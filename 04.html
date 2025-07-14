@@ -53,31 +53,30 @@
     box-sizing: border-box;
 }
 
+.popup-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%; /* เพิ่มเข้ามา */
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    padding: 20px 0;
+    align-items: center;
+}
+
 .popup-content {
     background-color: #fffde7;
-    border-radius: 10px; /* เพิ่มความโค้งมนเล็กน้อยเพื่อความสวยงาม */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
     width: 100%;
     max-width: 600px;
-    max-height: 100%; /* ทำให้แน่ใจว่า content ไม่ล้นกรอบ padding ที่เราตั้งไว้ */
-    padding: 15px 5px;
+    padding: 25px 5px; 
     position: relative;
-    overflow-y: auto;
     box-sizing: border-box;
 }
-    
-    .result-container-popup {
-        border: 2px solid #4CAF50;
-        background-color: #FAFAD2;
-        margin: 0;
-        padding: 15px 5px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
-        position: relative;
-        min-height: 300px;
-        box-sizing: border-box;
-    }
 
     .result-container-popup::before {
         content: "";
