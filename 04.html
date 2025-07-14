@@ -40,21 +40,6 @@
     
 .popup-overlay {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* ปรับเป็น 100% เพื่อให้ครอบคลุมทั้งหน้าจอ */
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0; /* เพิ่มระยะห่างบน-ล่าง 20px (ซ้าย-ขวาเป็น 0) */
-    box-sizing: border-box;
-}
-
-.popup-overlay {
-    display: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -77,6 +62,19 @@
     position: relative;
     box-sizing: border-box;
 }
+    
+    .result-container-popup {
+        border: 2px solid #4CAF50;
+        background-color: #FAFAD2;
+        margin: 0;
+        padding: 15px 5px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+        position: relative;
+        min-height: 300px;
+        box-sizing: border-box;
+    }
 
     .result-container-popup::before {
         content: "";
@@ -141,8 +139,8 @@
         </div>
 
         <select id="personSelect" onchange="checkCustomOption(this)">
-            <option value="Team">Team</option>
             <option value="@">@</option>
+            <option value="Team">Team</option>
             <option value="Udon Don">Udon Don</option>
             <option value="custom">อื่นๆ (พิมพ์เอง)</option>
         </select>
@@ -153,7 +151,7 @@
         <button id="convertButton">สร้างผลลัพธ์</button>
     </div>
     
-    <button class="homeButton" onclick="window.location.href='https://juckmanphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
+    <button class="homeButton" onclick="window.location.href='https://juckphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
 
     <!-- ---------- Popup Container ---------- -->
     <div id="resultPopupOverlay" class="popup-overlay">
