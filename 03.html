@@ -113,6 +113,10 @@ z-index: 1; /* ให้อยู่ด้านหน้าโลโก้ */
 color: blue;
 line-height: 1.3;
 }
+#resultContentWrapper p, #resultContentWrapper h2, #resultContentWrapper h3 {
+    margin: 0 0 10px 0;
+    line-height: inherit;
+}
 /* --- END: CSS สำหรับ POPUP (ปรับปรุงใหม่) --- */
 
 .controls { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px; }
@@ -320,10 +324,9 @@ return null;
 
 const lunarDate = getLunarDate(date);
 const lunarHtml = lunarDate ? `<p style="font-size: 14px; color: ${lunarDate.includes('วันพระ') ? 'red' : '#002060'}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">( ${lunarDate} )</p>` : '';
-let noteInput = document.getElementById("noteInput").value.trim() || '<span style="color: red;">No remarks</span>';
-if (!noteInput.startsWith('<span')) {
-noteInput = `<span style="color: red;">${noteInput}</span>`;
-}
+let noteValue = document.getElementById("noteInput").value.trim();
+const noteHtml = `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`;
+
 
 const twoDigitPairs = getTwoDigitPairs(num);
 const threeDigitCombinations = getThreeDigitCombinations(num);
@@ -341,145 +344,148 @@ ${lunarHtml}
 <p style="font-size: 26px; font-weight: bold; ${textShadow}">${threeDigitCombinations.join(' - ')}</p>
 <h2 style="font-size: 24px; font-weight: bold; color: red; ${textShadow}">แนวทางเท่านั้น</h2>
 <p style="font-size: 13px; ${textShadow}">แปล: ${getThaiDate(new Date())} ${getThaiTime()}</p>
-<p style="font-size: 18px; ${textShadow}">หมายเหตุ : ${noteInput}</p>
+<p style="font-size: 18px; ${textShadow}">${noteHtml}</p>
 </div>`;
 }
 
 // ===== START: ฟังก์ชันควบคุม Popup และบันทึกรูปภาพ (อัปเดตใหม่) =====
 function setupPopupControls() {
-const resultContentWrapper = document.getElementById("resultContentWrapper");
-if (!resultContentWrapper) return;
+    const resultContentWrapper = document.getElementById("resultContentWrapper");
+    if (!resultContentWrapper) return;
 
-const textElements = resultContentWrapper.querySelectorAll('p, h2, h3');
-textElements.forEach(el => {
-if (!el.dataset.originalSize) {
-el.dataset.originalSize = parseFloat(window.getComputedStyle(el).fontSize);
-}
-});
+    const textElements = resultContentWrapper.querySelectorAll('p, h2, h3');
+    textElements.forEach(el => {
+        if (!el.dataset.originalSize) {
+            el.dataset.originalSize = parseFloat(window.getComputedStyle(el).fontSize);
+        }
+    });
 
-// ควบคุมขนาดตัวอักษร
-const fsSlider = document.getElementById("popupFontSizeSlider");
-const fsValueSpan = document.getElementById("popupFontSizeValue");
-function updateFontSize() {
-const scale = fsSlider.value;
-textElements.forEach(el => {
-const originalSize = parseFloat(el.dataset.originalSize);
-if (originalSize) el.style.fontSize = (originalSize * scale) + 'px';
-});
-fsValueSpan.textContent = `ขนาด: ${Math.round(scale * 100)}%`;
-}
-fsSlider.addEventListener("input", updateFontSize);
+    // ควบคุมขนาดตัวอักษร
+    const fsSlider = document.getElementById("popupFontSizeSlider");
+    const fsValueSpan = document.getElementById("popupFontSizeValue");
+    function updateFontSize() {
+        const scale = fsSlider.value;
+        textElements.forEach(el => {
+            const originalSize = parseFloat(el.dataset.originalSize);
+            if (originalSize) el.style.fontSize = (originalSize * scale) + 'px';
+        });
+        fsValueSpan.textContent = `ขนาด: ${Math.round(scale * 100)}%`;
+    }
+    fsSlider.addEventListener("input", updateFontSize);
 
-// ควบคุมความสูงบรรทัด
-const lhSlider = document.getElementById("popupLineHeightSlider");
-const lhValueSpan = document.getElementById("popupLineHeightValue");
-function updateLineHeight() {
-const lineHeight = lhSlider.value;
-textElements.forEach(el => el.style.lineHeight = lineHeight);
-lhValueSpan.textContent = `ความสูงบรรทัด: ${lineHeight}`;
-}
-lhSlider.addEventListener("input", updateLineHeight);
+    // ควบคุมความสูงบรรทัด
+    const lhSlider = document.getElementById("popupLineHeightSlider");
+    const lhValueSpan = document.getElementById("popupLineHeightValue");
+    function updateLineHeight() {
+        const lineHeight = lhSlider.value;
+        resultContentWrapper.style.lineHeight = lineHeight; // Apply to wrapper for consistency
+        lhValueSpan.textContent = `ความสูงบรรทัด: ${lineHeight}`;
+    }
+    lhSlider.addEventListener("input", updateLineHeight);
 
-// --- เพิ่ม Event Listener สำหรับปุ่มบันทึกรูปภาพ ---
-const saveBtn = document.getElementById("saveResultAsImageBtn");
-const newSaveBtn = saveBtn.cloneNode(true);
-saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+    // --- Event Listener สำหรับปุ่มบันทึกรูปภาพ ---
+    const saveBtn = document.getElementById("saveResultAsImageBtn");
+    const newSaveBtn = saveBtn.cloneNode(true);
+    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
-newSaveBtn.addEventListener("click", function() {
-const captureElement = document.getElementById("resultContainerDiv");
-const controlsElement = document.querySelector('.popup-content .controls');
+    // ===== START: จุดที่แก้ไขการทำงานของปุ่มบันทึกให้เหมือนไฟล์อื่น =====
+    newSaveBtn.addEventListener("click", function() {
+        const captureElement = document.querySelector(".popup-content");
+        const controlsElement = captureElement.querySelector('.controls');
 
-controlsElement.style.visibility = 'hidden'; // ซ่อนปุ่มควบคุมชั่วคราว
+        controlsElement.style.display = 'none';
+        
+        const originalPadding = captureElement.style.padding;
+        captureElement.style.padding = '15px'; 
 
-html2canvas(captureElement, {
-useCORS: true,
-scale: 2, // เพิ่มความละเอียดของภาพ
-backgroundColor: '#FFFFD1' // กำหนดสีพื้นหลังให้ตรงกับ container
-}).then(canvas => {
-const link = document.createElement('a');
-const num = document.getElementById("numberInput").value || "XXXX";
-link.download = `Result-4D-${num}-${Date.now()}.png`;
-link.href = canvas.toDataURL("image/png");
-link.click();
+        html2canvas(captureElement, {
+            useCORS: true,
+            scale: 2,
+            backgroundColor: '#fffde7' // ใช้สีพื้นหลังของ .popup-content
+        }).then(canvas => {
+            const link = document.createElement('a');
+            const num = document.getElementById("numberInput").value || "XXXX";
+            link.download = `Result-4D-${num}-${Date.now()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }).catch(err => {
+            console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+            alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+        }).finally(() => {
+            controlsElement.style.display = ''; // or 'flex'
+            captureElement.style.padding = originalPadding;
+        });
+    });
+    // ===== END: จุดที่แก้ไขการทำงานของปุ่มบันทึก =====
 
-controlsElement.style.visibility = 'visible'; // แสดงปุ่มควบคุมกลับคืนมา
-}).catch(err => {
-console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-controlsElement.style.visibility = 'visible'; // แสดงปุ่มกลับคืนมาเสมอ
-});
-});
-
-// เรียกใช้ครั้งแรกเพื่อตั้งค่าเริ่มต้น
-updateFontSize();
-updateLineHeight();
+    // เรียกใช้ครั้งแรกเพื่อตั้งค่าเริ่มต้น
+    updateFontSize();
+    updateLineHeight();
 }
 // ===== END: ฟังก์ชันควบคุม Popup และบันทึกรูปภาพ (อัปเดตใหม่) =====
 
 function displayResultInPopup() {
-const resultHtml = generateResultHTML();
-if (resultHtml) {
-// ===== START: อัปเดตตำแหน่งที่แสดงผล =====
-document.getElementById("resultContentWrapper").innerHTML = resultHtml;
-// ===== END: อัปเดตตำแหน่งที่แสดงผล =====
-setupPopupControls();
-showResultPopup();
-}
+    const resultHtml = generateResultHTML();
+    if (resultHtml) {
+        document.getElementById("resultContentWrapper").innerHTML = resultHtml;
+        setupPopupControls();
+        showResultPopup();
+    }
 }
 
 // === PAGE INITIALIZATION ===
 document.addEventListener("DOMContentLoaded", function() {
-const dateInput = document.getElementById('dateInput');
-const calendarButton = document.getElementById('calendarButton');
-const hiddenDateInput = document.getElementById('hiddenDateInput');
+    const dateInput = document.getElementById('dateInput');
+    const calendarButton = document.getElementById('calendarButton');
+    const hiddenDateInput = document.getElementById('hiddenDateInput');
 
-const today = new Date();
-const day = String(today.getDate()).padStart(2, '0');
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const year = today.getFullYear() + 543;
-dateInput.value = `${day}/${month}/${year}`;
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear() + 543;
+    dateInput.value = `${day}/${month}/${year}`;
 
-calendarButton.addEventListener('click', () => {
-try {
-hiddenDateInput.showPicker();
-} catch (error) {
-hiddenDateInput.click();
-}
-});
+    calendarButton.addEventListener('click', () => {
+        try {
+            hiddenDateInput.showPicker();
+        } catch (error) {
+            hiddenDateInput.click();
+        }
+    });
 
-hiddenDateInput.addEventListener('change', (e) => {
-const selectedDate = e.target.value;
-if (selectedDate) {
-const parts = selectedDate.split('-');
-const christianYear = parseInt(parts[0], 10);
-const month = parts[1];
-const day = parts[2];
-const buddhistYear = christianYear + 543;
-dateInput.value = `${day}/${month}/${buddhistYear}`;
-}
-});
+    hiddenDateInput.addEventListener('change', (e) => {
+        const selectedDate = e.target.value;
+        if (selectedDate) {
+            const parts = selectedDate.split('-');
+            const christianYear = parseInt(parts[0], 10);
+            const month = parts[1];
+            const day = parts[2];
+            const buddhistYear = christianYear + 543;
+            dateInput.value = `${day}/${month}/${buddhistYear}`;
+        }
+    });
 
-document.getElementById("topicSelect").addEventListener("change", function() {
-document.getElementById("customTopicRow").style.display = this.value === "custom" ? "block" : "none";
-if (this.value === "custom") document.getElementById("customTopicName").focus();
-});
+    document.getElementById("topicSelect").addEventListener("change", function() {
+        document.getElementById("customTopicRow").style.display = this.value === "custom" ? "block" : "none";
+        if (this.value === "custom") document.getElementById("customTopicName").focus();
+    });
 
-document.getElementById("personSelect").addEventListener("change", function() {
-document.getElementById("customPersonRow").style.display = this.value === "custom" ? "block" : "none";
-if (this.value === "custom") document.getElementById("customPersonName").focus();
-});
+    document.getElementById("personSelect").addEventListener("change", function() {
+        document.getElementById("customPersonRow").style.display = this.value === "custom" ? "block" : "none";
+        if (this.value === "custom") document.getElementById("customPersonName").focus();
+    });
 
-document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
+    document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
 });
 </script>
 <script>
 // --- PWA Service Worker Registration ---
 if ('serviceWorker' in navigator) {
-window.addEventListener('load', () => {
-navigator.serviceWorker.register('./sw-4digit.js')
-.then(reg => console.log('Service Worker for 4-digit registered successfully:', reg))
-.catch(err => console.log('Service Worker registration failed:', err));
-});
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw-4digit.js')
+        .then(reg => console.log('Service Worker for 4-digit registered successfully:', reg))
+        .catch(err => console.log('Service Worker registration failed:', err));
+    });
 }
 </script>
 </body>
