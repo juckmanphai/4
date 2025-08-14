@@ -543,36 +543,44 @@
         }
         lhSlider.addEventListener("input", updateLineHeight);
 
-        // --- เพิ่ม Event Listener สำหรับปุ่มบันทึกรูปภาพ ---
         const saveBtn = document.getElementById("saveResultAsImageBtn");
         
         const newSaveBtn = saveBtn.cloneNode(true);
         saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
+        // ===== START: จุดที่แก้ไขการทำงานของปุ่มบันทึก =====
         newSaveBtn.addEventListener("click", function() {
-            const captureElement = document.getElementById("resultContainerDiv");
-            const controlsElement = document.querySelector('.popup-content .controls');
+            // เปลี่ยนเป้าหมายเป็น .popup-content ซึ่งเป็นคอนเทนเนอร์แม่
+            const captureElement = document.querySelector(".popup-content");
+            const controlsElement = captureElement.querySelector('.controls');
 
-            controlsElement.style.visibility = 'hidden';
+            // ซ่อนปุ่มควบคุมต่างๆ ก่อนการจับภาพ
+            controlsElement.style.display = 'none';
+            
+            // เก็บค่า padding เดิมเอาไว้ และกำหนดค่าใหม่ชั่วคราวเพื่อสร้างขอบ
+            const originalPadding = captureElement.style.padding;
+            captureElement.style.padding = '15px'; // กำหนดให้มีขอบ 15px รอบด้าน
 
             html2canvas(captureElement, {
                 useCORS: true,
                 scale: 2,
-                backgroundColor: '#FFFFD1'
+                backgroundColor: '#FFFFD1' // กำหนดสีพื้นหลังของขอบ
             }).then(canvas => {
                 const link = document.createElement('a');
                 const num = document.getElementById("numberInput").value || "XXX";
                 link.download = `Result-${num}-${Date.now()}.png`;
                 link.href = canvas.toDataURL("image/png");
                 link.click();
-                
-                controlsElement.style.visibility = 'visible';
             }).catch(err => {
                 console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
                 alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-                controlsElement.style.visibility = 'visible';
+            }).finally(() => {
+                // คืนค่าทุกอย่างให้เหมือนเดิมหลังจับภาพเสร็จ (ไม่ว่าจะสำเร็จหรือล้มเหลว)
+                controlsElement.style.display = ''; // แสดงส่วนควบคุมอีกครั้ง
+                captureElement.style.padding = originalPadding; // คืนค่า padding เดิม
             });
         });
+        // ===== END: จุดที่แก้ไขการทำงานของปุ่มบันทึก =====
         
         updateFontSize();
         updateLineHeight();
