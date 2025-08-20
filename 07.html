@@ -238,48 +238,6 @@ select {
   background-color: #d32f2f;
 }
 
-/* ---------- ลูกปิงปอง ---------- */
-.pingpong-ball {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 22px;
-  font-weight: bold;
-  margin: 0 0.5px;
-  background: radial-gradient(circle at 30% 30%, #e0e0e0, #888888);
-  box-shadow:
-    inset 0 4px 6px rgba(0, 0, 0, 0.5),
-    inset 0 -4px 8px rgba(255, 255, 255, 0.2),
-    inset -4px -4px 6px rgba(0, 0, 0, 0.25),
-    inset 4px 4px 6px rgba(255, 255, 255, 0.25);
-  text-shadow:
-    -1px -1px 1px rgba(0, 0, 0, 0.7),
-     1px 1px 2px rgba(255, 255, 255, 0.3);
-  transition: box-shadow 0.3s ease;
-}
-
-.pingpong-ball-red {
-  background: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF);
-  box-shadow:
-    inset 0 4px 6px rgba(0, 0, 0, 0.6),
-    inset 0 -4px 8px rgba(255, 255, 255, 0.2),
-    inset -4px -4px 6px rgba(0, 0, 0, 0.3),
-    inset 4px 4px 6px rgba(255, 255, 255, 0.3);
-}
-
-.pingpong-ball-blue {
-  background: radial-gradient(circle at 30% 30%, #47D359, #0066cc);
-}
-
-.pingpong-ball-orange {
-  background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600);
-}
-
-
 /* ป้ายรางวัล */
 .prize-label-red,
 .prize-label-blue,
@@ -295,11 +253,15 @@ select {
 
 /* กลุ่มลูกปิงปอง */
 .ball-group {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  margin: 3px 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    margin: 3px 0;
+    vertical-align: middle;
+}
+.ball-group svg {
+    margin: 0 1px;
 }
 
 /* ---------- กรอบแสดงเลข ---------- */
@@ -387,7 +349,7 @@ footer {
     <!-- ส่วนของ Popup -->
     <div id="popupOverlay" class="popup-overlay">
         <div class="popup-content">
-            <div class="popup-main-content">
+            <div id="captureArea" class="popup-main-content">
                 <div style="position: relative; z-index: 1;">
 <h3 id="popupTopicDisplay" class="blue" style="
   font-size: 36px;
@@ -465,10 +427,59 @@ footer {
             }
         }
 
-        // สร้างลูกปิงปอง
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (นำมาจากไฟล์ 05) ---
         function createPingPongBall(number, type = 'red') {
-            return `<span class="pingpong-ball pingpong-ball-${type}">${number}</span>`;
+            const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
+
+            if (type === 'blue') {
+                return `
+                    <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="${gradientId}" cx="30%" cy="30%" r="70%">
+                                <stop offset="0%" stop-color="#47D359" />
+                                <stop offset="100%" stop-color="#0066cc" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                            font-family="Arial, sans-serif" font-size="26" font-weight="bold"
+                            fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                            ${number}
+                        </text>
+                    </svg>
+                `;
+            }
+
+            let highlightColor, midColor, shadowColor;
+            if (type === 'red') { // สีชมพู
+                highlightColor = '#FFD6FF';
+                midColor = '#E800E8';
+                shadowColor = '#A100A1';
+            } else { // 'orange' - สีส้ม
+                highlightColor = '#FFE3A0';
+                midColor = '#FF8C00';
+                shadowColor = '#D97200';
+            }
+             
+            return `
+                <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
+                            <stop offset="0%" stop-color="${highlightColor}" />
+                            <stop offset="50%" stop-color="${midColor}" />
+                            <stop offset="100%" stop-color="${shadowColor}" />
+                        </radialGradient>
+                    </defs>
+                    <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                          font-family="Arial, sans-serif" font-size="26" font-weight="bold"
+                          fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                        ${number}
+                    </text>
+                </svg>
+            `;
         }
+        // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
 
         // สร้างกลุ่มลูกปิงปองจากตัวเลข
         function createPingPongNumbers(numbers, type = 'red') {
@@ -477,14 +488,12 @@ footer {
 
         // แสดง Popup
         function showPopup() {
-            const popup = document.getElementById("popupOverlay");
-            popup.style.display = "flex";
+            document.getElementById("popupOverlay").style.display = "flex";
         }
 
         // ปิด Popup
         function closePopup() {
-            const popup = document.getElementById("popupOverlay");
-            popup.style.display = "none";
+            document.getElementById("popupOverlay").style.display = "none";
         }
 
         // แปลงตัวเลขและแสดงผล
@@ -500,28 +509,17 @@ footer {
             const threeDigits = num.slice(3);
             const twoDigits = num.slice(2, 4);
 
-            // ตั้งค่าข้อมูลใน Popup
             document.getElementById("popupTopicDisplay").textContent = `ผลลาวพัฒนา`;
             document.getElementById("popupDateDisplay").textContent = thaiDate;
-            
-            // แสดงเลข 6 ตัวเป็นลูกปิงปองสีแดง
             document.getElementById("popupFiveDigitsDisplay").innerHTML = createPingPongNumbers(num, 'red');
-            
-            // แสดงเลข 3 ตัวท้ายเป็นลูกปิงปองสีน้ำเงิน
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(threeDigits, 'blue');
-            
-            // แสดงเลข 2 ตัวกลางเป็นลูกปิงปองสีส้ม
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(twoDigits, 'orange');
             
-            // รีเซ็ตสถานะปุ่ม
             document.getElementById("popupCircleButton").classList.remove("active");
             document.getElementById("popupSquareButton").classList.remove("active");
             document.getElementById("popupCircleTopButton").classList.remove("active");
             
-            // แสดง Popup
             showPopup();
-
-            // ตั้งค่าปุ่มบันทึกรูปภาพ
             setupSaveImageButton();
         }
 
@@ -529,18 +527,12 @@ footer {
         function toggleCirclePopup() {
             const twoDigitsDisplay = document.getElementById("popupTwoDigitsDisplay");
             const button = document.getElementById("popupCircleButton");
+            const numbers = document.getElementById("numberInput").value.slice(2, 4);
             
-            if (!twoDigitsDisplay) return;
-            
-            if (button.classList.contains("active")) {
-                // กลับไปแสดงแบบปกติ (ลูกปิงปองสีส้ม)
-                twoDigitsDisplay.innerHTML = createPingPongNumbers(twoDigitsDisplay.textContent.replace(/\D/g, ''), 'orange');
-                button.classList.remove("active");
-            } else {
-                // แสดงในวงกลม (ลูกปิงปองสีส้ม)
-                const numbers = twoDigitsDisplay.textContent.replace(/\D/g, '');
+            if (button.classList.toggle("active")) {
                 twoDigitsDisplay.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`;
-                button.classList.add("active");
+            } else {
+                twoDigitsDisplay.innerHTML = createPingPongNumbers(numbers, 'orange');
             }
         }
 
@@ -548,18 +540,12 @@ footer {
         function toggleSquarePopup() {
             const threeDigitsDisplay = document.getElementById("popupThreeDigitsDisplay");
             const button = document.getElementById("popupSquareButton");
-            
-            if (!threeDigitsDisplay) return;
-            
-            if (button.classList.contains("active")) {
-                // กลับไปแสดงแบบปกติ (ลูกปิงปองสีน้ำเงิน)
-                threeDigitsDisplay.innerHTML = createPingPongNumbers(threeDigitsDisplay.textContent.replace(/\D/g, ''), 'blue');
-                button.classList.remove("active");
-            } else {
-                // แสดงในสี่เหลี่ยม (ลูกปิงปองสีน้ำเงิน)
-                const numbers = threeDigitsDisplay.textContent.replace(/\D/g, '');
+            const numbers = document.getElementById("numberInput").value.slice(3);
+
+            if (button.classList.toggle("active")) {
                 threeDigitsDisplay.innerHTML = `<div class="square-container">${createPingPongNumbers(numbers, 'blue')}</div>`;
-                button.classList.add("active");
+            } else {
+                threeDigitsDisplay.innerHTML = createPingPongNumbers(numbers, 'blue');
             }
         }
 
@@ -567,21 +553,15 @@ footer {
         function toggleSquareTopPopup() {
             const threeDigitsDisplay = document.getElementById("popupThreeDigitsDisplay");
             const button = document.getElementById("popupCircleTopButton");
+            const numbers = document.getElementById("numberInput").value.slice(3);
             
-            if (!threeDigitsDisplay) return;
-            
-            if (button.classList.contains("active")) {
-                // กลับไปแสดงแบบปกติ (ลูกปิงปองสีน้ำเงิน)
-                threeDigitsDisplay.innerHTML = createPingPongNumbers(threeDigitsDisplay.textContent.replace(/\D/g, ''), 'blue');
-                button.classList.remove("active");
-            } else {
-                // แสดงแบบสี่เหลี่ยมสองตัวบน (ลูกปิงปองสีน้ำเงิน)
-                const numbers = threeDigitsDisplay.textContent.replace(/\D/g, '');
+            if (button.classList.toggle("active")) {
                 const firstDigit = numbers[0];
                 const lastTwoDigits = numbers.slice(1);
                 threeDigitsDisplay.innerHTML = 
                     `${createPingPongBall(firstDigit, 'blue')}<div class="square-two-container">${createPingPongNumbers(lastTwoDigits, 'blue')}</div>`;
-                button.classList.add("active");
+            } else {
+                threeDigitsDisplay.innerHTML = createPingPongNumbers(numbers, 'blue');
             }
         }
 
@@ -601,7 +581,6 @@ footer {
         // --- ฟังก์ชันบันทึกเป็นรูปภาพที่เพิ่มเข้ามา ---
         function setupSaveImageButton() {
             const saveBtn = document.getElementById("saveAsImageButton");
-            // Clone and replace the button to remove old event listeners
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
@@ -609,19 +588,18 @@ footer {
                 const captureElement = document.querySelector(".popup-content");
                 const controlsElement = captureElement.querySelector('.popup-buttons-container');
 
-                // Hide controls before capturing
                 if (controlsElement) {
                     controlsElement.style.display = 'none';
                 }
 
                 html2canvas(captureElement, {
                     useCORS: true,
-                    scale: 2.5, // Increase scale for better resolution
+                    scale: 2.5,
                     backgroundColor: '#fffde7'
                 }).then(canvas => {
                     const link = document.createElement('a');
                     const num = document.getElementById("numberInput").value || "XXXXXX";
-                    const topic = "Laopattana"; // Set topic manually
+                    const topic = "Laopattana";
                     
                     link.download = `Result-${topic}-${num}-${Date.now()}.png`;
                     link.href = canvas.toDataURL("image/png");
@@ -630,7 +608,6 @@ footer {
                     console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
                     alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
                 }).finally(() => {
-                    // Show controls again after capturing
                     if (controlsElement) {
                         controlsElement.style.display = 'flex';
                     }
