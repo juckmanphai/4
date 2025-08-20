@@ -59,11 +59,32 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .popup-button.active { background-color: #4CAF50; }
 .close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; }
 .close-popup:hover { background-color: #d32f2f; }
-/* Pingpong Ball */
-.pingpong-ball { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 22px; font-weight: bold; margin: 0 0.5px; background: radial-gradient(circle at 30% 30%, #e0e0e0, #888888); box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.25), inset 4px 4px 6px rgba(255, 255, 255, 0.25); text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.7), 1px 1px 2px rgba(255, 255, 255, 0.3); transition: box-shadow 0.3s ease; }
-.pingpong-ball-red { background: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF); box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.6), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.3), inset 4px 4px 6px rgba(255, 255, 255, 0.3); }
-.pingpong-ball-blue { background: radial-gradient(circle at 30% 30%, #47D359, #0066cc); }
-.pingpong-ball-orange { background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600); }
+
+/* --- START: CSS ฉบับแก้ไขสำหรับ Pingpong Ball --- */
+.pingpong-ball { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 22px; font-weight: bold; margin: 0 0.5px; text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.7), 1px 1px 2px rgba(255, 255, 255, 0.3); transition: box-shadow 0.3s ease; }
+
+.pingpong-ball-red {
+    background-color: #FF00FF; /* Fallback color */
+    background-image: -webkit-radial-gradient(30% 30%, circle, #FFB3B3, #FF00FF);
+    background-image: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.6), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.3), inset 4px 4px 6px rgba(255, 255, 255, 0.3);
+}
+
+.pingpong-ball-blue {
+    background-color: #0066cc; /* Fallback color */
+    background-image: -webkit-radial-gradient(30% 30%, circle, #47D359, #0066cc);
+    background-image: radial-gradient(circle at 30% 30%, #47D359, #0066cc);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.25), inset 4px 4px 6px rgba(255, 255, 255, 0.25);
+}
+
+.pingpong-ball-orange {
+    background-color: #cc6600; /* Fallback color */
+    background-image: -webkit-radial-gradient(30% 30%, circle, #ff9933, #cc6600);
+    background-image: radial-gradient(circle at 30% 30%, #ff9933, #cc6600);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.25), inset 4px 4px 6px rgba(255, 255, 255, 0.25);
+}
+/* --- END: CSS ฉบับแก้ไขสำหรับ Pingpong Ball --- */
+
 /* Prize Label */
 .prize-label-red, .prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
 .ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; }
@@ -170,20 +191,17 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); if (button.classList.toggle("active")) { const numbers = display.textContent.replace(/\D/g, ''); display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { display.innerHTML = createPingPongNumbers(display.textContent.replace(/\D/g, ''), 'blue'); } }
         function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
         
-        // --- START: ฟังก์ชันสำหรับบันทึกรูปภาพ (ฉบับแก้ไข) ---
         function setupSaveImageButton() {
             const saveBtn = document.getElementById("saveAsImageButton");
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
             newSaveBtn.addEventListener("click", function() {
-                //  ===== จุดที่ 1: แก้ไขเป้าหมายเป็นส่วนแสดงผลโดยตรง =====
-                const captureElement = document.getElementById("captureArea"); // หรือ document.querySelector(".popup-main-content");
+                const captureElement = document.getElementById("captureArea");
 
                 html2canvas(captureElement, {
                     useCORS: true,
-                    scale: 2.5, // เพิ่มความละเอียดของภาพให้คมชัดขึ้น
-                    //  ===== จุดที่ 2: แก้ไขสีพื้นหลังให้ตรงกับส่วนแสดงผล =====
+                    scale: 2.5,
                     backgroundColor: '#FFFFD1'
                 }).then(canvas => {
                     const link = document.createElement('a');
@@ -199,7 +217,6 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 });
             });
         }
-        // --- END: ฟังก์ชันสำหรับบันทึกรูปภาพ ---
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener("DOMContentLoaded", () => { document.getElementById("convertButton").addEventListener("click", convertNumber); setDefaultDate(); });
