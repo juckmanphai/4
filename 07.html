@@ -14,6 +14,9 @@
     <meta name="apple-mobile-web-app-title" content="ผลลาวพัฒนา">
     <!-- End of PWA-related additions -->
 
+    <!-- เพิ่มสคริปต์ html2canvas สำหรับการบันทึกรูปภาพ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
 /* ---------- พื้นหลังและฟอนต์ของหน้า ---------- */
 body {
@@ -201,6 +204,7 @@ select {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  padding-top: 15px;
 }
 
 .popup-buttons {
@@ -436,6 +440,8 @@ footer {
                     <button id="popupSquareButton" class="popup-button" onclick="toggleSquarePopup()">สี่เหลี่ยมสามตัวบน</button>
                     <button id="popupCircleTopButton" class="popup-button" onclick="toggleSquareTopPopup()">สี่เหลี่ยมสองตัวบน</button>
                 </div>
+                <!-- ปุ่มบันทึกเป็นรูปภาพที่เพิ่มเข้ามา -->
+                <button id="saveAsImageButton" class="popup-button" style="background-color: #007bff; max-width: 200px; width: 100%;">บันทึกเป็นรูปภาพ</button>
                 <button class="close-popup" onclick="closePopup()">ปิดหน้าต่างนี้</button>
             </div>
         </div>
@@ -447,17 +453,17 @@ footer {
     
     <script>
         // ตั้งค่าวันเริ่มต้น
-function setDefaultDate() {
-    const dateInput = document.getElementById("dateInput");
-    if (dateInput) {
-        const nowUTC = new Date();
-        const timezoneOffset = 7 * 60; // UTC+7 เป็นนาที
-        const localTimestamp = nowUTC.getTime() + (timezoneOffset * 60 * 1000);
-        const localDate = new Date(localTimestamp);
-        const today = localDate.toISOString().split('T')[0];
-        dateInput.value = today;
-    }
-}
+        function setDefaultDate() {
+            const dateInput = document.getElementById("dateInput");
+            if (dateInput) {
+                const nowUTC = new Date();
+                const timezoneOffset = 7 * 60; // UTC+7 เป็นนาที
+                const localTimestamp = nowUTC.getTime() + (timezoneOffset * 60 * 1000);
+                const localDate = new Date(localTimestamp);
+                const today = localDate.toISOString().split('T')[0];
+                dateInput.value = today;
+            }
+        }
 
         // สร้างลูกปิงปอง
         function createPingPongBall(number, type = 'red') {
@@ -514,6 +520,9 @@ function setDefaultDate() {
             
             // แสดง Popup
             showPopup();
+
+            // ตั้งค่าปุ่มบันทึกรูปภาพ
+            setupSaveImageButton();
         }
 
         // วงกลมสองตัวล่าง
@@ -587,6 +596,46 @@ function setDefaultDate() {
             const year = date.getFullYear() + 543;
             const dayOfWeek = daysOfWeek[date.getDay()];
             return `วัน${dayOfWeek}ที่ ${day} ${month} พ.ศ. ${year}`;
+        }
+        
+        // --- ฟังก์ชันบันทึกเป็นรูปภาพที่เพิ่มเข้ามา ---
+        function setupSaveImageButton() {
+            const saveBtn = document.getElementById("saveAsImageButton");
+            // Clone and replace the button to remove old event listeners
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+            newSaveBtn.addEventListener("click", function() {
+                const captureElement = document.querySelector(".popup-content");
+                const controlsElement = captureElement.querySelector('.popup-buttons-container');
+
+                // Hide controls before capturing
+                if (controlsElement) {
+                    controlsElement.style.display = 'none';
+                }
+
+                html2canvas(captureElement, {
+                    useCORS: true,
+                    scale: 2.5, // Increase scale for better resolution
+                    backgroundColor: '#fffde7'
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    const num = document.getElementById("numberInput").value || "XXXXXX";
+                    const topic = "Laopattana"; // Set topic manually
+                    
+                    link.download = `Result-${topic}-${num}-${Date.now()}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                }).catch(err => {
+                    console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+                    alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+                }).finally(() => {
+                    // Show controls again after capturing
+                    if (controlsElement) {
+                        controlsElement.style.display = 'flex';
+                    }
+                });
+            });
         }
 
         // ป้องกันคลิกขวา
