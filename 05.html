@@ -60,42 +60,12 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; }
 .close-popup:hover { background-color: #d32f2f; }
 
-/* --- START: CSS ฉบับแก้ไขขั้นสุดท้ายสำหรับ Pingpong Ball --- */
-.pingpong-ball {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
-    margin: 0 1px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.3);
-}
-
-.pingpong-ball-red {
-    background-color: #8A2BE2; /* สีม่วง (BlueViolet) */
-    background-image: radial-gradient(circle at 30% 30%, #D8A9FF, #8A2BE2 80%);
-}
-
-.pingpong-ball-blue {
-    background-color: #008080; /* สีเขียวน้ำทะเล (Teal) */
-    background-image: radial-gradient(circle at 30% 30%, #7FFFD4, #008080 80%);
-}
-
-.pingpong-ball-orange {
-    background-color: #8B4513; /* สีน้ำตาล (SaddleBrown) */
-    background-image: radial-gradient(circle at 30% 30%, #DEB887, #8B4513 80%);
-}
-/* --- END: CSS ฉบับแก้ไข --- */
+/* --- CSS สำหรับ SVG และส่วนอื่นๆ --- */
+.ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
+.ball-group svg { margin: 0 1px; }
 
 /* Prize Label */
 .prize-label-red, .prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
-.ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; }
 /* Number Containers */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
 .circle-container { width: 82px; border: 3px solid #FF00FF; border-radius: 2%; }
@@ -170,8 +140,49 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขขั้นสุดท้าย) ---
+        function createPingPongBall(number, type = 'red') {
+            let highlightColor, baseColor, stopColor;
+
+            if (type === 'red') { // สีม่วง
+                highlightColor = '#E6A8FF';
+                baseColor = '#800080';
+                stopColor = '#C142C1';
+            } else if (type === 'blue') { // สีเขียวน้ำทะเล
+                highlightColor = '#9EEAEA';
+                baseColor = '#008080';
+                stopColor = '#46B2B2';
+            } else { // 'orange' - สีน้ำตาล
+                highlightColor = '#D2B48C';
+                baseColor = '#8B4513';
+                stopColor = '#A0522D';
+            }
+
+            // สร้าง ID ที่ไม่ซ้ำกันสำหรับ gradient
+            const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
+
+            // สร้างโค้ด SVG ทั้งหมด
+            return `
+                <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="${gradientId}" cx="35%" cy="35%" r="65%">
+                            <stop offset="0%" stop-color="${highlightColor}" />
+                            <stop offset="50%" stop-color="${stopColor}" />
+                            <stop offset="100%" stop-color="${baseColor}" />
+                        </radialGradient>
+                    </defs>
+                    <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.4)" stroke-width="1.5"/>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                          font-family="Arial, sans-serif" font-size="26" font-weight="bold"
+                          fill="white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">
+                        ${number}
+                    </text>
+                </svg>
+            `;
+        }
+        // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
+
         function setDefaultDate() { const dateInput = document.getElementById("dateInput"); if (dateInput) { const localDate = new Date(new Date().getTime() + (7 * 60 * 60 * 1000)); dateInput.value = localDate.toISOString().split('T')[0]; } }
-        function createPingPongBall(number, type = 'red') { return `<span class="pingpong-ball pingpong-ball-${type}">${number}</span>`; }
         function createPingPongNumbers(numbers, type = 'red') { return numbers.split('').map(digit => createPingPongBall(digit, type)).join(''); }
         function showPopup() { document.getElementById("popupOverlay").style.display = "flex"; }
         function closePopup() { document.getElementById("popupOverlay").style.display = "none"; }
@@ -194,9 +205,9 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             setupSaveImageButton();
         }
 
-        function toggleCirclePopup() { const display = document.getElementById("popupTwoDigitsDisplay"); const button = document.getElementById("popupCircleButton"); if (button.classList.toggle("active")) { const numbers = display.textContent.replace(/\D/g, ''); display.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`; } else { display.innerHTML = createPingPongNumbers(display.textContent.replace(/\D/g, ''), 'orange'); } }
-        function toggleSquarePopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupSquareButton"); if (button.classList.toggle("active")) { const numbers = display.textContent.replace(/\D/g, ''); display.innerHTML = `<div class="square-container">${createPingPongNumbers(numbers, 'blue')}</div>`; } else { display.innerHTML = createPingPongNumbers(display.textContent.replace(/\D/g, ''), 'blue'); } }
-        function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); if (button.classList.toggle("active")) { const numbers = display.textContent.replace(/\D/g, ''); display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { display.innerHTML = createPingPongNumbers(display.textContent.replace(/\D/g, ''), 'blue'); } }
+        function toggleCirclePopup() { const display = document.getElementById("popupTwoDigitsDisplay"); const button = document.getElementById("popupCircleButton"); if (button.classList.toggle("active")) { const numbers = document.getElementById('numberInput').value.slice(0, 2); display.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`; } else { const numbers = document.getElementById('numberInput').value.slice(0, 2); display.innerHTML = createPingPongNumbers(numbers, 'orange'); } }
+        function toggleSquarePopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupSquareButton"); if (button.classList.toggle("active")) { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = `<div class="square-container">${createPingPongNumbers(numbers, 'blue')}</div>`; } else { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = createPingPongNumbers(numbers, 'blue'); } }
+        function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); if (button.classList.toggle("active")) { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = createPingPongNumbers(numbers, 'blue'); } }
         function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
         
         function setupSaveImageButton() {
