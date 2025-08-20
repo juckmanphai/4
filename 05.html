@@ -60,7 +60,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; }
 .close-popup:hover { background-color: #d32f2f; }
 
-/* --- START: CSS ฉบับแก้ไขสำหรับ Pingpong Ball เพื่อให้บันทึกภาพได้ถูกต้อง --- */
+/* --- START: CSS ฉบับแก้ไขขั้นสุดท้ายสำหรับ Pingpong Ball --- */
 .pingpong-ball {
     display: inline-flex;
     justify-content: center;
@@ -72,23 +72,23 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     font-size: 22px;
     font-weight: bold;
     margin: 0 1px;
-    text-shadow: 0 0 3px rgba(0,0,0,0.7);
-    border: 1px solid rgba(0,0,0,0.3);
+    text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .pingpong-ball-red {
-    background-color: #E100E1; /* สีชมพู-ม่วง */
-    box-shadow: inset 0 -3px 4px rgba(0,0,0,0.4), inset 0 3px 4px rgba(255,255,255,0.4);
+    background-color: #D900D9; /* Fallback */
+    background-image: radial-gradient(circle at 35% 35%, #FFB3FF, #D900D9 70%);
 }
 
 .pingpong-ball-blue {
-    background-color: #0095A2; /* สีเขียว-ฟ้า */
-    box-shadow: inset 0 -3px 4px rgba(0,0,0,0.4), inset 0 3px 4px rgba(255,255,255,0.4);
+    background-color: #0079C1; /* Fallback */
+    background-image: radial-gradient(circle at 35% 35%, #97E6FF, #0079C1 70%);
 }
 
 .pingpong-ball-orange {
-    background-color: #F37303; /* สีส้ม */
-    box-shadow: inset 0 -3px 4px rgba(0,0,0,0.4), inset 0 3px 4px rgba(255,255,255,0.4);
+    background-color: #F57C00; /* Fallback */
+    background-image: radial-gradient(circle at 35% 35%, #FFD180, #F57C00 70%);
 }
 /* --- END: CSS ฉบับแก้ไข --- */
 
