@@ -46,12 +46,12 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 /* ---------- Popup Content ---------- */
 .popup-content { background-color: #fffde7; border-radius: 1px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); width: 100%; max-width: 600px; padding: 20px 2px; position: relative; }
 
-/* --- START: ปรับแก้ Padding เพิ่มพื้นที่ว่าง --- */
+/* --- START: ปรับแก้ Padding เพิ่มพื้นที่ว่างให้ชัดเจน --- */
 .popup-main-content {
     position: relative;
     background-color: #FFFFD1;
     margin: 20px 5px;
-    padding: 25px 15px; /* เพิ่ม padding ซ้าย-ขวา และปรับบน-ล่าง */
+    padding: 30px 20px; /* เพิ่ม padding บน-ล่าง และ ซ้าย-ขวา ให้มากขึ้น */
     border-radius: 10px;
     border: 1.5px solid green;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -155,26 +155,26 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขเทียบสีตัวอย่าง) ---
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขเทียบสีตัวอย่างล่าสุด) ---
         function createPingPongBall(number, type = 'red') {
             let baseColor;
 
-            if (type === 'red') { // สีชมพูม่วง (Magenta)
-                baseColor = '#E600E6';
-            } else if (type === 'blue') { // สีเขียวน้ำทะเล (Teal)
-                baseColor = '#00B2B2';
-            } else { // 'orange' - สีส้ม
-                baseColor = '#E67E22';
+            if (type === 'red') { // สีชมพู (Fuchsia/Magenta)
+                baseColor = '#F200F2';
+            } else if (type === 'blue') { // สีเขียว (MediumSeaGreen)
+                baseColor = '#3CB371';
+            } else { // 'orange' - สีส้ม (DarkOrange)
+                baseColor = '#FF8C00';
             }
 
-            // สร้างโค้ด SVG โดยใช้เทคนิคการซ้อน Layer ที่แน่นอนกว่า
+            // สร้างโค้ด SVG โดยใช้เทคนิคการซ้อน Layer ที่แน่นอนและสีตรงตามตัวอย่าง
             return `
                 <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <!-- 1. วงกลมสีพื้นฐาน -->
-                    <circle cx="25" cy="25" r="24" fill="${baseColor}" stroke="rgba(0,0,0,0.4)" stroke-width="1.5"/>
+                    <circle cx="25" cy="25" r="24" fill="${baseColor}" stroke="rgba(0,0,0,0.4)" stroke-width="1"/>
                     
                     <!-- 2. แสงสะท้อน (วงรีสีขาวโปร่งแสง) -->
-                    <ellipse cx="21" cy="19" rx="15" ry="10" fill="white" fill-opacity="0.35" transform="rotate(-25 21 19)" />
+                    <ellipse cx="21" cy="19" rx="15" ry="10" fill="white" fill-opacity="0.4" transform="rotate(-25 21 19)" />
 
                     <!-- 3. ตัวเลข -->
                     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
