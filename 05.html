@@ -14,8 +14,9 @@
     <meta name="apple-mobile-web-app-title" content="ผลลาวสตาร์">
     <!-- End of PWA-related additions -->
 
-    <!-- Library for capturing HTML to Image -->
+    <!-- START: เพิ่มสคริปต์ html2canvas สำหรับการบันทึกรูปภาพ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- END: เพิ่มสคริปต์ html2canvas -->
 
 <style>
 /* ---------- พื้นหลังและฟอนต์ของหน้า ---------- */
@@ -52,43 +53,18 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 #popupTopicDisplay { font-weight: bold; font-size: clamp(18px, 4.4vw, 26px); }
 #popupDateDisplay { font-size: clamp(16px, 3.4vw, 20px); }
 /* Popup Buttons */
-.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px; }
+.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .popup-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
 .popup-button { padding: 8px 15px; background-color: #FF9800; }
 .popup-button:hover { background-color: #F57C00; }
 .popup-button.active { background-color: #4CAF50; }
-.save-image-button { padding: 8px 15px; background-color: #2196F3; }
-.save-image-button:hover { background-color: #1976D2; }
-.close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; margin-top: 10px; }
+.close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; }
 .close-popup:hover { background-color: #d32f2f; }
-
-/* === Colorful Image-based Pingpong Ball Styles === */
-.pingpong-ball {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-shadow: -1px -1px 1px rgba(0,0,0,0.7);
-    background-size: cover;
-    background-position: center;
-    margin: 0 1px;
-    box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
-}
-.pingpong-ball-red {
-    background-image: url('data:image/png;base64,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');
-}
-.pingpong-ball-blue {
-    background-image: url('data:image/png;base64,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');
-}
-.pingpong-ball-orange {
-    background-image: url('data:image/png;base64,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');
-}
-
+/* Pingpong Ball */
+.pingpong-ball { display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 22px; font-weight: bold; margin: 0 0.5px; background: radial-gradient(circle at 30% 30%, #e0e0e0, #888888); box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.25), inset 4px 4px 6px rgba(255, 255, 255, 0.25); text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.7), 1px 1px 2px rgba(255, 255, 255, 0.3); transition: box-shadow 0.3s ease; }
+.pingpong-ball-red { background: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF); box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.6), inset 0 -4px 8px rgba(255, 255, 255, 0.2), inset -4px -4px 6px rgba(0, 0, 0, 0.3), inset 4px 4px 6px rgba(255, 255, 255, 0.3); }
+.pingpong-ball-blue { background: radial-gradient(circle at 30% 30%, #47D359, #0066cc); }
+.pingpong-ball-orange { background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600); }
 /* Prize Label */
 .prize-label-red, .prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
 .ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; }
@@ -115,7 +91,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         </div>
         <div class="form-group">
             <select id="topicSelect">
-                 <option value="ลาวประตูชัย เวลา 05.45 น">ลาวประตูชัย เวลา 05.45 น</option>
+                <option value="ลาวประตูชัย เวลา 05.45 น">ลาวประตูชัย เวลา 05.45 น</option>
                 <option value="ลาวสันติภาพ เวลา 06.45 น">ลาวสันติภาพ เวลา 06.45 น</option>
                 <option value="ประชาชนลาว เวลา 07.45 น">ประชาชนลาว เวลา 07.45 น</option>
                 <option value="ลาว Extra เวลา 08.30 น">ลาว Extra เวลา 08.30 น</option>
@@ -156,8 +132,10 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                     <button id="popupCircleButton" class="popup-button" onclick="toggleCirclePopup()">สี่เหลี่ยมล่าง</button>
                     <button id="popupSquareButton" class="popup-button" onclick="toggleSquarePopup()">สี่เหลี่ยมสามตัวบน</button>
                     <button id="popupCircleTopButton" class="popup-button" onclick="toggleSquareTopPopup()">สี่เหลี่ยมสองตัวบน</button>
-                    <button id="saveImageButton" class="popup-button save-image-button" onclick="saveAsImage()">บันทึกเป็นรูปภาพ</button>
                 </div>
+                <!-- START: เพิ่มปุ่มบันทึกรูปภาพ -->
+                <button id="saveAsImageButton" class="popup-button" style="background-color: #007bff; max-width: 200px; width: 100%;">บันทึกเป็นรูปภาพ</button>
+                <!-- END: เพิ่มปุ่มบันทึกรูปภาพ -->
                 <button class="close-popup" onclick="closePopup()">ปิดหน้าต่างนี้</button>
             </div>
         </div>
@@ -166,15 +144,9 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        function createPingPongBall(number, type = 'red') {
-            return `<div class="pingpong-ball pingpong-ball-${type}">${number}</div>`;
-        }
-        
-        function createPingPongNumbers(numbers, type = 'red') {
-            return numbers.split('').map(digit => createPingPongBall(digit, type)).join('');
-        }
-
         function setDefaultDate() { const dateInput = document.getElementById("dateInput"); if (dateInput) { const localDate = new Date(new Date().getTime() + (7 * 60 * 60 * 1000)); dateInput.value = localDate.toISOString().split('T')[0]; } }
+        function createPingPongBall(number, type = 'red') { return `<span class="pingpong-ball pingpong-ball-${type}">${number}</span>`; }
+        function createPingPongNumbers(numbers, type = 'red') { return numbers.split('').map(digit => createPingPongBall(digit, type)).join(''); }
         function showPopup() { document.getElementById("popupOverlay").style.display = "flex"; }
         function closePopup() { document.getElementById("popupOverlay").style.display = "none"; }
         
@@ -187,13 +159,15 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const date = document.getElementById("dateInput").value ? new Date(document.getElementById("dateInput").value) : new Date(); 
             document.getElementById("popupTopicDisplay").textContent = `ผล${document.getElementById("topicSelect").value}`; 
             document.getElementById("popupDateDisplay").textContent = getThaiDate(date); 
-            
             document.getElementById("popupFiveDigitsDisplay").innerHTML = createPingPongNumbers(num, 'red'); 
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(num.slice(2), 'blue'); 
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(num.slice(0, 2), 'orange'); 
-
             ["popupCircleButton", "popupSquareButton", "popupCircleTopButton"].forEach(id => document.getElementById(id).classList.remove("active")); 
+            
             showPopup(); 
+            // START: เรียกใช้ฟังก์ชันเพื่อผูก Event กับปุ่มบันทึก
+            setupSaveImageButton();
+            // END: เรียกใช้ฟังก์ชัน
         }
 
         function toggleCirclePopup() { const display = document.getElementById("popupTwoDigitsDisplay"); const button = document.getElementById("popupCircleButton"); if (button.classList.toggle("active")) { const numbers = display.textContent.replace(/\D/g, ''); display.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`; } else { display.innerHTML = createPingPongNumbers(display.textContent.replace(/\D/g, ''), 'orange'); } }
@@ -201,30 +175,46 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); if (button.classList.toggle("active")) { const numbers = display.textContent.replace(/\D/g, ''); display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { display.innerHTML = createPingPongNumbers(display.textContent.replace(/\D/g, ''), 'blue'); } }
         function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
         
-        function saveAsImage() {
-            const elementToCapture = document.querySelector(".popup-main-content");
-            html2canvas(elementToCapture, {
-                scale: 2.5,
-                useCORS: true,
-                backgroundColor: null 
-            }).then(canvas => {
-                const link = document.createElement('a');
-                const topic = document.getElementById("topicSelect").value.split(' ')[0];
-                const date = document.getElementById("dateInput").value;
-                link.download = `ผล${topic}-${date}.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            }).catch(err => {
-                console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-                alert("ไม่สามารถบันทึกรูปภาพได้");
+        // START: เพิ่มฟังก์ชันสำหรับบันทึกรูปภาพ
+        function setupSaveImageButton() {
+            const saveBtn = document.getElementById("saveAsImageButton");
+            
+            // ใช้ cloneNode เพื่อลบ event listener เก่าออกก่อนจะเพิ่มอันใหม่ ป้องกันการทำงานซ้ำซ้อน
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+            newSaveBtn.addEventListener("click", function() {
+                const captureElement = document.querySelector(".popup-content");
+                const controlsElement = captureElement.querySelector('.popup-buttons-container');
+
+                // ซ่อนส่วนควบคุมก่อนการจับภาพ
+                controlsElement.style.display = 'none';
+                
+                html2canvas(captureElement, {
+                    useCORS: true,
+                    scale: 2, // เพิ่มความละเอียดของภาพ
+                    backgroundColor: '#fffde7' // กำหนดสีพื้นหลังให้ตรงกับ popup
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    const num = document.getElementById("numberInput").value || "XXXXX";
+                    const topic = document.getElementById("topicSelect").value.split(' ')[0] || "Result";
+                    
+                    link.download = `Result-${topic}-${num}-${Date.now()}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                }).catch(err => {
+                    console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+                    alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+                }).finally(() => {
+                    // แสดงส่วนควบคุมกลับมาเหมือนเดิม ไม่ว่าจะสำเร็จหรือล้มเหลว
+                    controlsElement.style.display = 'flex';
+                });
             });
         }
+        // END: เพิ่มฟังก์ชันสำหรับบันทึกรูปภาพ
 
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener("DOMContentLoaded", () => { 
-            document.getElementById("convertButton").addEventListener("click", convertNumber); 
-            setDefaultDate(); 
-        });
+        document.addEventListener("DOMContentLoaded", () => { document.getElementById("convertButton").addEventListener("click", convertNumber); setDefaultDate(); });
 
         // --- PWA Service Worker Registration ---
         if ('serviceWorker' in navigator) {
