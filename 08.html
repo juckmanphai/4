@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ผลฉลากกินแบ่งรัฐบาล</title>
+    <title>ผลฉบากกินแบ่งรัฐบาล</title>
 
     <!-- PWA-related tags -->
     <meta name="theme-color" content="#e65100"/>
@@ -124,7 +124,7 @@
             font-weight: bold;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color: 0.3s;
             padding: 10px 20px;
             background-color: #007bff;
             width: 90%;
@@ -209,47 +209,6 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
         }
 
-        .circle-number-base {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0 0.5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px 2px 5px rgba(255, 255, 255, 0.3);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-            transition: box-shadow 0.3s ease;
-        }
-
-        /* === START: จุดที่แก้ไขสี === */
-        /* รางวัลที่ 1 - สีแดงสด */
-.circle-number-red {
-  background: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF);
-  width: 42px;
-  height: 42px;
-  font-size: 26px;
-}
-        /* เลขหน้า 3 ตัว - สีฟ้าสด */
-.circle-number-blue {
-  background: radial-gradient(circle at 30% 30%, #3399ff, #0066cc);
-}
-        /* เลขท้าย 3 ตัว - สีเขียวสด */
-.circle-number-green {
-  background: radial-gradient(circle at 30% 30%, #47D359, #0066cc);
-}
-        /* เลขท้าย 2 ตัว - สีส้มสด */
-.circle-number-orange {
-  background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600);
-  width: 48px;
-  height: 48px;
-  font-size: 34px;
-}
-        /* === END: จุดที่แก้ไขสี === */
-
         .result-title {
             font-weight: bold;
             margin-bottom: 5px;
@@ -269,7 +228,7 @@
             text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
         }
         .back-two-title {
-            color: #BF360C; /* เปลี่ยนเป็นสีส้มเข้มเพื่อให้เข้ากับตัวเลข */
+            color: #BF360C;
             font-size: 24px;
             font-weight: bold;
             margin-top: 10px;
@@ -282,6 +241,7 @@
             justify-content: center;
             align-items: center;
             margin: 5px 0;
+            min-height: 50px;
         }
 
         .flex-row {
@@ -487,30 +447,95 @@
             return `งวดวันที่ ${dateString}`;
         }
 
-        function createNumberBall(number, colorClass) {
-            const ball = document.createElement("div");
-            ball.className = `circle-number-base ${colorClass}`;
-            ball.innerText = number;
-            return ball;
-        }
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ปรับปรุงสีฟ้าและเขียว) ---
+        function createPingPongBall(number, type = 'red', size = 42, fontSize = 26) {
+            const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
+            const r = (size / 2) - 1;
+            const cx = size / 2;
+            const cy = size / 2;
 
-        function displayNumberGroup(elementId, numberString, colorClass) {
+            let gradientHtml = '';
+            let highlightColor, midColor, shadowColor;
+            
+            if (type === 'blue') {
+                highlightColor = '#89CFF0'; // Baby Blue
+                midColor = '#007FFF';   // Azure
+                shadowColor = '#0059B3';  // Darker Azure
+                 gradientHtml = `
+                    <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="${highlightColor}" />
+                        <stop offset="50%" stop-color="${midColor}" />
+                        <stop offset="100%" stop-color="${shadowColor}" />
+                    </radialGradient>
+                `;
+            } else if (type === 'green') {
+                highlightColor = '#90EE90'; // Light Green
+                midColor = '#008000';   // Green
+                shadowColor = '#006400';  // Dark Green
+                 gradientHtml = `
+                    <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="${highlightColor}" />
+                        <stop offset="50%" stop-color="${midColor}" />
+                        <stop offset="100%" stop-color="${shadowColor}" />
+                    </radialGradient>
+                `;
+            } else {
+                 if (type === 'red') {
+                    highlightColor = '#FFD6FF';
+                    midColor = '#E800E8';
+                    shadowColor = '#A100A1';
+                } else { // 'orange'
+                    highlightColor = '#FFE3A0';
+                    midColor = '#FF8C00';
+                    shadowColor = '#D97200';
+                }
+                gradientHtml = `
+                    <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="${highlightColor}" />
+                        <stop offset="50%" stop-color="${midColor}" />
+                        <stop offset="100%" stop-color="${shadowColor}" />
+                    </radialGradient>
+                `;
+            }
+
+            return `
+                <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="margin: 0 1px;">
+                    <defs>
+                        ${gradientHtml}
+                    </defs>
+                    <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                        font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold"
+                        fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                        ${number}
+                    </text>
+                </svg>
+            `;
+        }
+        // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
+        
+        function displayNumberGroup(elementId, numberString, type, size, fontSize) {
             const container = document.getElementById(elementId);
             container.innerHTML = "";
+            if (!numberString) return;
+            let ballsHtml = "";
             for (let i = 0; i < numberString.length; i++) {
-                container.appendChild(createNumberBall(numberString[i], colorClass));
+                ballsHtml += createPingPongBall(numberString[i], type, size, fontSize);
             }
+            container.innerHTML = ballsHtml;
         }
 
         function displayResults() {
             const rawDate = document.getElementById("draw-date").value;
             document.getElementById("display-draw-date").innerText = formatThaiDate(rawDate);
-            displayNumberGroup("first-prize-display", document.getElementById("first-prize").value, "circle-number-red");
-            displayNumberGroup("display-front-three-1", document.getElementById("front-three-1").value, "circle-number-blue");
-            displayNumberGroup("display-front-three-2", document.getElementById("front-three-2").value, "circle-number-blue");
-            displayNumberGroup("display-back-three-1", document.getElementById("back-three-1").value, "circle-number-green");
-            displayNumberGroup("display-back-three-2", document.getElementById("back-three-2").value, "circle-number-green");
-            displayNumberGroup("display-back-two", document.getElementById("back-two").value, "circle-number-orange");
+            
+            displayNumberGroup("first-prize-display", document.getElementById("first-prize").value, "red", 42, 26);
+            displayNumberGroup("display-front-three-1", document.getElementById("front-three-1").value, "blue", 36, 20);
+            displayNumberGroup("display-front-three-2", document.getElementById("front-three-2").value, "blue", 36, 20);
+            displayNumberGroup("display-back-three-1", document.getElementById("back-three-1").value, "green", 36, 20);
+            displayNumberGroup("display-back-three-2", document.getElementById("back-three-2").value, "green", 36, 20);
+            displayNumberGroup("display-back-two", document.getElementById("back-two").value, "orange", 48, 34);
+            
             showPopup();
             attachSaveAsImageListener();
         }
