@@ -44,18 +44,16 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 /* ---------- Popup Overlay ---------- */
 .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
 
-/* --- START: ปรับแก้ Padding เพื่อควบคุมความหนาของขอบนอก --- */
 .popup-content {
     background-color: #fffde7;
     border-radius: 1px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     width: 100%;
     max-width: 600px;
-    padding: 12px; /* <<< ปรับแก้ค่า padding ตรงนี้ เพื่อควบคุมความหนาของขอบ */
+    padding: 12px;
     position: relative;
     box-sizing: border-box;
 }
-/* --- END: ปรับแก้ Padding --- */
 
 .popup-main-content {
     position: relative;
@@ -82,12 +80,52 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; }
 .close-popup:hover { background-color: #d32f2f; }
 
-/* --- CSS สำหรับ SVG และส่วนอื่นๆ --- */
-.ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
-.ball-group svg { margin: 0 1px; }
+/* --- START: โค้ด CSS สำหรับลูกปิงปอง (ฉบับแก้ไขตามตัวอย่าง) --- */
+.pingpong-ball {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0.5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    transition: box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/* สีชมพู (จากตัวอย่าง) */
+.pingpong-ball-red {
+    background-color: #E800E8; /* สีพื้นฐาน */
+    background-image: -webkit-radial-gradient(circle at 35% 35%, #FFB8FF, #E800E8 70%);
+    background-image: radial-gradient(circle at 35% 35%, #FFB8FF, #E800E8 70%);
+    box-shadow: inset 0 3px 4px rgba(255, 255, 255, 0.3), inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* สีเขียว (จากตัวอย่าง) */
+.pingpong-ball-blue {
+    background-color: #00AFAF;
+    background-image: -webkit-radial-gradient(circle at 35% 35%, #A4FFFF, #00AFAF 70%);
+    background-image: radial-gradient(circle at 35% 35%, #A4FFFF, #00AFAF 70%);
+    box-shadow: inset 0 3px 4px rgba(255, 255, 255, 0.3), inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* สีส้ม (จากตัวอย่าง) */
+.pingpong-ball-orange {
+    background-color: #EE7600;
+    background-image: -webkit-radial-gradient(circle at 35% 35%, #FFD180, #EE7600 70%);
+    background-image: radial-gradient(circle at 35% 35%, #FFD180, #EE7600 70%);
+    box-shadow: inset 0 3px 4px rgba(255, 255, 255, 0.3), inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+}
+/* --- END: โค้ด CSS สำหรับลูกปิงปอง --- */
+
 
 /* Prize Label */
 .prize-label-red, .prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
+.ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
 /* Number Containers */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
 .circle-container { width: 82px; border: 3px solid #FF00FF; border-radius: 2%; }
@@ -162,37 +200,11 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขเทียบสีตัวอย่างล่าสุด) ---
+        // --- START: ฟังก์ชันสร้างลูกบอลโดยใช้ CSS ---
         function createPingPongBall(number, type = 'red') {
-            let baseColor;
-
-            if (type === 'red') { // สีชมพู (Fuchsia/Magenta) จากตัวอย่าง
-                baseColor = '#E800E8';
-            } else if (type === 'blue') { // สีเขียว (Teal/Green-Cyan) จากตัวอย่าง
-                baseColor = '#00AFAF';
-            } else { // 'orange' - สีส้ม (Orange) จากตัวอย่าง
-                baseColor = '#EE7600';
-            }
-
-            // สร้างโค้ด SVG โดยใช้เทคนิคการซ้อน Layer ที่แน่นอนและสีตรงตามตัวอย่าง
-            return `
-                <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <!-- 1. วงกลมสีพื้นฐาน -->
-                    <circle cx="25" cy="25" r="24" fill="${baseColor}" stroke="rgba(0,0,0,0.4)" stroke-width="1"/>
-                    
-                    <!-- 2. แสงสะท้อน (วงรีสีขาวโปร่งแสง) -->
-                    <ellipse cx="21" cy="19" rx="15" ry="10" fill="white" fill-opacity="0.45" transform="rotate(-25 21 19)" />
-
-                    <!-- 3. ตัวเลข -->
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-                          font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                          fill="white" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">
-                        ${number}
-                    </text>
-                </svg>
-            `;
+            return `<span class="pingpong-ball pingpong-ball-${type}">${number}</span>`;
         }
-        // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
+        // --- END: ฟังก์ชันสร้างลูกบอล ---
 
         function setDefaultDate() { const dateInput = document.getElementById("dateInput"); if (dateInput) { const localDate = new Date(new Date().getTime() + (7 * 60 * 60 * 1000)); dateInput.value = localDate.toISOString().split('T')[0]; } }
         function createPingPongNumbers(numbers, type = 'red') { return numbers.split('').map(digit => createPingPongBall(digit, type)).join(''); }
@@ -222,18 +234,15 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); if (button.classList.toggle("active")) { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = createPingPongNumbers(numbers, 'blue'); } }
         function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
         
-        // --- START: ปรับปรุงฟังก์ชันบันทึกภาพให้มีขอบนอก ---
         function setupSaveImageButton() {
             const saveBtn = document.getElementById("saveAsImageButton");
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
             newSaveBtn.addEventListener("click", function() {
-                // เปลี่ยนเป้าหมายการจับภาพมาที่ .popup-content เพื่อให้ได้ขอบสีเหลือง
                 const captureElement = document.querySelector(".popup-content");
                 const controlsElement = captureElement.querySelector('.popup-buttons-container');
 
-                // ซ่อนปุ่มควบคุมก่อนการจับภาพ
                 if (controlsElement) {
                     controlsElement.style.display = 'none';
                 }
@@ -241,7 +250,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 html2canvas(captureElement, {
                     useCORS: true,
                     scale: 2.5,
-                    backgroundColor: '#fffde7' // สีพื้นหลังของขอบนอก
+                    backgroundColor: '#fffde7'
                 }).then(canvas => {
                     const link = document.createElement('a');
                     const num = document.getElementById("numberInput").value || "XXXXX";
@@ -254,14 +263,12 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                     console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
                     alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
                 }).finally(() => {
-                    // แสดงปุ่มควบคุมกลับมาเหมือนเดิม
                     if (controlsElement) {
                         controlsElement.style.display = 'flex';
                     }
                 });
             });
         }
-        // --- END: ปรับปรุงฟังก์ชันบันทึกภาพ ---
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener("DOMContentLoaded", () => { document.getElementById("convertButton").addEventListener("click", convertNumber); setDefaultDate(); });
