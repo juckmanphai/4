@@ -170,48 +170,111 @@
         }
         
         /* === START: จุดที่แก้ไข CSS === */
-        .header-title {
+         .header-title {
             font-size: 26px;
             font-weight: bold;
-            border: 2px solid #E57373; /* สีแดงอ่อนลง */
+            border: 2px solid #C2185B; /* สีขอบชมพูเข้ม */
             border-radius: 20px;
-            padding: 15px 25px; /* ปรับ padding */
+            padding: 15px 25px;
             margin-top: 4px;
-            margin-bottom: 10px; /* เพิ่มระยะห่าง */
+            margin-bottom: 10px;
             color: #fff;
-            background: linear-gradient(to bottom, #ffcdd2, #ef9a9a); /* สีชมพูอ่อน */
+            background: linear-gradient(to bottom, #F06292, #E91E63); /* ไล่สีชมพูเข้ม */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            /* ปรับเงาตัวหนังสือให้คมชัดและเรียบง่าย */
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
         }
 
         .draw-date {
             color: #fff;
-            padding: 12px 20px; /* ปรับ padding */
+            padding: 12px 20px;
             font-size: 15px;
             font-weight: bold;
-            border: 2px solid #FFB74D; /* สีส้มอ่อน */
-            background: linear-gradient(to bottom, #FFE0B2, #FFCC80); /* ไล่สีส้ม */
+            border: 2px solid #E65100; /* สีขอบส้มเข้ม */
+            background: linear-gradient(to bottom, #FFB74D, #FB8C00); /* ไล่สีส้มทอง */
             border-radius: 15px;
             margin-top: 5px;
             margin-bottom: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-            /* ปรับเงาตัวหนังสือ */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .prize-title {
             font-size: 22px;
             font-weight: bold;
-            border: 2px solid #F44336; /* สีแดง */
+            border: 2px solid #D32F2F; /* สีขอบแดงเข้ม */
             border-radius: 20px;
-            padding: 10px 20px; /* ปรับ padding */
+            padding: 10px 20px;
             margin: 4px 0 7px;
-            background: linear-gradient(to bottom, #FFEBEE, #FFCDD2); /* ไล่สีชมพูอ่อน */
+            background: linear-gradient(to bottom, #EF9A9A, #E53935); /* ไล่สีแดงสด */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            color: #B71C1C; /* สีแดงเข้ม */
-            /* เงาตัวหนังสือให้ดูนูน */
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+            color: #fff; /* สีตัวอักษรเป็นสีขาว */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); /* เงาเข้มสำหรับตัวอักษรขาว */
+        }
+
+        .circle-number-base {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 0.5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 2px 2px 5px rgba(255, 255, 255, 0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* รางวัลที่ 1 - สีชมพูม่วง */
+        .circle-number-red {
+            background: radial-gradient(circle at 30% 30%, #CE93D8, #8E24AA);
+            width: 42px;
+            height: 42px;
+            font-size: 26px;
+        }
+        /* เลขหน้า 3 ตัว - สีน้ำเงินเข้ม */
+        .circle-number-blue {
+            background: radial-gradient(circle at 30% 30%, #64B5F6, #1976D2);
+        }
+        /* เลขท้าย 3 ตัว - สีเขียวสด */
+        .circle-number-green {
+            background: radial-gradient(circle at 30% 30%, #81C784, #388E3C);
+        }
+        /* เลขท้าย 2 ตัว - สีน้ำตาลทองแดง */
+        .circle-number-orange {
+            background: radial-gradient(circle at 30% 30%, #BCAAA4, #795548);
+            width: 48px;
+            height: 48px;
+            font-size: 34px;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .front-three-title {
+            color: #1565C0; /* สีน้ำเงินเข้ม */
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+        }
+        .back-three-title {
+            color: #2E7D32; /* สีเขียวเข้ม */
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+        }
+        .back-two-title {
+            color: #1565C0; /* สีน้ำเงินเข้ม (เหมือนเลขหน้า) */
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
         }
         /* === END: จุดที่แก้ไข CSS === */
 
