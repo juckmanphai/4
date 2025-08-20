@@ -43,23 +43,30 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .form-footer { display: flex; justify-content: center; margin-top: 15px; }
 /* ---------- Popup Overlay ---------- */
 .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
-/* ---------- Popup Content ---------- */
-.popup-content { background-color: #fffde7; border-radius: 1px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); width: 100%; max-width: 600px; padding: 20px 2px; position: relative; }
 
 /* --- START: ปรับแก้ Padding เพิ่มพื้นที่ว่างให้ชัดเจน --- */
+.popup-content {
+    background-color: #fffde7;
+    border-radius: 1px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    padding: 20px; /* ปรับ Padding ให้มีขอบเท่ากันทุกด้าน */
+    position: relative;
+    box-sizing: border-box;
+}
+/* --- END: ปรับแก้ Padding --- */
+
 .popup-main-content {
     position: relative;
     background-color: #FFFFD1;
-    margin: 20px 5px;
-    padding: 30px 20px; /* เพิ่ม padding บน-ล่าง และ ซ้าย-ขวา ให้มากขึ้น */
+    margin: 0; /* เอา margin ออก เพราะ parent มี padding แล้ว */
+    padding: 25px 15px;
     border-radius: 10px;
     border: 1.5px solid green;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: calc(100% - 4px);
     text-align: center;
-    width: auto;
 }
-/* --- END: ปรับแก้ Padding --- */
 
 .popup-main-content::before { content: ""; background-image: url('logo.png'); background-size: 80% auto; background-repeat: no-repeat; background-position: center; opacity: 0.4; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
 /* Popup Header and Date */
@@ -67,7 +74,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 #popupTopicDisplay { font-weight: bold; font-size: clamp(18px, 4.4vw, 26px); }
 #popupDateDisplay { font-size: clamp(16px, 3.4vw, 20px); }
 /* Popup Buttons */
-.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 10px; }
+.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 15px; } /* เพิ่มระยะห่างด้านบน */
 .popup-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
 .popup-button { padding: 8px 15px; background-color: #FF9800; }
 .popup-button:hover { background-color: #F57C00; }
@@ -159,12 +166,12 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         function createPingPongBall(number, type = 'red') {
             let baseColor;
 
-            if (type === 'red') { // สีชมพู (Fuchsia/Magenta)
-                baseColor = '#F200F2';
-            } else if (type === 'blue') { // สีเขียว (MediumSeaGreen)
-                baseColor = '#3CB371';
-            } else { // 'orange' - สีส้ม (DarkOrange)
-                baseColor = '#FF8C00';
+            if (type === 'red') { // สีชมพู (Fuchsia/Magenta) จากตัวอย่าง
+                baseColor = '#E800E8';
+            } else if (type === 'blue') { // สีเขียว (Teal/Green-Cyan) จากตัวอย่าง
+                baseColor = '#00AFAF';
+            } else { // 'orange' - สีส้ม (Orange) จากตัวอย่าง
+                baseColor = '#EE7600';
             }
 
             // สร้างโค้ด SVG โดยใช้เทคนิคการซ้อน Layer ที่แน่นอนและสีตรงตามตัวอย่าง
@@ -174,7 +181,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                     <circle cx="25" cy="25" r="24" fill="${baseColor}" stroke="rgba(0,0,0,0.4)" stroke-width="1"/>
                     
                     <!-- 2. แสงสะท้อน (วงรีสีขาวโปร่งแสง) -->
-                    <ellipse cx="21" cy="19" rx="15" ry="10" fill="white" fill-opacity="0.4" transform="rotate(-25 21 19)" />
+                    <ellipse cx="21" cy="19" rx="15" ry="10" fill="white" fill-opacity="0.45" transform="rotate(-25 21 19)" />
 
                     <!-- 3. ตัวเลข -->
                     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
@@ -215,18 +222,26 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); if (button.classList.toggle("active")) { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { const numbers = document.getElementById('numberInput').value.slice(2); display.innerHTML = createPingPongNumbers(numbers, 'blue'); } }
         function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
         
+        // --- START: ปรับปรุงฟังก์ชันบันทึกภาพให้มีขอบนอก ---
         function setupSaveImageButton() {
             const saveBtn = document.getElementById("saveAsImageButton");
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
             newSaveBtn.addEventListener("click", function() {
-                const captureElement = document.getElementById("captureArea");
+                // เปลี่ยนเป้าหมายการจับภาพมาที่ .popup-content เพื่อให้ได้ขอบสีเหลือง
+                const captureElement = document.querySelector(".popup-content");
+                const controlsElement = captureElement.querySelector('.popup-buttons-container');
+
+                // ซ่อนปุ่มควบคุมก่อนการจับภาพ
+                if (controlsElement) {
+                    controlsElement.style.display = 'none';
+                }
 
                 html2canvas(captureElement, {
                     useCORS: true,
                     scale: 2.5,
-                    backgroundColor: '#FFFFD1'
+                    backgroundColor: '#fffde7' // สีพื้นหลังของขอบนอก
                 }).then(canvas => {
                     const link = document.createElement('a');
                     const num = document.getElementById("numberInput").value || "XXXXX";
@@ -238,9 +253,15 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 }).catch(err => {
                     console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
                     alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+                }).finally(() => {
+                    // แสดงปุ่มควบคุมกลับมาเหมือนเดิม
+                    if (controlsElement) {
+                        controlsElement.style.display = 'flex';
+                    }
                 });
             });
         }
+        // --- END: ปรับปรุงฟังก์ชันบันทึกภาพ ---
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener("DOMContentLoaded", () => { document.getElementById("convertButton").addEventListener("click", convertNumber); setDefaultDate(); });
