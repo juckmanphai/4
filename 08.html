@@ -105,8 +105,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.3);
             width: 100%;
             max-width: 600px;
-            /* ปรับ padding ให้มีพื้นที่ว่างรอบๆ กรอบเขียว */
-            padding: 20px 10px; 
+            padding: 10px 10px; 
             position: relative;
             box-sizing: border-box;
         }
@@ -169,54 +168,46 @@
             margin-top: 5px;
         }
         
-        /* === START: จุดที่แก้ไข CSS === */
+        /* === START: จุดที่แก้ไขสีสัน === */
         .header-title {
             font-size: 26px;
             font-weight: bold;
-            border: 2px solid #E57373; /* สีแดงอ่อนลง */
+            border: 2px solid #C2185B; /* สีขอบชมพูเข้ม */
             border-radius: 20px;
-            padding: 15px 25px; /* ปรับ padding */
+            padding: 10px 10px;
             margin-top: 4px;
-            margin-bottom: 10px; /* เพิ่มระยะห่าง */
+            margin-bottom: 10px;
             color: #fff;
-            background: linear-gradient(to bottom, #ffcdd2, #ef9a9a); /* สีชมพูอ่อน */
+            background: linear-gradient(to bottom, #F06292, #E91E63); /* ไล่สีชมพูเข้ม */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            /* ปรับเงาตัวหนังสือให้คมชัดและเรียบง่าย */
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
         }
 
         .draw-date {
             color: #fff;
-            padding: 12px 20px; /* ปรับ padding */
+            padding: 10px 10px;
             font-size: 15px;
             font-weight: bold;
-            border: 2px solid #FFB74D; /* สีส้มอ่อน */
-            background: linear-gradient(to bottom, #FFE0B2, #FFCC80); /* ไล่สีส้ม */
+            border: 2px solid #E65100; /* สีขอบส้มเข้ม */
+            background: linear-gradient(to bottom, #FFB74D, #FB8C00); /* ไล่สีส้มทอง */
             border-radius: 15px;
             margin-top: 5px;
             margin-bottom: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-            /* ปรับเงาตัวหนังสือ */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .prize-title {
             font-size: 22px;
             font-weight: bold;
-            border: 2px solid #F44336; /* สีแดง */
+            border: 2px solid #D32F2F; /* สีขอบแดงเข้ม */
             border-radius: 20px;
-            padding: 10px 20px; /* ปรับ padding */
+            padding: 10px 20px;
             margin: 4px 0 7px;
-            background: linear-gradient(to bottom, #FFEBEE, #FFCDD2); /* ไล่สีชมพูอ่อน */
+            background: linear-gradient(to bottom, #EF9A9A, #E53935); /* ไล่สีแดงสด */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            color: #B71C1C; /* สีแดงเข้ม */
-            /* เงาตัวหนังสือให้ดูนูน */
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
-        }
-        /* === END: จุดที่แก้ไข CSS === */
-
-        .first-prize-title {
-            /* ไม่จำเป็นต้องใช้แล้ว เพราะ .prize-title จัดการทั้งหมด */
+            color: #fff; /* สีตัวอักษรเป็นสีขาว */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); /* เงาเข้มสำหรับตัวอักษรขาว */
         }
 
         .circle-number-base {
@@ -235,30 +226,27 @@
             transition: box-shadow 0.3s ease;
         }
 
+        /* รางวัลที่ 1 - สีชมพูม่วง */
         .circle-number-red {
-            background: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF);
+            background: radial-gradient(circle at 30% 30%, #CE93D8, #8E24AA);
             width: 42px;
             height: 42px;
             font-size: 26px;
         }
+        /* เลขหน้า 3 ตัว - สีน้ำเงินเข้ม */
         .circle-number-blue {
-            background: radial-gradient(circle at 30% 30%, #3399ff, #0066cc);
+            background: radial-gradient(circle at 30% 30%, #64B5F6, #1976D2);
         }
+        /* เลขท้าย 3 ตัว - สีเขียวสด */
         .circle-number-green {
-            background: radial-gradient(circle at 30% 30%, #47D359, #0066cc);
+            background: radial-gradient(circle at 30% 30%, #81C784, #388E3C);
         }
+        /* เลขท้าย 2 ตัว - สีน้ำตาลทองแดง */
         .circle-number-orange {
-            background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600);
+            background: radial-gradient(circle at 30% 30%, #BCAAA4, #795548);
             width: 48px;
             height: 48px;
             font-size: 34px;
-        }
-
-        .number-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 5px 0;
         }
 
         .result-title {
@@ -267,26 +255,27 @@
             margin-top: 5px;
         }
 
-        .front-three-title, .back-three-title, .back-two-title {
-            font-weight: bold;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.6), 1px 1px 2px rgba(255, 255, 255, 0.3);
-        }
         .front-three-title {
-            color: #0066cc;
+            color: #1565C0; /* สีน้ำเงินเข้ม */
             font-size: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
         }
         .back-three-title {
-            color: #009900;
+            color: #2E7D32; /* สีเขียวเข้ม */
             font-size: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
         }
         .back-two-title {
-            color: blue;
+            color: #1565C0; /* สีน้ำเงินเข้ม (เหมือนเลขหน้า) */
             font-size: 24px;
+            font-weight: bold;
             margin-top: 10px;
             margin-bottom: 10px;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
         }
+        /* === END: จุดที่แก้ไขสีสัน === */
 
         .flex-row {
             display: flex;
@@ -385,9 +374,9 @@
                         <span id="display-draw-date"></span>
                     </div>
                     <div class="result-section" style="margin-top: 20px; display: flex; align-items: center; justify-content: center; position: relative;">
-                        <img src="logo.png" alt="Logo Left" style="width: 50px; height: 50px; margin-right: 10px;">
+                        <img src="logo.png" alt="Logo Left" style="width: 50px; height: 50px; margin-right: 10px; display: none;">
                         <div class="prize-title">รางวัลที่ 1</div>
-                        <img src="logo.png" alt="Logo Right" style="width: 50px; height: 50px; margin-left: 10px;">
+                        <img src="logo.png" alt="Logo Right" style="width: 50px; height: 50px; margin-left: 10px; display: none;">
                     </div>
                     <div id="first-prize-display" class="number-group" style="margin-top: 5px;"></div>
                     <div class="result-section flex-row">
@@ -428,7 +417,6 @@
             document.getElementById("popupOverlay").style.display = "none";
         }
 
-        // === START: จุดที่แก้ไข JAVASCRIPT ===
         function attachSaveAsImageListener() {
             const saveBtn = document.getElementById("saveAsImageButton");
             if (!saveBtn) return;
@@ -437,13 +425,11 @@
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
             newSaveBtn.addEventListener("click", function() {
-                // เป้าหมายคือ .popup-content ทั้งหมด เพื่อให้ได้พื้นหลังสีเหลือง
                 const captureElement = document.querySelector(".popup-content");
                 const controlsElement = document.querySelector('.popup-controls');
                 const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
                 const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
 
-                // ซ่อนปุ่มควบคุมชั่วคราวก่อนบันทึก
                 if (controlsElement) {
                     controlsElement.style.display = 'none';
                 }
@@ -451,7 +437,7 @@
                 html2canvas(captureElement, {
                     useCORS: true,
                     scale: 2.5,
-                    backgroundColor: '#FFFFD1' // กำหนดสีพื้นหลังเผื่อไว้
+                    backgroundColor: '#FFFFD1'
                 }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
@@ -461,14 +447,12 @@
                     console.error("Error creating image:", err);
                     alert("ขออภัย, ไม่สามารถบันทึกรูปภาพได้");
                 }).finally(() => {
-                    // แสดงปุ่มควบคุมกลับมาเหมือนเดิม ไม่ว่าการบันทึกจะสำเร็จหรือไม่
                     if (controlsElement) {
                         controlsElement.style.display = 'flex';
                     }
                 });
             });
         }
-        // === END: จุดที่แก้ไข JAVASCRIPT ===
 
         function formatThaiDate(dateString) {
             const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
