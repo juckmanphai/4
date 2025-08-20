@@ -169,14 +169,14 @@ select {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 600px;
-  padding: 20px 2px; /* ด้านบนล่าง 20px, ด้านซ้ายขวา 2px */
+  padding: 20px 2px;
   position: relative;
 }
 
 .popup-main-content {
   position: relative;
   background-color: #FFFFD1;
-  margin: 20px 5px; /* ด้านบนล่าง 20px, ด้านซ้ายขวา 2px */
+  margin: 20px 5px;
   padding: 20px 0;
   border-radius: 10px;
   border: 1.5px solid green;
@@ -358,31 +358,29 @@ footer {
   color: color: blue;
   background: none;
   text-shadow:
-    -2px -2px 2px #fff8dc,    /* แสงบนซ้ายสีทองอ่อน */
+    -2px -2px 2px #fff8dc,
     -1px -1px 1px #fff8dc,
-     1px 1px 0 #cc9900,       /* เงาทองด้านล่างขวา */
-     2px 2px 2px #996600,     /* เงาทองเข้มลึก */
-     3px 3px 3px rgba(0, 0, 0, 0.3); /* เงาดำโปร่งลึกยิ่งขึ้น */
+     1px 1px 0 #cc9900,
+     2px 2px 2px #996600,
+     3px 3px 3px rgba(0, 0, 0, 0.3);
 ">
 ผลลาวพัฒนา
 </h3>
                     <p id="popupDateDisplay" class="blue" style="
-  /* [ปรับแก้] ใช้ clamp() เพื่อปรับขนาดฟอนต์อัตโนมัติ และบังคับให้อยู่ในบรรทัดเดียว */
   font-size: clamp(14px, 4vw, 20px);
   white-space: nowrap;
   margin: 5px 0;
   text-shadow:
-    -2px -2px 1px #fff8dc,     /* แสงสีทองอ่อนจากบนซ้าย */
+    -2px -2px 1px #fff8dc,
     -1px -1px 1px #fff8dc,
-     1px 1px 0 #cc9900,        /* เงาทองจากล่างขวา */
-     2px 2px 2px #996600,      /* เงาทองเข้มลึก */
-     3px 3px 3px rgba(0, 0, 0, 0.25); /* เงาดำบางช่วยยกตัวอักษร */
+     1px 1px 0 #cc9900,
+     2px 2px 2px #996600,
+     3px 3px 3px rgba(0, 0, 0, 0.25);
 ">
 </p>
 
                     <h2 class="prize-label-red">รางวัลเลข 6 ตัว</h2>
                     <div id="popupFiveDigitsDisplay" class="ball-group"></div> 
-                    <!-- จัดกลุ่มเลข 3 ตัวบนและ 2 ตัวล่างให้อยู่แนวเดียวกัน -->
                     <div class="numbers-display">
                         <div class="number-group">
                             <p class="prize-label-blue">3 ตัวบน</p>
@@ -402,7 +400,6 @@ footer {
                     <button id="popupSquareButton" class="popup-button" onclick="toggleSquarePopup()">สี่เหลี่ยมสามตัวบน</button>
                     <button id="popupCircleTopButton" class="popup-button" onclick="toggleSquareTopPopup()">สี่เหลี่ยมสองตัวบน</button>
                 </div>
-                <!-- ปุ่มบันทึกเป็นรูปภาพที่เพิ่มเข้ามา -->
                 <button id="saveAsImageButton" class="popup-button" style="background-color: #007bff; max-width: 200px; width: 100%;">บันทึกเป็นรูปภาพ</button>
                 <button class="close-popup" onclick="closePopup()">ปิดหน้าต่างนี้</button>
             </div>
@@ -414,23 +411,22 @@ footer {
     </footer>
     
     <script>
-        // ตั้งค่าวันเริ่มต้น
         function setDefaultDate() {
             const dateInput = document.getElementById("dateInput");
             if (dateInput) {
                 const nowUTC = new Date();
-                const timezoneOffset = 7 * 60; // UTC+7 เป็นนาที
+                const timezoneOffset = 7 * 60; // UTC+7
                 const localTimestamp = nowUTC.getTime() + (timezoneOffset * 60 * 1000);
                 const localDate = new Date(localTimestamp);
-                const today = localDate.toISOString().split('T')[0];
-                dateInput.value = today;
+                dateInput.value = localDate.toISOString().split('T')[0];
             }
         }
 
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG (นำมาจากไฟล์ 05) ---
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG ที่ถูกต้องตามที่คุณต้องการ ---
         function createPingPongBall(number, type = 'red') {
             const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
 
+            // เงื่อนไขพิเศษสำหรับลูกบอลสีฟ้า (blue)
             if (type === 'blue') {
                 return `
                     <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
@@ -450,7 +446,9 @@ footer {
                 `;
             }
 
+            // โค้ดสำหรับลูกบอลสีอื่นๆ (ชมพู และ ส้ม) จะยังคงเหมือนเดิม
             let highlightColor, midColor, shadowColor;
+
             if (type === 'red') { // สีชมพู
                 highlightColor = '#FFD6FF';
                 midColor = '#E800E8';
@@ -461,6 +459,7 @@ footer {
                 shadowColor = '#D97200';
             }
              
+            // สร้าง SVG สำหรับสีชมพูและสีส้ม
             return `
                 <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -481,104 +480,87 @@ footer {
         }
         // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
 
-        // สร้างกลุ่มลูกปิงปองจากตัวเลข
         function createPingPongNumbers(numbers, type = 'red') {
             return numbers.split('').map(digit => createPingPongBall(digit, type)).join('');
         }
 
-        // แสดง Popup
         function showPopup() {
             document.getElementById("popupOverlay").style.display = "flex";
         }
 
-        // ปิด Popup
         function closePopup() {
             document.getElementById("popupOverlay").style.display = "none";
         }
 
-        // แปลงตัวเลขและแสดงผล
         function convertNumber() {
             const num = document.getElementById("numberInput").value;
-            const dateInput = document.getElementById("dateInput").value;
             if (num.length !== 6 || isNaN(num)) {
                 alert("กรุณากรอกตัวเลข 6 หลัก");
                 return;
             }
-            const date = dateInput ? new Date(dateInput) : new Date();
+            const date = document.getElementById("dateInput").value ? new Date(document.getElementById("dateInput").value) : new Date();
             const thaiDate = getThaiDate(date);
             const threeDigits = num.slice(3);
             const twoDigits = num.slice(2, 4);
 
             document.getElementById("popupTopicDisplay").textContent = `ผลลาวพัฒนา`;
             document.getElementById("popupDateDisplay").textContent = thaiDate;
+            
+            // กำหนดสีให้ถูกต้อง: 6 ตัว (ชมพู), 3 ตัวบน (ฟ้า), 2 ตัวล่าง (ส้ม)
             document.getElementById("popupFiveDigitsDisplay").innerHTML = createPingPongNumbers(num, 'red');
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(threeDigits, 'blue');
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(twoDigits, 'orange');
             
-            document.getElementById("popupCircleButton").classList.remove("active");
-            document.getElementById("popupSquareButton").classList.remove("active");
-            document.getElementById("popupCircleTopButton").classList.remove("active");
+            ["popupCircleButton", "popupSquareButton", "popupCircleTopButton"].forEach(id => {
+                document.getElementById(id).classList.remove("active");
+            });
             
             showPopup();
             setupSaveImageButton();
         }
 
-        // วงกลมสองตัวล่าง
         function toggleCirclePopup() {
-            const twoDigitsDisplay = document.getElementById("popupTwoDigitsDisplay");
+            const display = document.getElementById("popupTwoDigitsDisplay");
             const button = document.getElementById("popupCircleButton");
             const numbers = document.getElementById("numberInput").value.slice(2, 4);
-            
             if (button.classList.toggle("active")) {
-                twoDigitsDisplay.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`;
+                display.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`;
             } else {
-                twoDigitsDisplay.innerHTML = createPingPongNumbers(numbers, 'orange');
+                display.innerHTML = createPingPongNumbers(numbers, 'orange');
             }
         }
 
-        // สี่เหลี่ยมสามตัวบน
         function toggleSquarePopup() {
-            const threeDigitsDisplay = document.getElementById("popupThreeDigitsDisplay");
+            const display = document.getElementById("popupThreeDigitsDisplay");
             const button = document.getElementById("popupSquareButton");
             const numbers = document.getElementById("numberInput").value.slice(3);
-
             if (button.classList.toggle("active")) {
-                threeDigitsDisplay.innerHTML = `<div class="square-container">${createPingPongNumbers(numbers, 'blue')}</div>`;
+                display.innerHTML = `<div class="square-container">${createPingPongNumbers(numbers, 'blue')}</div>`;
             } else {
-                threeDigitsDisplay.innerHTML = createPingPongNumbers(numbers, 'blue');
+                display.innerHTML = createPingPongNumbers(numbers, 'blue');
             }
         }
 
-        // สี่เหลี่ยมสองตัวบน
         function toggleSquareTopPopup() {
-            const threeDigitsDisplay = document.getElementById("popupThreeDigitsDisplay");
+            const display = document.getElementById("popupThreeDigitsDisplay");
             const button = document.getElementById("popupCircleTopButton");
             const numbers = document.getElementById("numberInput").value.slice(3);
-            
             if (button.classList.toggle("active")) {
                 const firstDigit = numbers[0];
                 const lastTwoDigits = numbers.slice(1);
-                threeDigitsDisplay.innerHTML = 
+                display.innerHTML = 
                     `${createPingPongBall(firstDigit, 'blue')}<div class="square-two-container">${createPingPongNumbers(lastTwoDigits, 'blue')}</div>`;
             } else {
-                threeDigitsDisplay.innerHTML = createPingPongNumbers(numbers, 'blue');
+                display.innerHTML = createPingPongNumbers(numbers, 'blue');
             }
         }
 
-        // แปลงวันที่เป็นรูปแบบไทย
         function getThaiDate(date = new Date()) {
             const daysOfWeek = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = [
-                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-                "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-            ][date.getMonth()];
-            const year = date.getFullYear() + 543;
-            const dayOfWeek = daysOfWeek[date.getDay()];
-            return `วัน${dayOfWeek}ที่ ${day} ${month} พ.ศ. ${year}`;
+            const month = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"][date.getMonth()];
+            return `วัน${daysOfWeek[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${month} พ.ศ. ${date.getFullYear() + 543}`;
         }
         
-        // --- ฟังก์ชันบันทึกเป็นรูปภาพที่เพิ่มเข้ามา ---
         function setupSaveImageButton() {
             const saveBtn = document.getElementById("saveAsImageButton");
             const newSaveBtn = saveBtn.cloneNode(true);
@@ -588,9 +570,7 @@ footer {
                 const captureElement = document.querySelector(".popup-content");
                 const controlsElement = captureElement.querySelector('.popup-buttons-container');
 
-                if (controlsElement) {
-                    controlsElement.style.display = 'none';
-                }
+                if (controlsElement) controlsElement.style.display = 'none';
 
                 html2canvas(captureElement, {
                     useCORS: true,
@@ -599,29 +579,20 @@ footer {
                 }).then(canvas => {
                     const link = document.createElement('a');
                     const num = document.getElementById("numberInput").value || "XXXXXX";
-                    const topic = "Laopattana";
-                    
-                    link.download = `Result-${topic}-${num}-${Date.now()}.png`;
+                    link.download = `Result-LaoPattana-${num}-${Date.now()}.png`;
                     link.href = canvas.toDataURL("image/png");
                     link.click();
                 }).catch(err => {
                     console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
                     alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
                 }).finally(() => {
-                    if (controlsElement) {
-                        controlsElement.style.display = 'flex';
-                    }
+                    if (controlsElement) controlsElement.style.display = 'flex';
                 });
             });
         }
 
-        // ป้องกันคลิกขวา
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // ตั้งค่าเมื่อโหลดหน้าเว็บ
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("convertButton").addEventListener("click", convertNumber);
             setDefaultDate();
         });
@@ -632,14 +603,10 @@ footer {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registered successfully:', registration);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed:', error);
-                    });
+                    .then(reg => console.log('Service Worker registered successfully:', reg))
+                    .catch(err => console.log('Service Worker registration failed:', err));
             });
         }
     </script>
 </body>
-</html>
+</html>```
