@@ -22,7 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
     <!-- END: Dependencies for Datepicker -->
 
-    <!-- START: Dependency for Image Capture (เพิ่มเข้ามา) -->
+    <!-- START: Dependency for Image Capture -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- END: Dependency for Image Capture -->
 
@@ -88,7 +88,7 @@
             justify-content: center;
         }
         
-        /* -------- START: POPUP STYLES (MODIFIED TO MATCH 01.HTML) -------- */
+        /* -------- START: POPUP STYLES -------- */
         .popup-overlay {
             display: none;
             position: absolute;
@@ -99,28 +99,27 @@
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             justify-content: center;
-            padding: 10px 0; /* No horizontal padding */
+            padding: 10px 0;
             align-items: center;
             box-sizing: border-box;
         }
 
         .popup-content {
-            background-color:  #FFFFD1; /* Yellow background from 01.html */
+            background-color:  #FFFFD1;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.3);
             width: 100%;
             max-width: 600px;
-            padding: 25px 5px; /* Padding from 01.html to create inner space */
+            padding: 25px 5px;
             position: relative;
             box-sizing: border-box;
         }
         
-        /* --- START: CSS สำหรับปุ่มใน Popup (เพิ่มเข้ามา) --- */
         .popup-controls {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+            gap: 10px;
             margin-top: 15px;
         }
 
@@ -132,7 +131,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
             padding: 10px 20px;
-            background-color: #007bff; /* สีน้ำเงิน */
+            background-color: #007bff;
             width: 90%;
             max-width: 200px;
             font-size: 16px;
@@ -143,7 +142,7 @@
 
         .close-popup {
             display: block;
-            margin: 0 auto; /* ปรับ margin ใหม่ */
+            margin: 0 auto;
             border: none;
             border-radius: 5px;
             font-weight: bold;
@@ -156,24 +155,22 @@
             max-width: 200px;
             font-size: 16px;
         }
-        /* --- END: CSS สำหรับปุ่มใน Popup --- */
-
-
         .close-popup:hover {
             background-color: #d32f2f;
         }
-        /* -------- END: POPUP STYLES (MODIFIED) -------- */
+        /* -------- END: POPUP STYLES -------- */
 
-
+        /* === START: จุดที่แก้ไข === */
         .result-display {
-            background-color:  #FFFFD1; /* Inner background color from 01.html */
-            padding: 10px;
+            background-color:  #FFFFD1;
+            padding: 10px; /* ปรับแก้: เพิ่ม padding ให้เท่ากันทุกด้าน */
             border-radius: 10px;
-            border: 1.5px solid #4CAF50; /* Green border color from 01.html */
+            border: 1.5px solid #4CAF50;
             text-align: center;
             position: relative;
-            box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); /* Shadow from 01.html */
+            box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
         }
+        /* === END: จุดที่แก้ไข === */
 
         .result-section {
             margin-top: 5px;
@@ -189,8 +186,8 @@
             padding: 20px;
             margin-top: 4px;
             margin-bottom: 7px;
-  color: #fff; /* ตัวหนังสือสีขาว */
-  background: linear-gradient(to bottom right, #ffb6c1, #ff69b4); /* สีชมพูมีมิติ */
+  color: #fff;
+  background: linear-gradient(to bottom right, #ffb6c1, #ff69b4);
   box-shadow:
     inset -4px -4px 10px rgba(0, 0, 0, 0.25),
     inset 4px 4px 8px rgba(255, 255, 255, 0.2),
@@ -211,7 +208,7 @@ display: inline-block;
             padding: 15px;
             margin-top: 4px;
             margin-bottom: 7px;
-  background: linear-gradient(to bottom right, #ffb6c1, #FFFF00); /* สีชมพูมีมิติ */
+  background: linear-gradient(to bottom right, #ffb6c1, #FFFF00);
   box-shadow:
     inset -4px -4px 10px rgba(0, 0, 0, 0.25),
     inset 4px 4px 8px rgba(255, 255, 255, 0.2),
@@ -222,28 +219,24 @@ display: inline-block;
         }
 
 .draw-date {
-    color: #fff; /* ตัวหนังสือสีขาว */
+    color: #fff;
     padding: 15px;
     font-size: 15px;
     font-weight: bold;
-    border: 2px solid #FFA500; /* กรอบสีส้ม */
-    background-color: #FFB84D; /* พื้นหลังสีส้มอ่อน */
+    border: 2px solid #FFA500;
+    background-color: #FFB84D;
     border-radius: 15px;
     display: inline-block;
     margin-top: 5px;
     margin-bottom: 5px;
-
-    /* สร้างเอฟเฟกต์ 3D สำหรับพื้นผิว */
     box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.35), /* เงาด้านนอก */
-        0 0 6px rgba(204, 153, 0, 0.4), /* เงาขอบสีส้ม */
-        inset -4px -4px 10px rgba(0, 0, 0, 0.25), /* เงาภายใน */
-        inset 4px 4px 8px rgba(255, 255, 255, 0.2); /* เงาภายในขาว */
-
-    /* เอฟเฟกต์เงาตัวหนังสือ */
+        0 4px 12px rgba(0, 0, 0, 0.35),
+        0 0 6px rgba(204, 153, 0, 0.4),
+        inset -4px -4px 10px rgba(0, 0, 0, 0.25),
+        inset 4px 4px 8px rgba(255, 255, 255, 0.2);
     text-shadow:
-        -1px -1px 1px rgba(0, 0, 0, 0.6), /* เงาดำที่ตัวหนังสือ */
-         1px 1px 2px rgba(255, 255, 255, 0.2); /* เงาขาวที่ตัวหนังสือ */
+        -1px -1px 1px rgba(0, 0, 0, 0.6),
+         1px 1px 2px rgba(255, 255, 255, 0.2);
 }
 
 
@@ -260,17 +253,14 @@ display: inline-block;
   font-weight: bold;
   margin: 0 0.5px;
   background: #ccc;
-
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.35),
     0 0 6px rgba(204, 153, 0, 0.4),
     inset -4px -4px 10px rgba(0, 0, 0, 0.25),
     inset 4px 4px 8px rgba(255, 255, 255, 0.2);
-
   text-shadow:
     -1px -1px 1px rgba(0, 0, 0, 0.6),
      1px 1px 2px rgba(255, 255, 255, 0.2);
-
   transition: box-shadow 0.3s ease;
 }
 
@@ -314,7 +304,6 @@ display: inline-block;
             margin-top: 5px;
         }
 
-/* ปรับสีข้อความตามที่ระบุ พร้อมขนาด 28px ตัวหนา และ margin บน-ล่าง 5px */
 .first-prize-title {
   color: white; 
   font-size: 22px;
@@ -327,20 +316,18 @@ display: inline-block;
     font-weight: bold;
     margin-top: 5px;
     margin-bottom: 5px;
-
-    /* เพิ่มเงาและมิติ 3D */
     text-shadow:
-        -1px -1px 2px rgba(0, 0, 0, 0.6), /* เงาดำเบาๆ ที่ขอบ */
-         1px 1px 2px rgba(255, 255, 255, 0.3); /* เงาขาวที่ขอบเพิ่มมิติ */
+        -1px -1px 2px rgba(0, 0, 0, 0.6),
+         1px 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .front-three-title {
-    color: #0066cc; /* สีน้ำเงินเหมือนลูกปิงปอง */
+    color: #0066cc;
     font-size: 20px;
 }
 
 .back-three-title {
-    color: #009900; /* สีเขียวเหมือนลูกปิงปอง */
+    color: #009900;
     font-size: 20px;
 }
 
@@ -349,11 +336,9 @@ display: inline-block;
     font-size: 24px;
     margin-top: 10px;
     margin-bottom: 10px;
-    
-    /* เงาเพิ่มเติมให้ดูมีมิติ */
     text-shadow:
-        -1px -1px 2px rgba(0, 0, 0, 0.6), /* เงาดำเบาๆ ที่ขอบ */
-         1px 1px 2px rgba(255, 255, 255, 0.3); /* เงาขาวที่ขอบเพิ่มมิติ */
+        -1px -1px 2px rgba(0, 0, 0, 0.6),
+         1px 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 
@@ -399,12 +384,10 @@ display: inline-block;
             margin-top: 15px;
         }
 
-        /* เพิ่มระยะห่างระหว่างข้อความและตัวเลข */
         .result-title-with-margin {
             margin-bottom: 15px;
         }
         
-        /* ปรับเฉพาะส่วนเลขท้าย 2 ตัวให้มีระยะห่างมากขึ้น */
         .back-two-section {
             margin-top: 20px;
             margin-bottom: 25px;
@@ -420,10 +403,10 @@ display: inline-block;
 .draw-date span,
 .back-two-title {
   text-shadow:
-    1px 1px 2px rgba(255, 255, 255, 0.6),   /* ไฮไลต์แสงด้านบน */
-   -1px -1px 1px rgba(0, 0, 0, 0.4),         /* เงาด้านล่าง */
-    inset 1px 1px 2px rgba(255, 255, 255, 0.4), /* เอฟเฟกต์ฝังตัว */
-    inset -1px -1px 2px rgba(0, 0, 0, 0.5);     /* เงาลึกภายใน */
+    1px 1px 2px rgba(255, 255, 255, 0.6),
+   -1px -1px 1px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.4),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
     </style>
@@ -435,7 +418,6 @@ display: inline-block;
     <div class="form-container">
         <div class="form-group">
             <label for="draw-date">งวดวันที่ (วัน เดือน พ.ศ.)</label>
-            <!-- MODIFIED: Changed placeholder to be more intuitive -->
             <input type="text" id="draw-date" placeholder="กรอกหรือเลือกวันที่">
         </div>
 
@@ -514,7 +496,7 @@ display: inline-block;
                     </div>
                 </div>
             </div>
-            <!-- START: ปุ่มควบคุม Popup (ปรับปรุงใหม่) -->
+            <!-- START: ปุ่มควบคุม Popup -->
             <div class="popup-controls">
                 <button id="saveAsImageButton" class="popup-button">บันทึกเป็นรูปภาพ</button>
                 <button class="close-popup" onclick="closePopup()">ปิดหน้าต่างนี้</button>
@@ -530,43 +512,39 @@ display: inline-block;
 
     <script>
         // -------- START: JAVASCRIPT FOR POPUP --------
-        // แสดง Popup
         function showPopup() {
             const popup = document.getElementById("popupOverlay");
             popup.style.display = "flex";
         }
 
-        // ปิด Popup
         function closePopup() {
             const popup = document.getElementById("popupOverlay");
             popup.style.display = "none";
         }
         // -------- END: JAVASCRIPT FOR POPUP --------
 
-        // -------- START: JAVASCRIPT FOR IMAGE CAPTURE (เพิ่มเข้ามา) --------
+        // -------- START: JAVASCRIPT FOR IMAGE CAPTURE --------
         function attachSaveAsImageListener() {
             const saveBtn = document.getElementById("saveAsImageButton");
             if (!saveBtn) return;
 
-            // Clone and replace the button to remove any old listeners
             const newSaveBtn = saveBtn.cloneNode(true);
             saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
             newSaveBtn.addEventListener("click", function() {
-                const captureElement = document.querySelector(".popup-content");
+                const captureElement = document.querySelector(".result-display");
                 const controlsElement = document.querySelector('.popup-controls');
                 const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
                 const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
 
-                // Hide controls before taking the screenshot
                 if (controlsElement) {
                     controlsElement.style.visibility = 'hidden';
                 }
 
                 html2canvas(captureElement, {
                     useCORS: true,
-                    scale: 2.5, // For higher resolution image
-                    backgroundColor: '#FFFFD1' // Match the popup background
+                    scale: 2.5,
+                    backgroundColor: '#FFFFD1'
                 }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
@@ -576,7 +554,6 @@ display: inline-block;
                     console.error("Error creating image:", err);
                     alert("ขออภัย, ไม่สามารถบันทึกรูปภาพได้");
                 }).finally(() => {
-                    // Show controls again after screenshot is done
                     if (controlsElement) {
                         controlsElement.style.visibility = 'visible';
                     }
@@ -598,7 +575,6 @@ display: inline-block;
                 "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
             ];
 
-            // ลองแปลงจากรูปแบบ "1 มกราคม 2567" เป็น Date object
             let date;
             const thDateParts = dateString.match(/(\d+)\s+([^\s]+)\s+(\d+)/);
             if (thDateParts) {
@@ -613,7 +589,6 @@ display: inline-block;
                 }
             }
             
-            // ถ้าไม่สำเร็จ ให้คืนค่าเดิมไป
             return `งวดวันที่ ${dateString}`;
         }
 
@@ -634,19 +609,16 @@ display: inline-block;
         }
 
         function displayResults() {
-            // ดึงข้อมูลและจัดรูปแบบวันที่
             const rawDate = document.getElementById("draw-date").value;
             const formattedDate = formatThaiDate(rawDate);
             document.getElementById("display-draw-date").innerText = formattedDate;
 
-            // รางวัลที่ 1 (สีแดง)
             displayNumberGroup(
                 "first-prize-display", 
                 document.getElementById("first-prize").value, 
                 "circle-number-red"
             );
 
-            // เลขหน้า 3 ตัว (สีน้ำเงิน)
             displayNumberGroup(
                 "display-front-three-1", 
                 document.getElementById("front-three-1").value, 
@@ -658,7 +630,6 @@ display: inline-block;
                 "circle-number-blue"
             );
 
-            // เลขท้าย 3 ตัว (สีเขียว)
             displayNumberGroup(
                 "display-back-three-1", 
                 document.getElementById("back-three-1").value, 
@@ -670,17 +641,13 @@ display: inline-block;
                 "circle-number-green"
             );
 
-            // เลขท้าย 2 ตัว (สีส้ม)
             displayNumberGroup(
                 "display-back-two", 
                 document.getElementById("back-two").value, 
                 "circle-number-orange"
             );
             
-            // แสดง Popup หลังจากเตรียมข้อมูลเสร็จ
             showPopup();
-
-            // ตั้งค่าปุ่มบันทึกรูปภาพ (เพิ่มเข้ามา)
             attachSaveAsImageListener();
         }
     </script>
@@ -688,35 +655,30 @@ display: inline-block;
     <!-- START: Datepicker Initialization Script -->
     <script>
     $(function() {
-        // Set Thai localization from the i18n file
         $.datepicker.setDefaults($.datepicker.regional['th']);
 
         $("#draw-date").datepicker({
             changeMonth: true,
             changeYear: true,
-            dateFormat: 'd MM yy', // Format: 1 มกราคม 2567
-            yearRange: "c-10:c+5", // Year range: 10 years past to 5 years future
+            dateFormat: 'd MM yy',
+            yearRange: "c-10:c+5",
             isBuddhist: true,
             defaultDate: new Date(),
-            // When the calendar is opened, convert Buddhist year from input to Gregorian for the calendar to understand
             beforeShow: function() {
                 if ($(this).val() != "") {
                     var dateArray = $(this).val().split(' ');
                     if (dateArray.length === 3) {
                         var year = parseInt(dateArray[2], 10);
                         if (year > 2500) {
-                             // Adjust to Gregorian year for the datepicker's internal use
                             dateArray[2] = year - 543;
                             $(this).datepicker("setDate", $.datepicker.parseDate('d MM yy', dateArray.join(' ')));
                         }
                     }
                 }
             },
-            // When a date is selected, convert Gregorian year back to Buddhist year for display
             onSelect: function(dateText, inst) {
                 var date = $(this).datepicker('getDate');
                 date.setFullYear(date.getFullYear() + 543);
-                // Manually format the date to ensure correct Buddhist year is displayed
                 var day = date.getDate();
                 var month = $.datepicker.regional['th'].monthNames[date.getMonth()];
                 var year = date.getFullYear();
@@ -724,12 +686,10 @@ display: inline-block;
             }
         });
 
-        // Set initial value to today's date in Thai format
         var today = new Date();
         var day = today.getDate();
         var month = $.datepicker.regional['th'].monthNames[today.getMonth()];
-        var year = today.getFullYear() + 543; // Buddhist year
-        // To avoid conflicts on first load, check if the input is empty before setting a value
+        var year = today.getFullYear() + 543;
         if ($("#draw-date").val() === '') {
             $("#draw-date").val(day + ' ' + month + ' ' + year);
         }
