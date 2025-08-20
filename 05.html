@@ -45,7 +45,22 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
 /* ---------- Popup Content ---------- */
 .popup-content { background-color: #fffde7; border-radius: 1px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); width: 100%; max-width: 600px; padding: 20px 2px; position: relative; }
-.popup-main-content { position: relative; background-color: #FFFFD1; margin: 20px 5px; padding: 20px 0; border-radius: 10px; border: 1.5px solid green; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); max-width: calc(100% - 4px); text-align: center; width: auto; }
+
+/* --- START: ปรับแก้ Padding เพิ่มพื้นที่ว่าง --- */
+.popup-main-content {
+    position: relative;
+    background-color: #FFFFD1;
+    margin: 20px 5px;
+    padding: 25px 15px; /* เพิ่ม padding ซ้าย-ขวา และปรับบน-ล่าง */
+    border-radius: 10px;
+    border: 1.5px solid green;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: calc(100% - 4px);
+    text-align: center;
+    width: auto;
+}
+/* --- END: ปรับแก้ Padding --- */
+
 .popup-main-content::before { content: ""; background-image: url('logo.png'); background-size: 80% auto; background-repeat: no-repeat; background-position: center; opacity: 0.4; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
 /* Popup Header and Date */
 #popupTopicDisplay, #popupDateDisplay { margin: 3px 0; color: blue; text-shadow: -2px -2px 1px #fff8dc, -1px -1px 1px #fff8dc, 1px 1px 0 #cc9900, 2px 2px 2px #996600, 3px 3px 3px rgba(0, 0, 0, 0.25); }
@@ -140,16 +155,16 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขขั้นสุดท้าย) ---
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขเทียบสีตัวอย่าง) ---
         function createPingPongBall(number, type = 'red') {
             let baseColor;
 
-            if (type === 'red') { // สีม่วง
-                baseColor = '#8A2BE2';
-            } else if (type === 'blue') { // สีเขียวน้ำทะเล
-                baseColor = '#008B8B';
-            } else { // 'orange' - สีน้ำตาล
-                baseColor = '#A0522D';
+            if (type === 'red') { // สีชมพูม่วง (Magenta)
+                baseColor = '#E600E6';
+            } else if (type === 'blue') { // สีเขียวน้ำทะเล (Teal)
+                baseColor = '#00B2B2';
+            } else { // 'orange' - สีส้ม
+                baseColor = '#E67E22';
             }
 
             // สร้างโค้ด SVG โดยใช้เทคนิคการซ้อน Layer ที่แน่นอนกว่า
