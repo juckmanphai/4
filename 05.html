@@ -160,28 +160,44 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขเทียบสีและมิติสมจริง) ---
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขเฉพาะสีฟ้า) ---
         function createPingPongBall(number, type = 'red') {
+            const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
+
+            // เงื่อนไขพิเศษสำหรับลูกบอลสีฟ้า (blue)
+            if (type === 'blue') {
+                return `
+                    <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="${gradientId}" cx="30%" cy="30%" r="70%">
+                                <stop offset="0%" stop-color="#47D359" />
+                                <stop offset="100%" stop-color="#0066cc" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                            font-family="Arial, sans-serif" font-size="26" font-weight="bold"
+                            fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                            ${number}
+                        </text>
+                    </svg>
+                `;
+            }
+
+            // โค้ดสำหรับลูกบอลสีอื่นๆ (ชมพู และ ส้ม) จะยังคงเหมือนเดิม
             let highlightColor, midColor, shadowColor;
 
-            if (type === 'red') { // สีชมพู (Fuchsia/Magenta) จากตัวอย่าง
+            if (type === 'red') { // สีชมพู
                 highlightColor = '#FFD6FF';
                 midColor = '#E800E8';
                 shadowColor = '#A100A1';
-            } else if (type === 'blue') { // สีเขียว (Teal/Green-Cyan) จากตัวอย่าง
-                highlightColor = '#98FFFF';
-                midColor = '#00C5C5';
-                shadowColor = '#008585';
-            } else { // 'orange' - สีส้ม (Orange) จากตัวอย่าง
+            } else { // 'orange' - สีส้ม
                 highlightColor = '#FFE3A0';
                 midColor = '#FF8C00';
                 shadowColor = '#D97200';
             }
              
-            // สร้าง ID ที่ไม่ซ้ำกันสำหรับ gradient
-            const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
-
-            // สร้างโค้ด SVG ที่มีการไล่ระดับสี 3 ระดับเพื่อความสมจริง
+            // สร้าง SVG สำหรับสีชมพูและสีส้ม
             return `
                 <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <defs>
