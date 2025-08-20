@@ -162,28 +162,27 @@ select {
   align-items: center;
 }
 
-/* ---------- Popup Content ---------- */
+/* ---------- Popup Content (ปรับแก้) ---------- */
 .popup-content {
   background-color: #fffde7;
   border-radius: 1px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 600px;
-  padding: 20px 2px;
+  padding: 12px; /* ปรับแก้: ลด padding บน-ล่าง */
   position: relative;
+  box-sizing: border-box;
 }
 
 .popup-main-content {
   position: relative;
   background-color: #FFFFD1;
-  margin: 20px 5px;
-  padding: 20px 0;
+  margin: 0; /* ปรับแก้: ลบ margin เดิมออก */
+  padding: 15px 10px; /* ปรับแก้: กำหนด padding ใหม่ให้สมดุล */
   border-radius: 10px;
   border: 1.5px solid green;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: calc(100% - 4px);
   text-align: center;
-  width: auto;
 }
 
 .popup-main-content::before {
@@ -609,4 +608,4 @@ footer {
         }
     </script>
 </body>
-</html>```
+</html>
