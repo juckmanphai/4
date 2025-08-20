@@ -142,39 +142,29 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <script>
         // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับแก้ไขขั้นสุดท้าย) ---
         function createPingPongBall(number, type = 'red') {
-            let highlightColor, baseColor, stopColor;
+            let baseColor;
 
             if (type === 'red') { // สีม่วง
-                highlightColor = '#E6A8FF';
-                baseColor = '#800080';
-                stopColor = '#C142C1';
+                baseColor = '#8A2BE2';
             } else if (type === 'blue') { // สีเขียวน้ำทะเล
-                highlightColor = '#9EEAEA';
-                baseColor = '#008080';
-                stopColor = '#46B2B2';
+                baseColor = '#008B8B';
             } else { // 'orange' - สีน้ำตาล
-                highlightColor = '#D2B48C';
-                baseColor = '#8B4513';
-                stopColor = '#A0522D';
+                baseColor = '#A0522D';
             }
 
-            // สร้าง ID ที่ไม่ซ้ำกันสำหรับ gradient
-            const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
-
-            // สร้างโค้ด SVG ทั้งหมด
+            // สร้างโค้ด SVG โดยใช้เทคนิคการซ้อน Layer ที่แน่นอนกว่า
             return `
                 <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <radialGradient id="${gradientId}" cx="35%" cy="35%" r="65%">
-                            <stop offset="0%" stop-color="${highlightColor}" />
-                            <stop offset="50%" stop-color="${stopColor}" />
-                            <stop offset="100%" stop-color="${baseColor}" />
-                        </radialGradient>
-                    </defs>
-                    <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.4)" stroke-width="1.5"/>
+                    <!-- 1. วงกลมสีพื้นฐาน -->
+                    <circle cx="25" cy="25" r="24" fill="${baseColor}" stroke="rgba(0,0,0,0.4)" stroke-width="1.5"/>
+                    
+                    <!-- 2. แสงสะท้อน (วงรีสีขาวโปร่งแสง) -->
+                    <ellipse cx="21" cy="19" rx="15" ry="10" fill="white" fill-opacity="0.35" transform="rotate(-25 21 19)" />
+
+                    <!-- 3. ตัวเลข -->
                     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                           font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                          fill="white" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">
+                          fill="white" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.9);">
                         ${number}
                     </text>
                 </svg>
