@@ -62,23 +62,34 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; margin-top: 10px; }
 .close-popup:hover { background-color: #d32f2f; }
 
-/* === NEW SVG Pingpong Ball Styles === */
-.pingpong-svg {
-    margin: 0 1px;
-    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
-    -webkit-filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
-}
-.pingpong-text {
-    font-family: Arial, sans-serif;
-    fill: white;
-    font-size: 26px;
+/* === NEW Image-based Pingpong Ball Styles === */
+.pingpong-ball {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
     font-weight: bold;
-    text-anchor: middle;
-    paint-order: stroke;
-    stroke: rgba(0,0,0,0.7);
-    stroke-width: 1px;
-    stroke-linecap: butt;
-    stroke-linejoin: miter;
+    text-shadow: -1px -1px 1px rgba(0,0,0,0.7);
+    background-size: cover;
+    background-position: center;
+    margin: 0 1px;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
+}
+
+.pingpong-ball-red {
+    background-image: url('data:image/png;base64,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');
+}
+
+.pingpong-ball-blue {
+    background-image: url('data:image/png;base64,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');
+}
+
+.pingpong-ball-orange {
+    background-image: url('data:image/png;base64,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');
 }
 
 /* Prize Label */
@@ -107,7 +118,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         </div>
         <div class="form-group">
             <select id="topicSelect">
-                <option value="ลาวประตูชัย เวลา 05.45 น">ลาวประตูชัย เวลา 05.45 น</option>
+                 <option value="ลาวประตูชัย เวลา 05.45 น">ลาวประตูชัย เวลา 05.45 น</option>
                 <option value="ลาวสันติภาพ เวลา 06.45 น">ลาวสันติภาพ เวลา 06.45 น</option>
                 <option value="ประชาชนลาว เวลา 07.45 น">ประชาชนลาว เวลา 07.45 น</option>
                 <option value="ลาว Extra เวลา 08.30 น">ลาว Extra เวลา 08.30 น</option>
@@ -158,34 +169,9 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        // --- ส่วนของ SVG ที่จะถูกเพิ่มเข้าไปในหน้าเว็บ ---
-        const svgDefs = `
-        <svg width="0" height="0" style="position:absolute">
-            <defs>
-                <radialGradient id="grad-red" cx="30%" cy="30%" r="65%">
-                    <stop offset="0%" stop-color="#FFB3B3" />
-                    <stop offset="100%" stop-color="#FF00FF" />
-                </radialGradient>
-                <radialGradient id="grad-blue" cx="30%" cy="30%" r="65%">
-                    <stop offset="0%" stop-color="#81C784" />
-                    <stop offset="100%" stop-color="#0066CC" />
-                </radialGradient>
-                <radialGradient id="grad-orange" cx="30%" cy="30%" r="65%">
-                    <stop offset="0%" stop-color="#FFB74D" />
-                    <stop offset="100%" stop-color="#CC6600" />
-                </radialGradient>
-            </defs>
-        </svg>`;
-        document.body.insertAdjacentHTML('afterbegin', svgDefs);
-
-        // === UPDATED FUNCTION to create SVG pingpong ball ===
+        // === UPDATED FUNCTION to create image-based pingpong ball ===
         function createPingPongBall(number, type = 'red') {
-            const gradientId = `grad-${type}`;
-            return `
-                <svg class="pingpong-svg" viewBox="0 0 50 50" width="40" height="40">
-                    <circle cx="25" cy="25" r="24.5" fill="url(#${gradientId})" />
-                    <text x="25" y="27" class="pingpong-text">${number}</text>
-                </svg>`;
+            return `<div class="pingpong-ball pingpong-ball-${type}">${number}</div>`;
         }
         
         function createPingPongNumbers(numbers, type = 'red') {
