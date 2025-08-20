@@ -22,6 +22,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
     <!-- END: Dependencies for Datepicker -->
 
+    <!-- START: Dependency for Image Capture (เพิ่มเข้ามา) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- END: Dependency for Image Capture -->
+
 
     <style>
         body {
@@ -111,9 +115,35 @@
             box-sizing: border-box;
         }
         
+        /* --- START: CSS สำหรับปุ่มใน Popup (เพิ่มเข้ามา) --- */
+        .popup-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+            margin-top: 15px;
+        }
+
+        .popup-button {
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            padding: 10px 20px;
+            background-color: #007bff; /* สีน้ำเงิน */
+            width: 90%;
+            max-width: 200px;
+            font-size: 16px;
+        }
+        .popup-button:hover {
+            background-color: #0056b3;
+        }
+
         .close-popup {
             display: block;
-            margin: 15px auto 0;
+            margin: 0 auto; /* ปรับ margin ใหม่ */
             border: none;
             border-radius: 5px;
             font-weight: bold;
@@ -126,6 +156,8 @@
             max-width: 200px;
             font-size: 16px;
         }
+        /* --- END: CSS สำหรับปุ่มใน Popup --- */
+
 
         .close-popup:hover {
             background-color: #d32f2f;
@@ -482,8 +514,12 @@ display: inline-block;
                     </div>
                 </div>
             </div>
-            <!-- ปุ่มปิด Popup -->
-            <button class="close-popup" onclick="closePopup()">ปิดหน้าต่างนี้</button>
+            <!-- START: ปุ่มควบคุม Popup (ปรับปรุงใหม่) -->
+            <div class="popup-controls">
+                <button id="saveAsImageButton" class="popup-button">บันทึกเป็นรูปภาพ</button>
+                <button class="close-popup" onclick="closePopup()">ปิดหน้าต่างนี้</button>
+            </div>
+            <!-- END: ปุ่มควบคุม Popup -->
         </div>
     </div>
     <!-- END: MODIFIED RESULT CONTAINER -->
@@ -506,6 +542,49 @@ display: inline-block;
             popup.style.display = "none";
         }
         // -------- END: JAVASCRIPT FOR POPUP --------
+
+        // -------- START: JAVASCRIPT FOR IMAGE CAPTURE (เพิ่มเข้ามา) --------
+        function attachSaveAsImageListener() {
+            const saveBtn = document.getElementById("saveAsImageButton");
+            if (!saveBtn) return;
+
+            // Clone and replace the button to remove any old listeners
+            const newSaveBtn = saveBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+            newSaveBtn.addEventListener("click", function() {
+                const captureElement = document.querySelector(".popup-content");
+                const controlsElement = document.querySelector('.popup-controls');
+                const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
+                const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
+
+                // Hide controls before taking the screenshot
+                if (controlsElement) {
+                    controlsElement.style.visibility = 'hidden';
+                }
+
+                html2canvas(captureElement, {
+                    useCORS: true,
+                    scale: 2.5, // For higher resolution image
+                    backgroundColor: '#FFFFD1' // Match the popup background
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                }).catch(err => {
+                    console.error("Error creating image:", err);
+                    alert("ขออภัย, ไม่สามารถบันทึกรูปภาพได้");
+                }).finally(() => {
+                    // Show controls again after screenshot is done
+                    if (controlsElement) {
+                        controlsElement.style.visibility = 'visible';
+                    }
+                });
+            });
+        }
+        // -------- END: JAVASCRIPT FOR IMAGE CAPTURE --------
+
 
         function formatThaiDate(dateString) {
             const days = [
@@ -600,6 +679,9 @@ display: inline-block;
             
             // แสดง Popup หลังจากเตรียมข้อมูลเสร็จ
             showPopup();
+
+            // ตั้งค่าปุ่มบันทึกรูปภาพ (เพิ่มเข้ามา)
+            attachSaveAsImageListener();
         }
     </script>
     
