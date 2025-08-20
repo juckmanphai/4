@@ -44,14 +44,14 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 /* ---------- Popup Overlay ---------- */
 .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
 
-/* --- START: ปรับแก้ Padding เพิ่มพื้นที่ว่างให้ชัดเจน --- */
+/* --- START: ปรับแก้ Padding เพื่อควบคุมความหนาของขอบนอก --- */
 .popup-content {
     background-color: #fffde7;
     border-radius: 1px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     width: 100%;
     max-width: 600px;
-    padding: 20px; /* ปรับ Padding ให้มีขอบเท่ากันทุกด้าน */
+    padding: 12px; /* <<< ปรับแก้ค่า padding ตรงนี้ เพื่อควบคุมความหนาของขอบ */
     position: relative;
     box-sizing: border-box;
 }
@@ -60,7 +60,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .popup-main-content {
     position: relative;
     background-color: #FFFFD1;
-    margin: 0; /* เอา margin ออก เพราะ parent มี padding แล้ว */
+    margin: 0;
     padding: 25px 15px;
     border-radius: 10px;
     border: 1.5px solid green;
@@ -74,7 +74,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 #popupTopicDisplay { font-weight: bold; font-size: clamp(18px, 4.4vw, 26px); }
 #popupDateDisplay { font-size: clamp(16px, 3.4vw, 20px); }
 /* Popup Buttons */
-.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 15px; } /* เพิ่มระยะห่างด้านบน */
+.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 15px; }
 .popup-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
 .popup-button { padding: 8px 15px; background-color: #FF9800; }
 .popup-button:hover { background-color: #F57C00; }
