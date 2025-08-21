@@ -114,7 +114,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 3px;
             margin-top: 15px;
         }
 
@@ -143,7 +143,7 @@
             font-weight: bold;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color: 0.3s;
             padding: 10px 20px;
             background-color: #f44336;
             width: 90%;
@@ -211,8 +211,6 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
         }
 
-        /* --- START: โค้ดที่ปรับปรุงตามคำขอ --- */
-        /* สไตล์ร่วมของป้ายรางวัล */
         .prize-label-blue, .prize-label-green, .prize-label-orange {
             display: inline-block;
             font-weight: bold;
@@ -223,34 +221,29 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        /* สไตล์สำหรับ "เลขหน้า 3 ตัว" */
         .prize-label-blue {
             background: linear-gradient(to bottom, #89CFF0, #007FFF);
             border: 2px solid #0059B3;
             border-radius: 10px;
         }
-        /* สไตล์สำหรับ "เลขท้าย 3 ตัว" */
         .prize-label-green {
             background: linear-gradient(to bottom, #90EE90, #008000);
             border: 2px solid #006400;
             border-radius: 10px;
         }
-        /* สไตล์สำหรับ "เลขท้าย 2 ตัว" */
         .prize-label-orange {
             font-size: 22px;
             background: linear-gradient(to bottom, #FFE3A0, #FF8C00);
             border: 2px solid #D97200;
             border-radius: 50px;
         }
-        /* คอนเทนเนอร์สำหรับจัดกลุ่ม ป้าย + ตัวเลข (ปรับลดระยะห่าง) */
         .prize-group-vertical {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px; /* <-- ปรับลดค่า gap ลง */
-            margin-top: 10px; /* <-- ปรับลด margin-top ลง */
+            gap: 3px;
+            margin-top: 10px;
         }
-        /* --- END: โค้ดที่ปรับปรุงตามคำขอ --- */
         
         .number-group {
             display: flex;
@@ -260,13 +253,15 @@
             min-height: 50px;
         }
 
+        /* --- START: โค้ดที่ปรับปรุงตามคำขอ --- */
         .flex-row {
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* จัดชิดบน */
+            align-items: flex-start;
             flex-wrap: wrap;
-            gap: 20px; /* เพิ่มระยะห่างระหว่างกลุ่ม */
+            gap: 3px 20px; /* <-- ปรับลดระยะห่างแนวตั้ง (row-gap) เป็น 15px */
         }
+        /* --- END: โค้ดที่ปรับปรุงตามคำขอ --- */
 
         .button-container button {
             font-size: 22px;
@@ -345,9 +340,7 @@
                     <div class="draw-date">
                         <span id="display-draw-date"></span>
                     </div>
-                    <!-- START: ปรับลด margin-top ของรางวัลที่ 1 -->
                     <div class="result-section" style="margin-top: 10px; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <!-- END: ปรับลด margin-top ของรางวัลที่ 1 -->
                         <img src="logo.png" alt="Logo Left" style="width: 50px; height: 50px; margin-right: 10px;">
                         <div class="prize-title">รางวัลที่ 1</div>
                         <img src="logo.png" alt="Logo Right" style="width: 50px; height: 50px; margin-left: 10px;">
@@ -367,12 +360,10 @@
                         </div>
                     </div>
                     
-                    <!-- --- START: โครงสร้าง HTML ที่ปรับปรุงใหม่สำหรับเลขท้าย 2 ตัว --- -->
                     <div class="result-section prize-group-vertical">
                         <div id="display-back-two" class="number-group"></div>
                         <p class="prize-label-orange">เลขท้าย 2 ตัว</p>
                     </div>
-                    <!-- --- END: โครงสร้าง HTML ที่ปรับปรุงใหม่สำหรับเลขท้าย 2 ตัว --- -->
 
                 </div>
             </div>
@@ -458,7 +449,6 @@
             return `งวดวันที่ ${dateString}`;
         }
 
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ปรับปรุงสีฟ้าและเขียว) ---
         function createPingPongBall(number, type = 'red', size = 50, fontSize = 26) {
             const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
             const r = (size / 2) - 1;
@@ -469,9 +459,9 @@
             let highlightColor, midColor, shadowColor;
             
             if (type === 'blue') {
-                highlightColor = '#89CFF0'; // Baby Blue
-                midColor = '#007FFF';   // Azure
-                shadowColor = '#0059B3';  // Darker Azure
+                highlightColor = '#89CFF0';
+                midColor = '#007FFF';
+                shadowColor = '#0059B3';
                  gradientHtml = `
                     <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
                         <stop offset="0%" stop-color="${highlightColor}" />
@@ -480,9 +470,9 @@
                     </radialGradient>
                 `;
             } else if (type === 'green') {
-                highlightColor = '#90EE90'; // Light Green
-                midColor = '#008000';   // Green
-                shadowColor = '#006400';  // Dark Green
+                highlightColor = '#90EE90';
+                midColor = '#008000';
+                shadowColor = '#006400';
                  gradientHtml = `
                     <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
                         <stop offset="0%" stop-color="${highlightColor}" />
@@ -523,7 +513,6 @@
                 </svg>
             `;
         }
-        // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
         
         function displayNumberGroup(elementId, numberString, type, size, fontSize) {
             const container = document.getElementById(elementId);
