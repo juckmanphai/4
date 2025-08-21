@@ -242,13 +242,13 @@
             border: 2px solid #D97200;
             border-radius: 50px;
         }
-        /* คอนเทนเนอร์สำหรับจัดกลุ่ม ป้าย + ตัวเลข */
+        /* คอนเทนเนอร์สำหรับจัดกลุ่ม ป้าย + ตัวเลข (ปรับลดระยะห่าง) */
         .prize-group-vertical {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            margin-top: 15px;
+            gap: 5px; /* <-- ปรับลดค่า gap ลง */
+            margin-top: 10px; /* <-- ปรับลด margin-top ลง */
         }
         /* --- END: โค้ดที่ปรับปรุงตามคำขอ --- */
         
@@ -345,14 +345,15 @@
                     <div class="draw-date">
                         <span id="display-draw-date"></span>
                     </div>
-                    <div class="result-section" style="margin-top: 20px; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <!-- START: ปรับลด margin-top ของรางวัลที่ 1 -->
+                    <div class="result-section" style="margin-top: 10px; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <!-- END: ปรับลด margin-top ของรางวัลที่ 1 -->
                         <img src="logo.png" alt="Logo Left" style="width: 50px; height: 50px; margin-right: 10px;">
                         <div class="prize-title">รางวัลที่ 1</div>
                         <img src="logo.png" alt="Logo Right" style="width: 50px; height: 50px; margin-left: 10px;">
                     </div>
                     <div id="first-prize-display" class="number-group" style="margin-top: 5px;"></div>
                     
-                    <!-- --- START: โครงสร้าง HTML ที่ปรับปรุงใหม่ --- -->
                     <div class="result-section flex-row">
                         <div class="prize-group-vertical">
                             <p class="prize-label-blue">เลขหน้า 3 ตัว</p>
@@ -365,11 +366,13 @@
                             <div id="display-back-three-2" class="number-group"></div>
                         </div>
                     </div>
+                    
+                    <!-- --- START: โครงสร้าง HTML ที่ปรับปรุงใหม่สำหรับเลขท้าย 2 ตัว --- -->
                     <div class="result-section prize-group-vertical">
-                        <p class="prize-label-orange">เลขท้าย 2 ตัว</p>
                         <div id="display-back-two" class="number-group"></div>
+                        <p class="prize-label-orange">เลขท้าย 2 ตัว</p>
                     </div>
-                    <!-- --- END: โครงสร้าง HTML ที่ปรับปรุงใหม่ --- -->
+                    <!-- --- END: โครงสร้าง HTML ที่ปรับปรุงใหม่สำหรับเลขท้าย 2 ตัว --- -->
 
                 </div>
             </div>
