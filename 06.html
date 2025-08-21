@@ -110,13 +110,17 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
 .ball-group svg { margin: 0 0px; }
 
-/* Prize Label */
-.prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
+/* Prize Label - START OF CHANGE */
+.prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
+.prize-label-blue { color: #0066cc; } /* สีสำหรับ 3 ตัวบน */
+.prize-label-orange { color: #FF8C00; } /* สีสำหรับ 2 ตัวล่าง */
+/* Prize Label - END OF CHANGE */
+
 /* Number Containers */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
-.circle-container { width: 82px; border: 3px solid #FF00FF; border-radius: 2%; }
-.square-container { width: 125px; border: 3px solid red; }
-.square-two-container { width: 82px; border: 3px solid blue; }
+.circle-container { width: 85px; border: 3px solid #FF00FF; border-radius: 2%; }
+.square-container { width: 128px; border: 3px solid red; }
+.square-two-container { width: 85px; border: 3px solid blue; }
 /* Numbers Display */
 .numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin: 8px 0; }
 .number-group { text-align: center; min-width: 120px; }
@@ -194,7 +198,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
             if (type === 'blue') {
                 return `
-                    <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <radialGradient id="${gradientId}" cx="30%" cy="30%" r="70%">
                                 <stop offset="0%" stop-color="#47D359" />
@@ -223,7 +227,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             }
              
             return `
-                <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
                             <stop offset="0%" stop-color="${highlightColor}" />
