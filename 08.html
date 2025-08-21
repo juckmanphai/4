@@ -448,7 +448,7 @@
         }
 
         // --- START: ฟังก์ชันสร้างลูกบอล SVG (ปรับปรุงสีฟ้าและเขียว) ---
-        function createPingPongBall(number, type = 'red', size = 42, fontSize = 26) {
+        function createPingPongBall(number, type = 'red', size = 50, fontSize = 26) {
             const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
             const r = (size / 2) - 1;
             const cx = size / 2;
@@ -499,7 +499,7 @@
             }
 
             return `
-                <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="margin: 0 1px;">
+                <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="margin: 0 0px;">
                     <defs>
                         ${gradientHtml}
                     </defs>
@@ -529,12 +529,12 @@
             const rawDate = document.getElementById("draw-date").value;
             document.getElementById("display-draw-date").innerText = formatThaiDate(rawDate);
             
-            displayNumberGroup("first-prize-display", document.getElementById("first-prize").value, "red", 42, 26);
-            displayNumberGroup("display-front-three-1", document.getElementById("front-three-1").value, "blue", 36, 20);
-            displayNumberGroup("display-front-three-2", document.getElementById("front-three-2").value, "blue", 36, 20);
-            displayNumberGroup("display-back-three-1", document.getElementById("back-three-1").value, "green", 36, 20);
-            displayNumberGroup("display-back-three-2", document.getElementById("back-three-2").value, "green", 36, 20);
-            displayNumberGroup("display-back-two", document.getElementById("back-two").value, "orange", 48, 34);
+            displayNumberGroup("first-prize-display", document.getElementById("first-prize").value, "red", 50, 26);
+            displayNumberGroup("display-front-three-1", document.getElementById("front-three-1").value, "blue", 40, 20);
+            displayNumberGroup("display-front-three-2", document.getElementById("front-three-2").value, "blue", 40, 20);
+            displayNumberGroup("display-back-three-1", document.getElementById("back-three-1").value, "green", 40, 20);
+            displayNumberGroup("display-back-three-2", document.getElementById("back-three-2").value, "green", 40, 20);
+            displayNumberGroup("display-back-two", document.getElementById("back-two").value, "orange", 56, 34);
             
             showPopup();
             attachSaveAsImageListener();
