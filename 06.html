@@ -22,7 +22,7 @@
 body { font-family: Arial, sans-serif; background-color: #fffde7; margin: 0 auto; padding: 0 20px; max-width: 600px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
 /* ---------- หัวเรื่อง ---------- */
 h1 { text-align: center; color: #e65100; margin: 10px 0 15px; font-size: 24px; }
-.blue { color: blue; font-size: 22px; }
+.blue { color: blue; }
 .red { color: red; }
 /* ---------- ปุ่มทั่วไป ---------- */
 .convert-button, .back-button, .popup-button, .close-popup { border: none; border-radius: 5px; font-weight: bold; color: white; cursor: pointer; transition: background-color 0.3s; }
@@ -43,7 +43,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .form-footer { display: flex; justify-content: center; margin-top: 15px; }
 /* ---------- Popup Overlay ---------- */
 .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; }
-/* ---------- Popup Content ---------- */
+
 .popup-content {
     background-color: #fffde7;
     border-radius: 1px;
@@ -54,6 +54,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     position: relative;
     box-sizing: border-box;
 }
+
 .popup-main-content {
     position: relative;
     background-color: #FFFFD1;
@@ -64,11 +65,38 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
-.popup-main-content::before { content: ""; background-image: url('logo.png'); background-size: 80% auto; background-repeat: no-repeat; background-position: center; opacity: 0.4; position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; }
+
 /* Popup Header and Date */
-#popupTopicDisplay, #popupDateDisplay { margin: 3px 0; color: blue; text-shadow: -2px -2px 1px #fff8dc, -1px -1px 1px #fff8dc, 1px 1px 0 #cc9900, 2px 2px 2px #996000, 3px 3px 3px rgba(0, 0, 0, 0.25); }
-#popupTopicDisplay { font-weight: bold; font-size: clamp(18px, 4.4vw, 26px); }
-#popupDateDisplay { font-size: clamp(16px, 3.4vw, 20px); }
+#popupTimeDisplay, #popupDateDisplay { margin: 3px 0; color: blue; text-shadow: -2px -2px 1px #fff8dc, -1px -1px 1px #fff8dc, 1px 1px 0 #cc9900, 2px 2px 2px #996600, 3px 3px 3px rgba(0, 0, 0, 0.25); }
+#popupTimeDisplay, #popupDateDisplay { font-size: clamp(16px, 3.4vw, 20px); }
+
+/* START: CSS สำหรับหัวข้อรางวัล (นำมาจาก 050505.html) */
+.prize-title, .prize-title-red {
+    display: inline-block;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 4px 0 7px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* พื้นหลังสีชมพู สำหรับ "รางวัลเลข 5 ตัว" */
+.prize-title {
+    border: 2px solid #AD1457;
+    background: linear-gradient(to bottom, #F48FB1, #EC407A);
+}
+
+/* พื้นหลังสีแดง สำหรับหัวข้อบนสุด */
+.prize-title-red {
+    border: 2px solid #B71C1C;
+    background: linear-gradient(to bottom, #E53935, #C62828);
+}
+/* END: CSS สำหรับหัวข้อรางวัล */
+
+
 /* Popup Buttons */
 .popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 15px; }
 .popup-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
@@ -77,11 +105,13 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .popup-button.active { background-color: #4CAF50; }
 .close-popup { padding: 8px 15px; background-color: #f44336; width: 100%; max-width: 200px; }
 .close-popup:hover { background-color: #d32f2f; }
+
 /* --- CSS สำหรับ SVG และส่วนอื่นๆ --- */
 .ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
 .ball-group svg { margin: 0 0px; }
+
 /* Prize Label */
-.prize-label-red, .prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
+.prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; color: blue; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
 /* Number Containers */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
 .circle-container { width: 82px; border: 3px solid #FF00FF; border-radius: 2%; }
@@ -117,10 +147,18 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <div id="popupOverlay" class="popup-overlay">
         <div class="popup-content">
             <div id="captureArea" class="popup-main-content">
+                <!-- START: โครงสร้าง Popup ที่นำมาจาก 050505.html -->
                 <div style="position: relative; z-index: 1;">
-                    <h3 id="popupTopicDisplay" class="blue"></h3>
+                    <div id="popupNameDisplay" class="prize-title-red"></div>
+                    <p id="popupTimeDisplay" class="blue"></p>
                     <p id="popupDateDisplay" class="blue"></p>
-                    <h2 class="prize-label-red">รางวัลเลข 5 ตัว</h2>
+                    
+                    <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center;">
+                        <img src="logo.png" alt="Logo Left" style="width: 60px; height: 60px; margin-right: 10px;">
+                        <div class="prize-title">รางวัลเลข 5 ตัว</div>
+                        <img src="logo.png" alt="Logo Right" style="width: 60px; height: 60px; margin-left: 10px;">
+                    </div>
+
                     <div id="popupFiveDigitsDisplay" class="ball-group"></div>
                     <div class="numbers-display">
                         <div class="number-group">
@@ -133,6 +171,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                         </div>
                     </div>
                 </div>
+                 <!-- END: โครงสร้าง Popup -->
             </div>
             <div class="popup-buttons-container">
                 <div class="popup-buttons">
@@ -215,18 +254,35 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 return; 
             } 
             const date = document.getElementById("dateInput").value ? new Date(document.getElementById("dateInput").value) : new Date(); 
-            document.getElementById("popupTopicDisplay").textContent = `ผล${document.getElementById("topicSelect").value}`; 
+            
+            // --- START: JS ที่แก้ไขเพื่อแยกชื่อและเวลา ---
+            const fullTopic = document.getElementById("topicSelect").value;
+            const topicParts = fullTopic.split(' เวลา ');
+            const topicName = topicParts[0];
+            const topicTime = topicParts.length > 1 ? `เวลา ${topicParts[1]}` : '';
+
+            document.getElementById("popupNameDisplay").textContent = `ผล${topicName}`;
+            document.getElementById("popupTimeDisplay").textContent = topicTime;
+            // --- END: JS ที่แก้ไข ---
+            
             document.getElementById("popupDateDisplay").textContent = getThaiDate(date); 
             document.getElementById("popupFiveDigitsDisplay").innerHTML = createPingPongNumbers(num, 'red'); 
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(num.slice(2), 'blue'); 
+            
+            // --- ส่วนนี้คงเดิมตามไฟล์ 06.html ---
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(num.slice(1, 3), 'orange'); 
+            // --- สิ้นสุดส่วนที่คงเดิม ---
+
             ["popupCircleButton", "popupSquareButton", "popupCircleTopButton"].forEach(id => document.getElementById(id).classList.remove("active")); 
             
             showPopup(); 
             setupSaveImageButton();
         }
 
+        // --- ส่วนนี้คงเดิมตามไฟล์ 06.html ---
         function toggleCirclePopup() { const display = document.getElementById("popupTwoDigitsDisplay"); const button = document.getElementById("popupCircleButton"); const numbers = document.getElementById('numberInput').value.slice(1, 3); if (button.classList.toggle("active")) { display.innerHTML = `<div class="circle-container">${createPingPongNumbers(numbers, 'orange')}</div>`; } else { display.innerHTML = createPingPongNumbers(numbers, 'orange'); } }
+        // --- สิ้นสุดส่วนที่คงเดิม ---
+        
         function toggleSquarePopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupSquareButton"); const numbers = document.getElementById('numberInput').value.slice(2); if (button.classList.toggle("active")) { display.innerHTML = `<div class="square-container">${createPingPongNumbers(numbers, 'blue')}</div>`; } else { display.innerHTML = createPingPongNumbers(numbers, 'blue'); } }
         function toggleSquareTopPopup() { const display = document.getElementById("popupThreeDigitsDisplay"); const button = document.getElementById("popupCircleTopButton"); const numbers = document.getElementById('numberInput').value.slice(2); if (button.classList.toggle("active")) { display.innerHTML = `${createPingPongBall(numbers[0], 'blue')}<div class="square-two-container">${createPingPongNumbers(numbers.slice(1), 'blue')}</div>`; } else { display.innerHTML = createPingPongNumbers(numbers, 'blue'); } }
         function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
