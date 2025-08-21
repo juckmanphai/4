@@ -211,33 +211,47 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
         }
 
-        .result-title {
+        /* --- START: โค้ดที่ปรับปรุงตามคำขอ --- */
+        /* สไตล์ร่วมของป้ายรางวัล */
+        .prize-label-blue, .prize-label-green, .prize-label-orange {
+            display: inline-block;
             font-weight: bold;
-            margin-bottom: 5px;
-            margin-top: 5px;
-        }
-
-        .front-three-title {
-            color: #1565C0;
             font-size: 20px;
-            font-weight: bold;
-            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+            margin: 0;
+            padding: 8px 15px;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        .back-three-title {
-            color: #2E7D32;
-            font-size: 20px;
-            font-weight: bold;
-            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+        /* สไตล์สำหรับ "เลขหน้า 3 ตัว" */
+        .prize-label-blue {
+            background: linear-gradient(to bottom, #89CFF0, #007FFF);
+            border: 2px solid #0059B3;
+            border-radius: 10px;
         }
-        .back-two-title {
-            color: #BF360C;
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 1px rgba(255,255,255,0.7);
+        /* สไตล์สำหรับ "เลขท้าย 3 ตัว" */
+        .prize-label-green {
+            background: linear-gradient(to bottom, #90EE90, #008000);
+            border: 2px solid #006400;
+            border-radius: 10px;
         }
-
+        /* สไตล์สำหรับ "เลขท้าย 2 ตัว" */
+        .prize-label-orange {
+            font-size: 22px;
+            background: linear-gradient(to bottom, #FFE3A0, #FF8C00);
+            border: 2px solid #D97200;
+            border-radius: 50px;
+        }
+        /* คอนเทนเนอร์สำหรับจัดกลุ่ม ป้าย + ตัวเลข */
+        .prize-group-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        /* --- END: โค้ดที่ปรับปรุงตามคำขอ --- */
+        
         .number-group {
             display: flex;
             justify-content: center;
@@ -249,8 +263,9 @@
         .flex-row {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* จัดชิดบน */
             flex-wrap: wrap;
+            gap: 20px; /* เพิ่มระยะห่างระหว่างกลุ่ม */
         }
 
         .button-container button {
@@ -282,19 +297,7 @@
         #first-prize-display {
             margin-top: 15px;
         }
-
-        .result-title-with-margin {
-            margin-bottom: 15px;
-        }
         
-        .back-two-section {
-            margin-top: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .back-two-number-group {
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
@@ -348,23 +351,26 @@
                         <img src="logo.png" alt="Logo Right" style="width: 50px; height: 50px; margin-left: 10px;">
                     </div>
                     <div id="first-prize-display" class="number-group" style="margin-top: 5px;"></div>
+                    
+                    <!-- --- START: โครงสร้าง HTML ที่ปรับปรุงใหม่ --- -->
                     <div class="result-section flex-row">
-                        <div>
-                            <h3 class="result-title front-three-title result-title-with-margin">เลขหน้า 3 ตัว</h3>
+                        <div class="prize-group-vertical">
+                            <p class="prize-label-blue">เลขหน้า 3 ตัว</p>
                             <div id="display-front-three-1" class="number-group"></div>
                             <div id="display-front-three-2" class="number-group"></div>
                         </div>
-                        <div style="margin: 0 15px;"></div>
-                        <div>
-                            <h3 class="result-title back-three-title result-title-with-margin">เลขท้าย 3 ตัว</h3>
+                        <div class="prize-group-vertical">
+                            <p class="prize-label-green">เลขท้าย 3 ตัว</p>
                             <div id="display-back-three-1" class="number-group"></div>
                             <div id="display-back-three-2" class="number-group"></div>
                         </div>
                     </div>
-                    <div class="result-section back-two-section">
-                        <div id="display-back-two" class="number-group back-two-number-group"></div>
-                        <h3 class="result-title back-two-title">เลขท้าย 2 ตัว</h3>
+                    <div class="result-section prize-group-vertical">
+                        <p class="prize-label-orange">เลขท้าย 2 ตัว</p>
+                        <div id="display-back-two" class="number-group"></div>
                     </div>
+                    <!-- --- END: โครงสร้าง HTML ที่ปรับปรุงใหม่ --- -->
+
                 </div>
             </div>
             <div class="popup-controls">
