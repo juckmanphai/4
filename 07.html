@@ -38,14 +38,8 @@ h1 {
   font-size: 24px;
 }
 
-.blue {
-  color: blue;
-  font-size: 22px;
-}
-
-.red {
-  color: red;
-}
+.blue { color: blue; }
+.red { color: red; }
 
 /* ---------- ปุ่มทั่วไป ---------- */
 .convert-button,
@@ -57,7 +51,7 @@ h1 {
   font-weight: bold;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color: 0.3s;
 }
 
 /* ปุ่มกลับ */
@@ -71,9 +65,7 @@ h1 {
   font-size: 16px;
 }
 
-.back-button:hover {
-  background-color: darkorange;
-}
+.back-button:hover { background-color: darkorange; }
 
 /* ปุ่มแปลง */
 .convert-button {
@@ -84,9 +76,7 @@ h1 {
   margin-top: 10px;
 }
 
-.convert-button:hover {
-  background-color: #F57C00;
-}
+.convert-button:hover { background-color: #F57C00; }
 
 /* ---------- ฟอร์ม ---------- */
 .form-container {
@@ -122,7 +112,6 @@ select {
   max-width: 250px;
 }
 
-/* กล่องกรอกตัวเลข */
 #numberInput {
   background-color: #e3f2fd;
   color: #1a237e;
@@ -162,14 +151,14 @@ select {
   align-items: center;
 }
 
-/* ---------- Popup Content (ปรับแก้) ---------- */
+/* ---------- Popup Content ---------- */
 .popup-content {
   background-color: #fffde7;
   border-radius: 1px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 600px;
-  padding: 8px; /* ปรับแก้: ลด padding บน-ล่าง */
+  padding: 8px;
   position: relative;
   box-sizing: border-box;
 }
@@ -177,25 +166,43 @@ select {
 .popup-main-content {
   position: relative;
   background-color: #FFFFD1;
-  margin: 0; /* ปรับแก้: ลบ margin เดิมออก */
-  padding: 8px 8px; /* ปรับแก้: กำหนด padding ใหม่ให้สมดุล */
+  margin: 0;
+  padding: 8px 8px;
   border-radius: 10px;
   border: 1.5px solid green;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.popup-main-content::before {
-  content: "";
-  background-image: url('logo.png');
-  background-size: 80% auto;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.4;
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 0;
+/* Popup Date */
+#popupDateDisplay {
+    margin: 3px 0;
+    color: blue;
+    text-shadow: -2px -2px 1px #fff8dc, -1px -1px 1px #fff8dc, 1px 1px 0 #cc9900, 2px 2px 2px #996600, 3px 3px 3px rgba(0, 0, 0, 0.25);
+    font-size: clamp(16px, 3.4vw, 20px);
 }
+
+/* CSS สำหรับหัวข้อรางวัล */
+.prize-title, .prize-title-red {
+    display: inline-block;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 4px 0 7px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+.prize-title {
+    border: 2px solid #AD1457;
+    background: linear-gradient(to bottom, #F48FB1, #EC407A);
+}
+.prize-title-red {
+    border: 2px solid #B71C1C;
+    background: linear-gradient(to bottom, #E53935, #C62828);
+}
+
 
 /* ปุ่มใน Popup */
 .popup-buttons-container {
@@ -218,13 +225,8 @@ select {
   background-color: #FF9800;
 }
 
-.popup-button:hover {
-  background-color: #F57C00;
-}
-
-.popup-button.active {
-  background-color: #4CAF50;
-}
+.popup-button:hover { background-color: #F57C00; }
+.popup-button.active { background-color: #4CAF50; }
 
 .close-popup {
   padding: 8px 15px;
@@ -232,23 +234,23 @@ select {
   width: 100%;
   max-width: 200px;
 }
+.close-popup:hover { background-color: #d32f2f; }
 
-.close-popup:hover {
-  background-color: #d32f2f;
-}
-
-/* ป้ายรางวัล */
-.prize-label-red,
+/* CSS ป้ายรางวัล */
 .prize-label-blue,
 .prize-label-orange {
   font-weight: bold;
   font-size: 22px;
-  color: blue;
   margin: 5px 0;
-  text-shadow:
-    2px 2px 3px rgba(0, 0, 0, 0.4),
-   -1px -1px 1px rgba(255, 255, 255, 0.5);
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5);
 }
+.prize-label-blue {
+  color: #0066cc;
+}
+.prize-label-orange {
+  color: #FF8C00;
+}
+
 
 /* กลุ่มลูกปิงปอง */
 .ball-group {
@@ -259,11 +261,9 @@ select {
     margin: 3px 0;
     vertical-align: middle;
 }
-.ball-group svg {
-    margin: 0 1px;
-}
+.ball-group svg { margin: 0 0px; }
 
-/* ---------- กรอบแสดงเลข ---------- */
+/* กรอบแสดงเลข */
 .circle-container,
 .square-container,
 .square-two-container {
@@ -274,26 +274,12 @@ select {
   margin: 0 0.5px;
   padding: 5px;
   background: transparent;
-  box-shadow:
-    inset 2px 2px 4px rgba(0, 0, 0, 0.3),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.4);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4);
 }
 
-.circle-container {
-  width: 82px;
-  border: 3px solid #FF00FF;
-  border-radius: 2%;
-}
-
-.square-container {
-  width: 125px;
-  border: 3px solid red;
-}
-
-.square-two-container {
-  width: 82px;
-  border: 3px solid blue;
-}
+.circle-container { width: 82px; border: 3px solid #FF00FF; border-radius: 2%; }
+.square-container { width: 125px; border: 3px solid red; }
+.square-two-container { width: 82px; border: 3px solid blue; }
 
 /* กลุ่มแสดงตัวเลข */
 .numbers-display {
@@ -310,15 +296,10 @@ select {
   min-width: 120px;
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 480px) {
-  #numberInput {
-    font-size: 18px;
-    padding: 8px;
-  }
+  #numberInput { font-size: 18px; padding: 8px; }
 }
 
-/* ---------- ส่วนท้าย ---------- */
 footer {
   text-align: center;
   margin: 15px 0;
@@ -335,11 +316,9 @@ footer {
         <div class="form-group">
             <input type="text" id="numberInput" placeholder="กรุณากรอกตัวเลข 6 หลัก" pattern="\d{6}" maxlength="6" inputmode="numeric" />
         </div>
-        
         <div class="form-group">
             <input type="date" id="dateInput">
         </div>
-        
         <div class="form-footer">
             <button id="convertButton" class="convert-button">แจงรายละเอียด</button>
         </div>
@@ -350,35 +329,15 @@ footer {
         <div class="popup-content">
             <div id="captureArea" class="popup-main-content">
                 <div style="position: relative; z-index: 1;">
-<h3 id="popupTopicDisplay" class="blue" style="
-  font-size: 36px;
-  margin: 8px 0;
-  font-weight: bold;
-  color: color: blue;
-  background: none;
-  text-shadow:
-    -2px -2px 2px #fff8dc,
-    -1px -1px 1px #fff8dc,
-     1px 1px 0 #cc9900,
-     2px 2px 2px #996600,
-     3px 3px 3px rgba(0, 0, 0, 0.3);
-">
-ผลลาวพัฒนา
-</h3>
-                    <p id="popupDateDisplay" class="blue" style="
-  font-size: clamp(14px, 4vw, 20px);
-  white-space: nowrap;
-  margin: 5px 0;
-  text-shadow:
-    -2px -2px 1px #fff8dc,
-    -1px -1px 1px #fff8dc,
-     1px 1px 0 #cc9900,
-     2px 2px 2px #996600,
-     3px 3px 3px rgba(0, 0, 0, 0.25);
-">
-</p>
+                    <div id="popupNameDisplay" class="prize-title-red"></div>
+                    <p id="popupDateDisplay" class="blue"></p>
+                    
+                    <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center;">
+                        <img src="logo.png" alt="Logo Left" style="width: 60px; height: 60px; margin-right: 10px;">
+                        <div class="prize-title">รางวัลเลข 6 ตัว</div>
+                        <img src="logo.png" alt="Logo Right" style="width: 60px; height: 60px; margin-left: 10px;">
+                    </div>
 
-                    <h2 class="prize-label-red">รางวัลเลข 6 ตัว</h2>
                     <div id="popupFiveDigitsDisplay" class="ball-group"></div> 
                     <div class="numbers-display">
                         <div class="number-group">
@@ -420,15 +379,13 @@ footer {
                 dateInput.value = localDate.toISOString().split('T')[0];
             }
         }
-
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG ที่ถูกต้องตามที่คุณต้องการ ---
+        
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG ที่ปรับปรุงแล้ว ---
         function createPingPongBall(number, type = 'red') {
             const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
-
-            // เงื่อนไขพิเศษสำหรับลูกบอลสีฟ้า (blue)
             if (type === 'blue') {
                 return `
-                    <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <radialGradient id="${gradientId}" cx="30%" cy="30%" r="70%">
                                 <stop offset="0%" stop-color="#47D359" />
@@ -438,29 +395,20 @@ footer {
                         <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                             font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                            fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                            fill="white" style="text-shadow: 0px 2px 2px rgba(0,0,0,0.5), 0px -1px 1px rgba(255,255,255,0.4);">
                             ${number}
                         </text>
                     </svg>
                 `;
             }
-
-            // โค้ดสำหรับลูกบอลสีอื่นๆ (ชมพู และ ส้ม) จะยังคงเหมือนเดิม
             let highlightColor, midColor, shadowColor;
-
-            if (type === 'red') { // สีชมพู
-                highlightColor = '#FFD6FF';
-                midColor = '#E800E8';
-                shadowColor = '#A100A1';
-            } else { // 'orange' - สีส้ม
-                highlightColor = '#FFE3A0';
-                midColor = '#FF8C00';
-                shadowColor = '#D97200';
+            if (type === 'red') {
+                highlightColor = '#FFD6FF'; midColor = '#E800E8'; shadowColor = '#A100A1';
+            } else { // 'orange'
+                highlightColor = '#FFE3A0'; midColor = '#FF8C00'; shadowColor = '#D97200';
             }
-             
-            // สร้าง SVG สำหรับสีชมพูและสีส้ม
             return `
-                <svg width="42" height="42" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%">
                             <stop offset="0%" stop-color="${highlightColor}" />
@@ -471,25 +419,21 @@ footer {
                     <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
                     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                           font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                          fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                          fill="white" style="text-shadow: 0px 2px 2px rgba(0,0,0,0.5), 0px -1px 1px rgba(255,255,255,0.4);">
                         ${number}
                     </text>
                 </svg>
             `;
         }
-        // --- END: ฟังก์ชันสร้างลูกบอล SVG ---
+        // --- END: ฟังก์ชันสร้างลูกบอล SVG ที่ปรับปรุงแล้ว ---
+
 
         function createPingPongNumbers(numbers, type = 'red') {
             return numbers.split('').map(digit => createPingPongBall(digit, type)).join('');
         }
 
-        function showPopup() {
-            document.getElementById("popupOverlay").style.display = "flex";
-        }
-
-        function closePopup() {
-            document.getElementById("popupOverlay").style.display = "none";
-        }
+        function showPopup() { document.getElementById("popupOverlay").style.display = "flex"; }
+        function closePopup() { document.getElementById("popupOverlay").style.display = "none"; }
 
         function convertNumber() {
             const num = document.getElementById("numberInput").value;
@@ -502,10 +446,9 @@ footer {
             const threeDigits = num.slice(3);
             const twoDigits = num.slice(2, 4);
 
-            document.getElementById("popupTopicDisplay").textContent = `ผลลาวพัฒนา`;
+            document.getElementById("popupNameDisplay").textContent = `ผลลาวพัฒนา`;
             document.getElementById("popupDateDisplay").textContent = thaiDate;
             
-            // กำหนดสีให้ถูกต้อง: 6 ตัว (ชมพู), 3 ตัวบน (ฟ้า), 2 ตัวล่าง (ส้ม)
             document.getElementById("popupFiveDigitsDisplay").innerHTML = createPingPongNumbers(num, 'red');
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(threeDigits, 'blue');
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(twoDigits, 'orange');
