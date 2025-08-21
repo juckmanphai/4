@@ -66,8 +66,14 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     text-align: center;
 }
 
-/* Popup Header and Date */
-#popupTimeDisplay, #popupDateDisplay { margin: 3px 0; color: blue; text-shadow: -2px -2px 1px #fff8dc, -1px -1px 1px #fff8dc, 1px 1px 0 #cc9900, 2px 2px 2px #996600, 3px 3px 3px rgba(0, 0, 0, 0.25); }
+/* START: ปรับปรุงโค้ด - เอา text-shadow ออกแล้วใส่ขอบสีขาว */
+#popupTimeDisplay, #popupDateDisplay {
+    margin: 3px 0;
+    color: blue;
+    -webkit-text-stroke: 2px white;
+    paint-order: stroke fill;
+}
+/* END: ปรับปรุงโค้ด */
 #popupTimeDisplay, #popupDateDisplay { font-size: clamp(16px, 3.4vw, 20px); }
 
 /* START: CSS สำหรับหัวข้อรางวัล (นำมาจาก 050505.html) */
@@ -80,7 +86,9 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     margin: 4px 0 7px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    /* START: ปรับปรุงโค้ด - เอา text-shadow ออก */
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); */
+    /* END: ปรับปรุงโค้ด */
 }
 
 /* พื้นหลังสีชมพู สำหรับ "รางวัลเลข 5 ตัว" */
@@ -110,17 +118,23 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
 .ball-group svg { margin: 0 0px; }
 
-/* Prize Label - START OF CHANGE */
-.prize-label-blue, .prize-label-orange { font-weight: bold; font-size: 22px; margin: 5px 0; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5); }
+/* START: ปรับปรุงโค้ด - Prize Label */
+.prize-label-blue, .prize-label-orange {
+    font-weight: bold;
+    font-size: 22px;
+    margin: 5px 0;
+    -webkit-text-stroke: 2px white;
+    paint-order: stroke fill;
+}
 .prize-label-blue { color: #0066cc; } /* สีสำหรับ 3 ตัวบน */
 .prize-label-orange { color: #FF8C00; } /* สีสำหรับ 2 ตัวล่าง */
-/* Prize Label - END OF CHANGE */
+/* END: ปรับปรุงโค้ด */
 
 /* Number Containers */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
-.circle-container { width: 85px; border: 3px solid #FF00FF; border-radius: 2%; }
-.square-container { width: 128px; border: 3px solid red; }
-.square-two-container { width: 85px; border: 3px solid blue; }
+.circle-container { width: 88px; border: 3px solid #FF00FF; border-radius: 2%; }
+.square-container { width: 131px; border: 3px solid red; }
+.square-two-container { width: 88px; border: 3px solid blue; }
 /* Numbers Display */
 .numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin: 8px 0; }
 .number-group { text-align: center; min-width: 120px; }
@@ -192,7 +206,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     <footer>&copy; 2025 Juckmanphai. All Rights Reserved.</footer>
     
     <script>
-        // --- START: ฟังก์ชันสร้างลูกบอล SVG ---
+        // --- START: ฟังก์ชันสร้างลูกบอล SVG (ฉบับปรับปรุง) ---
         function createPingPongBall(number, type = 'red') {
             const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`;
 
@@ -208,7 +222,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                         <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                             font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                            fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                            fill="white">
                             ${number}
                         </text>
                     </svg>
@@ -238,7 +252,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                     <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
                     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                           font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                          fill="white" style="text-shadow: 1px 2px 3px rgba(0,0,0,0.5);">
+                          fill="white">
                         ${number}
                     </text>
                 </svg>
