@@ -174,15 +174,17 @@ select {
   text-align: center;
 }
 
-/* Popup Date */
+/* START: ปรับปรุงโค้ด - Popup Date */
 #popupDateDisplay {
     margin: 3px 0;
     color: blue;
-    text-shadow: -2px -2px 1px #fff8dc, -1px -1px 1px #fff8dc, 1px 1px 0 #cc9900, 2px 2px 2px #996600, 3px 3px 3px rgba(0, 0, 0, 0.25);
+    -webkit-text-stroke: 2px white;
+    paint-order: stroke fill;
     font-size: clamp(16px, 3.4vw, 20px);
 }
+/* END: ปรับปรุงโค้ด */
 
-/* CSS สำหรับหัวข้อรางวัล */
+/* START: ปรับปรุงโค้ด - CSS สำหรับหัวข้อรางวัล */
 .prize-title, .prize-title-red {
     display: inline-block;
     font-size: 22px;
@@ -192,8 +194,9 @@ select {
     margin: 4px 0 7px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); */
 }
+/* END: ปรับปรุงโค้ด */
 .prize-title {
     border: 2px solid #AD1457;
     background: linear-gradient(to bottom, #F48FB1, #EC407A);
@@ -236,14 +239,16 @@ select {
 }
 .close-popup:hover { background-color: #d32f2f; }
 
-/* CSS ป้ายรางวัล */
+/* START: ปรับปรุงโค้ด - CSS ป้ายรางวัล */
 .prize-label-blue,
 .prize-label-orange {
   font-weight: bold;
   font-size: 22px;
   margin: 5px 0;
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(255, 255, 255, 0.5);
+  -webkit-text-stroke: 2px white;
+  paint-order: stroke fill;
 }
+/* END: ปรับปรุงโค้ด */
 .prize-label-blue {
   color: #0066cc;
 }
@@ -277,9 +282,9 @@ select {
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4);
 }
 
-.circle-container { width: 85px; border: 3px solid #FF00FF; border-radius: 2%; }
-.square-container { width: 128px; border: 3px solid red; }
-.square-two-container { width: 85px; border: 3px solid blue; }
+.circle-container { width: 88px; border: 3px solid #FF00FF; border-radius: 2%; }
+.square-container { width: 131px; border: 3px solid red; }
+.square-two-container { width: 88px; border: 3px solid blue; }
 
 /* กลุ่มแสดงตัวเลข */
 .numbers-display {
@@ -395,7 +400,7 @@ footer {
                         <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
                         <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                             font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                            fill="white" style="text-shadow: 0px 2px 2px rgba(0,0,0,0.5), 0px -1px 1px rgba(255,255,255,0.4);">
+                            fill="white">
                             ${number}
                         </text>
                     </svg>
@@ -419,7 +424,7 @@ footer {
                     <circle cx="25" cy="25" r="24" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
                     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
                           font-family="Arial, sans-serif" font-size="26" font-weight="bold"
-                          fill="white" style="text-shadow: 0px 2px 2px rgba(0,0,0,0.5), 0px -1px 1px rgba(255,255,255,0.4);">
+                          fill="white">
                         ${number}
                     </text>
                 </svg>
