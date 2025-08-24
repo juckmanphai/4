@@ -55,8 +55,22 @@
     .reset-btn { background-color: #17a2b8; }
     .reset-btn:hover { background-color: #138496; }
 
-    /* POPUP Styles */
-    .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: flex-start; padding: 15px 5px; overflow-y: auto; box-sizing: border-box; }
+    /* ===== START: POPUP Styles Modified to match 02old.html ===== */
+    .popup-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        justify-content: center;
+        padding: 20px 0;
+        align-items: center;
+    }
+    /* ===== END: POPUP Styles Modified ===== */
+
     .popup-content { background-color: #FFFFD1; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.3); width: 100%; max-width: 600px; padding: 25px 15px; position: relative; box-sizing: border-box; }
     .result-container-popup { border: 1.5px solid #4CAF50; background-color: #FFFFD1; margin: 0; padding: 15px 5px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); position: relative; min-height: 300px; box-sizing: border-box; overflow: hidden; }
 
@@ -82,7 +96,7 @@
     @media only screen and (max-width: 600px) {
     .form-container, .select-wrapper { width: 100%; }
     input, select, button, .date-input-wrapper { width: 100%; }
-    .popup-overlay { padding: 20px 10px; }
+    .popup-overlay { padding: 20px 10px; box-sizing: border-box;}
     }
 </style>
 </head>
@@ -1096,7 +1110,7 @@ function generateResultHTML() {
     return null; // Should not be reached
 }
 
-// === THIS IS THE MODIFIED FUNCTION ===
+// === POPUP CONTROLS SETUP ===
 function setupPopupControls() {
     const resultContentWrapper = document.getElementById("resultContentWrapper");
     if (!resultContentWrapper) return;
@@ -1107,22 +1121,20 @@ function setupPopupControls() {
     const lhValueSpan = document.getElementById("popupLineHeightValue");
     const numLength = document.getElementById("numberInput").value.length;
 
-    // --- START: Dynamic Line Height Logic ---
-    // Set slider properties based on the number of digits
+    // Dynamic Line Height Logic based on 02old.html layout.
     if (numLength === 2) {
-        lhSlider.min = "1.0";
-        lhSlider.max = "3.0";
-        lhSlider.value = "1.7";
+        lhSlider.min = "0.8";
+        lhSlider.max = "2.5";
+        lhSlider.value = "1.7"; 
     } else if (numLength === 3) {
         lhSlider.min = "0.5";
         lhSlider.max = "2.5";
-        lhSlider.value = "0.7";
-    } else { // Default for 4 digits (and any other case)
+        lhSlider.value = "0.7"; 
+    } else { // Default for 4 digits
         lhSlider.min = "0.5";
         lhSlider.max = "2.5";
-        lhSlider.value = "1.3";
+        lhSlider.value = "1.3"; 
     }
-    // --- END: Dynamic Line Height Logic ---
 
     function updateFontSize() { 
         const scale = fsSlider.value; 
@@ -1177,11 +1189,12 @@ function setupPopupControls() {
     
     // Initial setup after content is loaded
     setTimeout(() => {
+        const textElements = resultContentWrapper.querySelectorAll('p, h2, h3, .topic-box');
+        textElements.forEach(el => { el.dataset.originalSize = ''; });
         updateFontSize();
-        updateLineHeight(); // This will apply the correct initial value based on the logic above
+        updateLineHeight();
     }, 10);
 }
-
 
 function displayResultInPopup() {
     const resultHtml = generateResultHTML();
