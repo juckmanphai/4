@@ -65,7 +65,17 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     text-align: center;
 }
 
-/* Popup Header and Date */
+/* START: Popup Header and Date - UPDATED */
+.result-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.header-logo {
+    width: 50px; /* Adjusted to match original logo size in this file */
+    height: auto;
+}
 #popupTimeDisplay, #popupDateDisplay {
     margin: 3px 0;
     color: blue;
@@ -78,7 +88,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     display: inline-block;
     font-size: 22px;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 50px;
     padding: 5px 15px;
     margin: 4px 0 7px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -90,19 +100,23 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     background: linear-gradient(to bottom, #EE8D5C, #E800E8);
 }
 
-/* --- UPDATED STYLE --- */
+/* --- UPDATED with clamp() --- */
 .prize-title-red {
-    border: 4px solid #0070C0;
+    border: 2px solid #0070C0;
     background: linear-gradient(to bottom, #FFD6FF, #E800E8);
-    font-size: 30px;
-    padding: 5px 10px;
+    /* ใช้ clamp() เพื่อปรับขนาดฟอนต์อัตโนมัติ: clamp(ขนาดเล็กสุด, ขนาดที่ต้องการ, ขนาดใหญ่สุด) */
+    font-size: clamp(16px, 4.2vw, 28px);
+    white-space: nowrap;
+    padding: 5px 15px;
     border-radius: 50px;
-    /* Added flex properties to align logos and text */
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    /* เพิ่ม flex-shrink เพื่อให้ข้อความถูกบีบอัดก่อนโลโก้ */
+    flex-shrink: 1; 
 }
-/* --- END OF UPDATE --- */
+/* END: Popup Header and Date - UPDATED */
 
 /* Popup Buttons */
 .popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 15px; }
@@ -202,15 +216,19 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
         <div class="popup-content">
             <div id="captureArea" class="popup-main-content">
                 <div style="position: relative; z-index: 1;">
-                    <div id="popupNameDisplay" class="prize-title-red"></div>
+                    <!-- START: UPDATED HTML STRUCTURE -->
+                    <div class="result-header">
+                        <div id="popupNameDisplay" class="prize-title-red">
+                            <!-- JS will inject: img, span, img -->
+                        </div>
+                    </div>
                     <p id="popupTimeDisplay" class="blue"></p>
                     <p id="popupDateDisplay" class="blue"></p>
                     
-                    <!-- --- UPDATED HTML: Logos are now moved to the top banner via JavaScript --- -->
                     <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center;">
                         <div id="popupPrizeTitle" class="prize-title"></div>
                     </div>
-                    <!-- --- END OF UPDATE --- -->
+                    <!-- END: UPDATED HTML STRUCTURE -->
 
                     <div id="popupMainDigitsDisplay" class="ball-group"></div>
                     <div class="numbers-display">
@@ -371,19 +389,17 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
             const date = document.getElementById("dateInput").value ? new Date(document.getElementById("dateInput").value) : new Date();
             
-            // --- START: UPDATED JAVASCRIPT ---
-            // Update Popup Display
+            // START: Update Popup Display - UPDATED
             const popupNameDisplay = document.getElementById("popupNameDisplay");
             popupNameDisplay.innerHTML = `
-                <img src="logo.png" alt="Logo Left" style="width: 60px; height: auto;">
+                <img src="logo.png" class="header-logo" alt="logo">
                 <span>ผล${config.name}</span>
-                <img src="logo.png" alt="Logo Right" style="width: 60px; height: auto;">
+                <img src="logo.png" class="header-logo" alt="logo">
             `;
-            // --- END OF UPDATE ---
-            
             document.getElementById("popupTimeDisplay").textContent = `เวลา ${config.time}`;
             document.getElementById("popupDateDisplay").textContent = getThaiDate(date);
             document.getElementById("popupPrizeTitle").textContent = `รางวัลเลข ${config.digits} ตัว`;
+            // END: Update Popup Display - UPDATED
 
             let twoDigits, threeDigits;
             
