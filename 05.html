@@ -100,17 +100,21 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     background: linear-gradient(to bottom, #EE8D5C, #E800E8);
 }
 
+/* --- UPDATED with clamp() --- */
 .prize-title-red {
     border: 2px solid #0070C0;
     background: linear-gradient(to bottom, #FFD6FF, #E800E8);
-    font-size: 28px; /* --- ADJUSTED: Reduced font size --- */
-    white-space: nowrap; /* --- ADDED: Prevent text from wrapping --- */
-    padding: 5px 15px; /* Adjusted padding for better fit */
+    /* ใช้ clamp() เพื่อปรับขนาดฟอนต์อัตโนมัติ: clamp(ขนาดเล็กสุด, ขนาดที่ต้องการ, ขนาดใหญ่สุด) */
+    font-size: clamp(16px, 4.2vw, 28px);
+    white-space: nowrap;
+    padding: 5px 15px;
     border-radius: 50px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    /* เพิ่ม flex-shrink เพื่อให้ข้อความถูกบีบอัดก่อนโลโก้ */
+    flex-shrink: 1; 
 }
 /* END: Popup Header and Date - UPDATED */
 
