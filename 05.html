@@ -301,7 +301,6 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 `;
             }
             
-            // Apply the SVG filter for the engraved effect on the number
             return `
                 <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     ${svgContent}
@@ -343,15 +342,14 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             if (config) {
                 numberInput.maxLength = config.digits;
                 numberInput.placeholder = `กรุณากรอกตัวเลข ${config.digits} หลัก`;
-                numberInput.value = ""; // Clear previous input
+                numberInput.value = "";
             }
         }
 
         function populateTopicSelect() {
             const select = document.getElementById("topicSelect");
-            select.innerHTML = ''; // Clear existing options
+            select.innerHTML = ''; 
 
-            // Sort keys by time
             const sortedKeys = Object.keys(lotteryTypes).sort((a, b) => {
                 const timeA = lotteryTypes[a].time.replace('.', '');
                 const timeB = lotteryTypes[b].time.replace('.', '');
@@ -378,9 +376,8 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
             const date = document.getElementById("dateInput").value ? new Date(document.getElementById("dateInput").value) : new Date();
             
-            // --- START: โค้ดที่ปรับปรุงตามไฟล์ 01 ---
             const popupNameDisplay = document.getElementById("popupNameDisplay");
-            popupNameDisplay.className = 'topic-box'; // Set the class
+            popupNameDisplay.className = 'topic-box';
             popupNameDisplay.innerHTML = `
                 <img src="logo.png" alt="Logo" class="header-logo">
                 <span>ผล${config.name}</span>
@@ -388,26 +385,24 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             `;
 
             const popupTimeDisplay = document.getElementById("popupTimeDisplay");
-            popupTimeDisplay.className = 'topic-time'; // Set the class
+            popupTimeDisplay.className = 'topic-time';
             popupTimeDisplay.textContent = `เวลา ${config.time}`;
-            // --- END: โค้ดที่ปรับปรุง ---
 
             document.getElementById("popupDateDisplay").textContent = getThaiDate(date);
             document.getElementById("popupPrizeTitle").textContent = `รางวัลเลข ${config.digits} ตัว`;
 
             let twoDigits, threeDigits;
             
-            // Slicing logic based on lottery type
             switch (config.type) {
-                case 'pattana': // 6 digits
+                case 'pattana':
                     threeDigits = num.slice(3);
                     twoDigits = num.slice(2, 4);
                     break;
-                case 'samakkhee': // 5 digits
+                case 'samakkhee':
                     threeDigits = num.slice(2);
                     twoDigits = num.slice(1, 3);
                     break;
-                case 'star': // 5 digits
+                case 'star':
                 default:
                     threeDigits = num.slice(2);
                     twoDigits = num.slice(0, 2);
@@ -418,7 +413,6 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(threeDigits, 'blue');
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(twoDigits, 'orange');
 
-            // Reset toggle buttons
             ["popupCircleButton", "popupSquareButton", "popupCircleTopButton"].forEach(id => document.getElementById(id).classList.remove("active"));
             
             showPopup();
@@ -430,7 +424,6 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const selectedKey = document.getElementById("topicSelect").value;
             const config = lotteryTypes[selectedKey];
             const num = document.getElementById('numberInput').value;
-
             let twoDigits, threeDigits, threeDigits_first, threeDigits_lastTwo;
 
             switch (config.type) {
@@ -490,6 +483,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             }
         }
         
+        // --- START: โค้ดที่แก้ไข ---
         function setupSaveImageButton() {
             const saveBtn = document.getElementById("saveAsImageButton");
             const newSaveBtn = saveBtn.cloneNode(true);
@@ -501,34 +495,39 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
                 if (controlsElement) controlsElement.style.display = 'none';
 
-                html2canvas(captureElement, {
-                    useCORS: true,
-                    scale: 2.5,
-                    backgroundColor: '#fffde7'
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    const num = document.getElementById("numberInput").value || "result";
-                    const selectedKey = document.getElementById("topicSelect").value;
-                    const topicName = lotteryTypes[selectedKey].name.replace(/\s+/g, '');
-                    
-                    link.download = `Result-${topicName}-${num}-${Date.now()}.png`;
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
-                }).catch(err => {
-                    console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-                    alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-                }).finally(() => {
-                    if (controlsElement) controlsElement.style.display = 'flex';
-                });
+                // เพิ่มการหน่วงเวลา 500 มิลลิวินาที (ครึ่งวินาที)
+                setTimeout(() => {
+                    html2canvas(captureElement, {
+                        useCORS: true,
+                        scale: 2.5,
+                        backgroundColor: '#fffde7'
+                    }).then(canvas => {
+                        const link = document.createElement('a');
+                        const num = document.getElementById("numberInput").value || "result";
+                        const selectedKey = document.getElementById("topicSelect").value;
+                        const topicName = lotteryTypes[selectedKey].name.replace(/\s+/g, '');
+                        
+                        link.download = `Result-${topicName}-${num}-${Date.now()}.png`;
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                    }).catch(err => {
+                        console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+                        alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+                    }).finally(() => {
+                        // คืนค่าปุ่มควบคุมให้แสดงเหมือนเดิม
+                        if (controlsElement) controlsElement.style.display = 'flex';
+                    });
+                }, 500); // <-- นี่คือเวลาที่หน่วง (500ms = 0.5 วินาที)
             });
         }
+        // --- END: โค้ดที่แก้ไข ---
         
         // --- Event Listeners ---
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener("DOMContentLoaded", () => {
             populateTopicSelect();
             setDefaultDate();
-            updateNumberInput(); // Set initial placeholder
+            updateNumberInput();
             
             document.getElementById("topicSelect").addEventListener("change", updateNumberInput);
             document.getElementById("convertButton").addEventListener("click", convertNumber);
