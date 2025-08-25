@@ -72,7 +72,10 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     justify-content: center;
     margin-bottom: 5px;
 }
-
+.header-logo {
+    width: 60px; /* Adjusted to match original logo size in this file */
+    height: auto;
+}
 #popupTimeDisplay, #popupDateDisplay {
     margin: 3px 0;
     color: blue;
@@ -81,7 +84,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     font-size: clamp(16px, 3.4vw, 20px);
 }
 
-.prize-title {
+.prize-title, .prize-title-red {
     display: inline-block;
     font-size: 22px;
     font-weight: bold;
@@ -90,25 +93,28 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     margin: 4px 0 7px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     color: #fff;
+}
+
+.prize-title {
     border: 2px solid #4EA72E;
     background: linear-gradient(to bottom, #EE8D5C, #E800E8);
 }
 
-/* --- UPDATED to host a single SVG --- */
+/* --- UPDATED with clamp() --- */
 .prize-title-red {
-    /* เป็นแค่กรอบกำหนดขนาดให้ SVG ด้านใน */
-    width: 95%;
-    max-width: 550px;
-    height: 60px;
-    margin: 0 auto; /* จัดกลาง */
-}
-
-.prize-title-red svg {
-    /* ทำให้ SVG เต็มขนาดกรอบ */
-    width: 100%;
-    height: 100%;
-    /* เพิ่มเงาให้ป้ายทั้งหมด */
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    border: 2px solid #0070C0;
+    background: linear-gradient(to bottom, #FFD6FF, #E800E8);
+    /* ใช้ clamp() เพื่อปรับขนาดฟอนต์อัตโนมัติ: clamp(ขนาดเล็กสุด, ขนาดที่ต้องการ, ขนาดใหญ่สุด) */
+    font-size: clamp(16px, 4.2vw, 28px);
+    white-space: nowrap;
+    padding: 5px 15px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    /* เพิ่ม flex-shrink เพื่อให้ข้อความถูกบีบอัดก่อนโลโก้ */
+    flex-shrink: 1; 
 }
 /* END: Popup Header and Date - UPDATED */
 
@@ -124,6 +130,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .ball-group { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 3px 0; vertical-align: middle; }
 .ball-group svg { margin: 0 0px; }
 
+/* --- START: โค้ดที่ปรับปรุง --- */
 /* สไตล์ร่วมของป้าย (เอฟเฟกต์ร่องลึก ตัวอักษรสีขาว) */
 .prize-label-blue, .prize-label-orange {
     display: inline-block;
@@ -137,6 +144,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 50px;
 }
+/* --- END: โค้ดที่ปรับปรุง --- */
 
 /* สไตล์สำหรับ "3 ตัวบน" */
 .prize-label-blue {
@@ -211,7 +219,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                     <!-- START: UPDATED HTML STRUCTURE -->
                     <div class="result-header">
                         <div id="popupNameDisplay" class="prize-title-red">
-                            <!-- JavaScript will inject a single SVG here -->
+                            <!-- JS will inject: img, span, img -->
                         </div>
                     </div>
                     <p id="popupTimeDisplay" class="blue"></p>
@@ -302,6 +310,8 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 `;
             }
             
+            // --- START: โค้ดที่ปรับปรุง ---
+            // เปลี่ยน fill เป็น "white"
             return `
                 <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
                     ${svgContent}
@@ -312,6 +322,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                     </text>
                 </svg>
             `;
+            // --- END: โค้ดที่ปรับปรุง ---
         }
 
         function createPingPongNumbers(numbers, type = 'red') {
@@ -351,6 +362,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const select = document.getElementById("topicSelect");
             select.innerHTML = ''; // Clear existing options
 
+            // Sort keys by time
             const sortedKeys = Object.keys(lotteryTypes).sort((a, b) => {
                 const timeA = lotteryTypes[a].time.replace('.', '');
                 const timeB = lotteryTypes[b].time.replace('.', '');
@@ -377,58 +389,31 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
             const date = document.getElementById("dateInput").value ? new Date(document.getElementById("dateInput").value) : new Date();
             
-            // --- START: UPDATED with single SVG rendering ---
+            // START: Update Popup Display - UPDATED
             const popupNameDisplay = document.getElementById("popupNameDisplay");
-            const textContent = `ผล${config.name}`;
-            const logoUrl = 'logo.png'; // Path to the logo
-
             popupNameDisplay.innerHTML = `
-                <svg width="100%" height="100%" viewBox="0 0 500 60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <defs>
-                        <linearGradient id="bannerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#FFD6FF" />
-                            <stop offset="100%" style="stop-color:#E800E8" />
-                        </linearGradient>
-                    </defs>
-
-                    <!-- พื้นหลังของป้าย -->
-                    <rect x="1" y="1" width="498" height="58" rx="29"
-                          fill="url(#bannerGradient)" stroke="#0070C0" stroke-width="2" />
-
-                    <!-- โลโก้ด้านซ้าย -->
-                    <image xlink:href="${logoUrl}" x="10" y="10" height="40" width="40" />
-
-                    <!-- โลโก้ด้านขวา -->
-                    <image xlink:href="${logoUrl}" x="450" y="10" height="40" width="40" />
-
-                    <!-- ข้อความหัวข้อที่ปรับขนาดอัตโนมัติ -->
-                    <text x="250" y="38"
-                          font-family="Arial, sans-serif" font-weight="bold" font-size="32"
-                          fill="white" text-anchor="middle"
-                          filter="url(#inset-effect)"
-                          lengthAdjust="spacingAndGlyphs" textLength="380">
-                        ${textContent}
-                    </text>
-                </svg>
+                <img src="logo.png" class="header-logo" alt="logo">
+                <span>ผล${config.name}</span>
+                <img src="logo.png" class="header-logo" alt="logo">
             `;
-            // --- END: UPDATED with single SVG rendering ---
-
             document.getElementById("popupTimeDisplay").textContent = `เวลา ${config.time}`;
             document.getElementById("popupDateDisplay").textContent = getThaiDate(date);
             document.getElementById("popupPrizeTitle").textContent = `รางวัลเลข ${config.digits} ตัว`;
+            // END: Update Popup Display - UPDATED
 
             let twoDigits, threeDigits;
             
+            // Slicing logic based on lottery type
             switch (config.type) {
-                case 'pattana':
+                case 'pattana': // 6 digits
                     threeDigits = num.slice(3);
                     twoDigits = num.slice(2, 4);
                     break;
-                case 'samakkhee':
+                case 'samakkhee': // 5 digits
                     threeDigits = num.slice(2);
                     twoDigits = num.slice(1, 3);
                     break;
-                case 'star':
+                case 'star': // 5 digits
                 default:
                     threeDigits = num.slice(2);
                     twoDigits = num.slice(0, 2);
@@ -439,6 +424,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             document.getElementById("popupThreeDigitsDisplay").innerHTML = createPingPongNumbers(threeDigits, 'blue');
             document.getElementById("popupTwoDigitsDisplay").innerHTML = createPingPongNumbers(twoDigits, 'orange');
 
+            // Reset toggle buttons
             ["popupCircleButton", "popupSquareButton", "popupCircleTopButton"].forEach(id => document.getElementById(id).classList.remove("active"));
             
             showPopup();
