@@ -31,7 +31,6 @@
         .date-input-wrapper button#calendarButton { flex-shrink: 0; width: auto; max-width: none; margin: 0; padding: 8px 12px; font-size: 20px; background-color: #f0f0f0; border: 1.5px solid #ccc; cursor: pointer; border-radius: 2px; }
         .date-input-wrapper button#calendarButton:hover { background-color: #e0e0e0; }
         
-        /* === START: โค้ด CSS ที่แก้ไข === */
         .popup-overlay { 
             display: none; 
             position: fixed; 
@@ -42,10 +41,10 @@
             background-color: rgba(0, 0, 0, 0.7); 
             z-index: 1000; 
             justify-content: center; 
-            align-items: center; /* เปลี่ยนจาก flex-start เป็น center */
+            align-items: center;
         }
         .popup-content { 
-            background-color: #FFFFD1; /* ย้ายพื้นหลังจาก result-display มาที่นี่ */
+            background-color: #FFFFD1;
             border-radius: 10px; 
             box-shadow: 0 0 20px rgba(0,0,0,0.3); 
             width: 100%; 
@@ -54,7 +53,6 @@
             position: relative; 
             box-sizing: border-box; 
         }
-        /* === END: โค้ด CSS ที่แก้ไข === */
 
         .popup-controls { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px; }
         .popup-button { border: none; border-radius: 5px; font-weight: bold; color: white; cursor: pointer; transition: background-color: 0.3s; padding: 10px 20px; background-color: #007bff; width: 90%; max-width: 200px; font-size: 16px; }
@@ -130,7 +128,6 @@
         function showPopup() { document.getElementById("popupOverlay").style.display = "flex"; }
         function closePopup() { document.getElementById("popupOverlay").style.display = "none"; }
         
-        // เราจะคงโค้ดการรอโหลดรูปภาพไว้ เพราะเป็นส่วนเสริมที่ดี
         function attachSaveAsImageListener() {
             const saveBtn = document.getElementById("saveAsImageButton");
             if (!saveBtn) return;
@@ -143,10 +140,11 @@
                 
                 const performCapture = () => {
                     if (controlsElement) { controlsElement.style.display = 'none'; }
+                    
                     html2canvas(captureElement, {
                         useCORS: true,
                         scale: 3,
-                        backgroundColor: null // ทำให้พื้นหลังโปร่งใสและใช้สีจาก popup-content
+                        backgroundColor: '#FFFFD1' // กำหนดสีพื้นหลังให้ตรงกับ .popup-content
                     }).then(canvas => {
                         const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
                         const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
@@ -162,31 +160,11 @@
                     });
                 };
 
-                const images = captureElement.getElementsByTagName('img');
-                let imagesToLoad = images.length;
-
-                if (imagesToLoad === 0) {
-                    performCapture();
-                    return;
-                }
-
-                let loadedCount = 0;
-                const onImageLoad = () => {
-                    loadedCount++;
-                    if (loadedCount === imagesToLoad) {
-                        performCapture();
-                    }
-                };
-
-                for (let i = 0; i < images.length; i++) {
-                    const img = images[i];
-                    if (img.complete) {
-                        onImageLoad();
-                    } else {
-                        img.addEventListener('load', onImageLoad, { once: true });
-                        img.addEventListener('error', onImageLoad, { once: true });
-                    }
-                }
+                // === START: โค้ดที่แก้ไข (หัวใจสำคัญ) ===
+                // หน่วงเวลาการทำงาน 500 มิลลิวินาที (0.1 วินาที)
+                // เพื่อให้แน่ใจว่าบราวเซอร์วาดทุกอย่างลงบนจอเสร็จสมบูรณ์แล้ว
+                setTimeout(performCapture, 100);
+                // === END: โค้ดที่แก้ไข ===
             });
         }
 
