@@ -97,7 +97,9 @@
     <div id="popupOverlay" class="popup-overlay">
         <div class="popup-content">
             <div class="result-display">
-                <div style="position: relative; text-align: center; font-size: 18px; line-height: 0.5;">
+                <!-- === START: โค้ด HTML ที่แก้ไข (ลบ line-height: 0.5) === -->
+                <div style="position: relative; text-align: center; font-size: 18px;">
+                <!-- === END: โค้ด HTML ที่แก้ไข === -->
                     <h2 class="header-title">ผลฉลากกินแบ่งรัฐบาล</h2>
                     <div class="draw-date"><span id="display-draw-date"></span></div>
                     
@@ -128,6 +130,8 @@
         function showPopup() { document.getElementById("popupOverlay").style.display = "flex"; }
         function closePopup() { document.getElementById("popupOverlay").style.display = "none"; }
         
+        // เราจะใช้โค้ด JavaScript ที่สะอาดและไม่ต้องหน่วงเวลา
+        // เพราะปัญหาอยู่ที่ HTML/CSS ไม่ใช่ JavaScript
         function attachSaveAsImageListener() {
             const saveBtn = document.getElementById("saveAsImageButton");
             if (!saveBtn) return;
@@ -138,33 +142,25 @@
                 const captureElement = document.querySelector(".popup-content");
                 const controlsElement = document.querySelector('.popup-controls');
                 
-                const performCapture = () => {
-                    if (controlsElement) { controlsElement.style.display = 'none'; }
-                    
-                    html2canvas(captureElement, {
-                        useCORS: true,
-                        scale: 3,
-                        backgroundColor: '#FFFFD1' // กำหนดสีพื้นหลังให้ตรงกับ .popup-content
-                    }).then(canvas => {
-                        const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
-                        const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
-                        const link = document.createElement('a');
-                        link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
-                        link.href = canvas.toDataURL("image/png", 1.0);
-                        link.click();
-                    }).catch(err => {
-                        console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-                        alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-                    }).finally(() => {
-                        if (controlsElement) { controlsElement.style.display = 'flex'; }
-                    });
-                };
-
-                // === START: โค้ดที่แก้ไข (หัวใจสำคัญ) ===
-                // หน่วงเวลาการทำงาน 500 มิลลิวินาที (0.1 วินาที)
-                // เพื่อให้แน่ใจว่าบราวเซอร์วาดทุกอย่างลงบนจอเสร็จสมบูรณ์แล้ว
-                setTimeout(performCapture, 100);
-                // === END: โค้ดที่แก้ไข ===
+                if (controlsElement) { controlsElement.style.display = 'none'; }
+                
+                html2canvas(captureElement, {
+                    useCORS: true,
+                    scale: 3,
+                    backgroundColor: '#FFFFD1'
+                }).then(canvas => {
+                    const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
+                    const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
+                    const link = document.createElement('a');
+                    link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
+                    link.href = canvas.toDataURL("image/png", 1.0);
+                    link.click();
+                }).catch(err => {
+                    console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+                    alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+                }).finally(() => {
+                    if (controlsElement) { controlsElement.style.display = 'flex'; }
+                });
             });
         }
 
