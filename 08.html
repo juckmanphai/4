@@ -79,13 +79,11 @@
                     <h2 class="header-title">ผลฉลากกินแบ่งรัฐบาล</h2>
                     <div class="draw-date"><span id="display-draw-date"></span></div>
                     
-                    <!-- === START: โค้ดที่แก้ไข === -->
                     <div class="result-section" style="margin-top: 5px;">
                         <div id="prize-title-container" class="prize-title">
                             <!-- เนื้อหาส่วนนี้จะถูกสร้างโดย JavaScript -->
                         </div>
                     </div>
-                    <!-- === END: โค้ดที่แก้ไข === -->
 
                     <div id="first-prize-display" class="number-group" style="margin-top: 5px;"></div>
                     <div class="result-section flex-row">
@@ -108,6 +106,7 @@
         function showPopup() { document.getElementById("popupOverlay").style.display = "flex"; }
         function closePopup() { document.getElementById("popupOverlay").style.display = "none"; }
 
+        // === START: โค้ดที่แก้ไข (ฟังก์ชันบันทึกภาพที่รอโหลดรูป) ===
         function attachSaveAsImageListener() {
             const saveBtn = document.getElementById("saveAsImageButton");
             if (!saveBtn) return;
@@ -117,35 +116,71 @@
             newSaveBtn.addEventListener("click", function() {
                 const captureElement = document.querySelector(".popup-content");
                 const controlsElement = document.querySelector('.popup-controls');
-                const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
-                const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
+                
+                // ฟังก์ชันสำหรับทำการจับภาพหน้าจอ
+                const performCapture = () => {
+                    if (controlsElement) { controlsElement.style.display = 'none'; }
 
-                if (controlsElement) { controlsElement.style.display = 'none'; }
+                    html2canvas(captureElement, {
+                        useCORS: true,
+                        scale: 3,
+                        backgroundColor: '#FFFFD1'
+                    }).then(canvas => {
+                        const dateText = document.getElementById("display-draw-date").innerText.replace(/[^a-zA-Z0-9-]/g, '_');
+                        const firstPrize = document.getElementById("first-prize").value || "XXXXXX";
+                        const link = document.createElement('a');
+                        link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
+                        link.href = canvas.toDataURL("image/png", 1.0);
+                        link.click();
+                    }).catch(err => {
+                        console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+                        alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+                    }).finally(() => {
+                        if (controlsElement) { controlsElement.style.display = 'flex'; }
+                    });
+                };
 
-                html2canvas(captureElement, {
-                    useCORS: true,
-                    scale: 3,
-                    backgroundColor: '#FFFFD1'
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `ผลสลาก-${firstPrize}-${dateText}.png`;
-                    link.href = canvas.toDataURL("image/png", 1.0);
-                    link.click();
-                }).catch(err => {
-                    console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-                    alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-                }).finally(() => {
-                    if (controlsElement) { controlsElement.style.display = 'flex'; }
-                });
+                // --- ตรรกะการรอโหลดรูปภาพ ---
+                const images = captureElement.getElementsByTagName('img');
+                let imagesToLoad = images.length;
+
+                // ถ้าไม่มีรูปภาพเลย ก็ให้ทำการจับภาพทันที
+                if (imagesToLoad === 0) {
+                    performCapture();
+                    return;
+                }
+
+                // ฟังก์ชันที่จะถูกเรียกเมื่อรูปโหลดเสร็จ 1 รูป
+                const onImageLoad = () => {
+                    imagesToLoad--;
+                    // เมื่อรูปสุดท้ายโหลดเสร็จ (ตัวนับเป็น 0) ให้เริ่มจับภาพ
+                    if (imagesToLoad === 0) {
+                        performCapture();
+                    }
+                };
+
+                // วนลูปเช็ครูปทุกรูป
+                for (let i = 0; i < images.length; i++) {
+                    const img = images[i];
+                    if (img.complete) {
+                        // ถ้ารูปโหลดเสร็จแล้ว (เช่น โหลดจาก cache) ให้นับเลย
+                        onImageLoad();
+                    } else {
+                        // ถ้ารูปยังไม่เสร็จ ให้ดักรอ event 'load'
+                        img.addEventListener('load', onImageLoad, { once: true });
+                        // ดักรอ event 'error' ด้วย เผื่อรูปโหลดไม่สำเร็จ
+                        img.addEventListener('error', onImageLoad, { once: true });
+                    }
+                }
             });
         }
+        // === END: โค้ดที่แก้ไข ===
 
         function formatThaiDate(dateString) { const parts = dateString.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); if (!parts) return `งวดวันที่ ${dateString}`; const day = parseInt(parts[1], 10); const month = parseInt(parts[2], 10); const thaiYear = parseInt(parts[3], 10); const gregorianYear = thaiYear - 543; const date = new Date(gregorianYear, month - 1, day); if (isNaN(date.getTime()) || date.getDate() !== day || date.getMonth() !== month - 1) { return `งวดวันที่ ${dateString}`; } const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; const dayOfWeek = days[date.getDay()]; const monthName = months[date.getMonth()]; return `งวดวัน${dayOfWeek}ที่ ${day} ${monthName} พ.ศ. ${thaiYear}`; }
         function createPingPongBall(number, type = 'red', size = 50, fontSize = 26) { const gradientId = `grad-${type}-${Math.random().toString(36).substring(2, 9)}`; const r = (size / 2) - 1; const cx = size / 2; const cy = size / 2; let highlightColor, midColor, shadowColor; if (type === 'blue') { highlightColor = '#89CFF0'; midColor = '#007FFF'; shadowColor = '#0059B3'; } else if (type === 'green') { highlightColor = '#90EE90'; midColor = '#008000'; shadowColor = '#006400'; } else if (type === 'orange') { highlightColor = '#FFE3A0'; midColor = '#FF8C00'; shadowColor = '#D97200'; } else { highlightColor = '#FFD6FF'; midColor = '#E800E8'; shadowColor = '#A100A1'; } const gradientHtml = `<radialGradient id="${gradientId}" cx="35%" cy="35%" r="70%"><stop offset="0%" stop-color="${highlightColor}" /><stop offset="50%" stop-color="${midColor}" /><stop offset="100%" stop-color="${shadowColor}" /></radialGradient>`; return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="margin: 0 0px;"><defs>${gradientHtml}</defs><circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${gradientId})" stroke="rgba(0,0,0,0.5)" stroke-width="1"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" filter="url(#inset-effect)">${number}</text></svg>`; }
         function displayNumberGroup(elementId, numberString, type, size, fontSize) { const container = document.getElementById(elementId); container.innerHTML = ""; if (!numberString) return; let ballsHtml = ""; for (let i = 0; i < numberString.length; i++) { ballsHtml += createPingPongBall(numberString[i], type, size, fontSize); } container.innerHTML = ballsHtml; }
         
         function displayResults() {
-            // === START: โค้ดที่เพิ่มเข้ามาเพื่อแก้ไขปัญหา ===
             const prizeTitleContainer = document.getElementById("prize-title-container");
             if (prizeTitleContainer) {
                 prizeTitleContainer.innerHTML = `
@@ -154,7 +189,6 @@
                     <img src="logo.png" alt="Logo" class="prize-title-logo">
                 `;
             }
-            // === END: โค้ดที่เพิ่มเข้ามา ===
 
             const rawDate = document.getElementById("draw-date").value;
             if (!rawDate || !rawDate.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/)) {
@@ -168,7 +202,9 @@
             displayNumberGroup("display-back-three-1", document.getElementById("back-three-1").value, "green", 40, 20);
             displayNumberGroup("display-back-three-2", document.getElementById("back-three-2").value, "green", 40, 20);
             displayNumberGroup("display-back-two", document.getElementById("back-two").value, "orange", 56, 34);
+            
             showPopup();
+            // เรียกใช้ฟังก์ชันผูก event บันทึกรูปภาพ (ที่แก้ไขใหม่แล้ว)
             attachSaveAsImageListener();
         }
 
