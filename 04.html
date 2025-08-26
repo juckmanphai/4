@@ -65,11 +65,34 @@
     .popup-content { background-color: #FFFFD1; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.3); width: 100%; max-width: 600px; padding: 25px 15px; position: relative; box-sizing: border-box; }
     .result-container-popup { border: 1.5px solid #4CAF50; background-color:  #FFFFD1; margin: 0; padding: 15px 5px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); position: relative; min-height: 300px; box-sizing: border-box; overflow: hidden; }
     
-    /* ===== Header and Logo Styles ===== */
-    .result-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
-    .header-logo { width: 60px; height: auto; }
-    .topic-box { background-color: #FF75FF; border: 3px solid #0070C0; color: white; border-radius: 15px; padding: 8px 15px; font-size: 22px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); text-align: center; }
-    .topic-time { font-size: 18px; color: blue; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; margin-top: 0; margin-bottom: 10px; }
+    /* ===== START: UPDATED Header and Logo Styles (from file 01) ===== */
+    .result-header { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .header-logo { width: 40px; height: auto; }
+    .topic-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        background-color: #FF75FF;
+        border: 2px solid #0070C0;
+        color: white;
+        border-radius: 50px;
+        padding: 5px 15px;
+        font-size: 24px;
+        font-weight: bold;
+        /* Engraved effect for white text */
+        text-shadow: -1px -1px 1px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+    }
+    .topic-time {
+        font-size: 18px;
+        color: blue;
+        font-weight: bold;
+        /* Engraved effect for dark text */
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.3), -1px -1px 1px rgba(255,255,255,0.9);
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    /* ===== END: UPDATED Header and Logo Styles ===== */
     
     #resultContentWrapper { position: relative; z-index: 1; color: blue; }
     #resultContentWrapper h2, #resultContentWrapper h3, #resultContentWrapper p { margin: 6px 0; }
@@ -108,7 +131,6 @@
         
         <div id="numberSetsContainer"></div>
 
-        <label for="topicSelect">หัวข้อ:</label>
         <div class="select-wrapper">
             <select id="topicSelect" onchange="checkCustomTopicOption(this)">
                 <option value="ลาวประตูชัย เวลา 05.45 น." data-default="true">ลาวประตูชัย เวลา 05.45 น.</option>
@@ -147,7 +169,6 @@
             </div>
         </div>
 
-        <label for="personSelect">ผู้บอก:</label>
         <div class="select-wrapper">
             <select id="personSelect" onchange="checkCustomOption(this)">
                 <option value="Team" data-default="true">Team</option> 
@@ -165,7 +186,6 @@
         </div>
         <input type="text" id="customPersonInput" placeholder="กรุณากรอกชื่อผู้บอกเอง" style="display: none; width: 80%; margin: 10px auto;" />
 
-        <label for="dateInput">วันที่:</label>
         <div class="date-input-wrapper">
             <input type="text" id="dateInput" placeholder="วว/ดด/ปปปป (พ.ศ.)" />
             <button type="button" id="calendarButton">📅</button>
@@ -187,11 +207,11 @@
             </div>
             <div class="controls">
                 <button id="saveResultAsImageBtn" class="close-popup-btn" style="background-color: #007bff; margin-bottom: 15px;">บันทึกเป็นรูปภาพ</button>
-                <div class="control-group">
-                    <label for="popupFontSizeSlider">ปรับขนาดตัวอักษร:</label>
-                    <input type="range" id="popupFontSizeSlider" min="0.7" max="1.5" step="0.05" value="1.0">
-                    <span id="popupFontSizeValue">ขนาด: 100%</span>
-                </div>
+<div class="control-group">
+    <label for="popupFontSizeSlider">ปรับขนาดตัวอักษร:</label>
+    <input type="range" id="popupFontSizeSlider" min="0.7" max="2.0" step="0.05" value="1.0">
+    <span id="popupFontSizeValue">ขนาด: 100%</span>
+</div>
                 <div class="control-group">
                     <label for="popupLineHeightSlider">ปรับขนาดบรรทัด:</label>
                     <input type="range" id="popupLineHeightSlider" min="1.0" max="2.5" step="0.1" value="1.5">
@@ -1041,33 +1061,38 @@ const lunarData = {
         }
 
         const lunarDate = getLunarDate(selectedDate);
-        const lunarHtml = lunarDate ? `<p style="font-size:14px;color:${lunarDate.includes('(วันพระ)')?'red':'#002060'};text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">( ${lunarDate} )</p>` : '';
+        const engravedShadowStyle = "text-shadow: 1px 1px 1px rgba(0,0,0,0.3), -1px -1px 1px rgba(255,255,255,0.9);";
+        const lunarHtml = lunarDate ? `<p style="font-size:14px;color:${lunarDate.includes('(วันพระ)')?'red':'#002060'}; font-weight: bold; ${engravedShadowStyle}">( ${lunarDate} )</p>` : '';
         let noteInput = document.getElementById("noteInput").value.trim();
         noteInput = noteInput ? `<span style="color: red;">${noteInput}</span>` : '<span style="color: red;">No remarks</span>';
         
+        // ===== START: UPDATED HTML structure for header =====
         return `
             <div style="position: relative; text-align: center; font-size: 20px; color: blue;">
                 <div class="result-header">
-                    <img src="logo.png" class="header-logo" alt="logo">
-                    <div class="topic-box">${topicName}</div>
-                    <img src="logo.png" class="header-logo" alt="logo">
+                    <div class="topic-box">
+                        <img src="logo.png" class="header-logo" alt="logo">
+                        <span>${topicName}</span>
+                        <img src="logo.png" class="header-logo" alt="logo">
+                    </div>
                 </div>
                 ${topicTimeHtml}
-                <p style="font-size: 18px; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">${getThaiDate(selectedDate)}</p>
+                <p style="font-size: 18px; ${engravedShadowStyle}">${getThaiDate(selectedDate)}</p>
                 ${lunarHtml}
-                <h2 style="font-size: 22px; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">By : <span style="color: green;">${getSelectedPerson()}</span> ${numberSetTitle} มีดังนี้</h2>
+                <h2 style="font-size: 22px; font-weight: bold; ${engravedShadowStyle}">By : <span style="color: green;">${getSelectedPerson()}</span> ${numberSetTitle} มีดังนี้</h2>
                 ${numberLines.join('')}
-                <h2 style="font-size: 24px; font-weight: bold; color: red; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; margin-top: 15px;">แนวทางเท่านั้น</h2>
-                <p style="font-size: 13px;">สร้างเมื่อ: ${getThaiDate()} ${getThaiTime()}</p>
-                <p style="font-size: 20px;">หมายเหตุ : ${noteInput}</p>
+                <h2 style="font-size: 24px; font-weight: bold; color: red; ${engravedShadowStyle} margin-top: 15px;">แนวทางเท่านั้น</h2>
+                <p style="font-size: 13px; ${engravedShadowStyle}">สร้างเมื่อ: ${getThaiDate()} ${getThaiTime()}</p>
+                <p style="font-size: 20px; ${engravedShadowStyle}">หมายเหตุ : ${noteInput}</p>
             </div>
         `;
+        // ===== END: UPDATED HTML structure for header =====
     }
 
     function setupPopupControls() {
         const resultContent = document.getElementById("resultContentWrapper");
         if (!resultContent) return;
-        const textElements = resultContent.querySelectorAll("p,h2,h3,.number-line,.topic-box");
+        const textElements = resultContent.querySelectorAll("p,h2,h3,.number-line,.topic-box, .topic-box span");
         const fsSlider = document.getElementById("popupFontSizeSlider");
         const fsValueSpan = document.getElementById("popupFontSizeValue");
         const lhSlider = document.getElementById("popupLineHeightSlider");
