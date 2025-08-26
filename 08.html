@@ -172,7 +172,7 @@
             display: inline-block;
             font-size: 26px;
             font-weight: bold;
-            border: 5px solid #C2185B;
+            border: 5px solid #00B0F0;
             border-radius: 15px;
             padding: 15px 20px;
             margin-top: 4px;
@@ -198,18 +198,29 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
+        /* === START: EDIT 1 === */
         .prize-title {
             font-size: 22px;
             font-weight: bold;
-            border: 2px solid #D32F2F;
-            border-radius: 10px;
-            padding: 10px 15px;
-            margin: 4px 0 7px;
+            border: 2px solid #0070C0;
+            border-radius: 50px; /* Rounded edges */
+            padding: 2px 2px; /* Adjusted padding */
+            margin: 10px 0 7px;
             background: linear-gradient(to bottom, #EF9A9A, #E53935);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             color: #fff;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+            display: inline-flex; /* Make it a flex container */
+            align-items: center;   /* Center items vertically */
+            justify-content: center; /* Center items horizontally */
+            gap: 10px; /* Space between logo and text */
         }
+
+        .prize-title-logo {
+            width: 40px;
+            height: auto;
+        }
+        /* === END: EDIT 1 === */
 
         /* --- START: โค้ดที่ปรับปรุง --- */
         .prize-label-blue, .prize-label-green, .prize-label-orange {
@@ -249,13 +260,15 @@
             margin-top: 10px;
         }
         
+        /* === START: EDIT 2 === */
         .number-group {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 5px 0;
-            min-height: 50px;
+            margin: 0; /* Reduced vertical margin */
+            min-height: 42px; /* Reduced min-height */
         }
+        /* === END: EDIT 2 === */
 
         .flex-row {
             display: flex;
@@ -355,11 +368,17 @@
                     <div class="draw-date">
                         <span id="display-draw-date"></span>
                     </div>
-                    <div class="result-section" style="margin-top: 10px; display: flex; align-items: center; justify-content: center; position: relative;">
-                        <img src="logo.png" alt="Logo Left" style="width: 50px; height: 50px; margin-right: 10px;">
-                        <div class="prize-title">รางวัลที่ 1</div>
-                        <img src="logo.png" alt="Logo Right" style="width: 50px; height: 50px; margin-left: 10px;">
+
+                    <!-- === START: EDIT 3 === -->
+                    <div class="result-section" style="margin-top: 5px;">
+                        <div class="prize-title">
+                            <img src="logo.png" alt="Logo" class="prize-title-logo">
+                            <span>รางวัลที่ 1</span>
+                            <img src="logo.png" alt="Logo" class="prize-title-logo">
+                        </div>
                     </div>
+                    <!-- === END: EDIT 3 === -->
+
                     <div id="first-prize-display" class="number-group" style="margin-top: 5px;"></div>
                     
                     <div class="result-section flex-row">
