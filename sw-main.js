@@ -1,4 +1,4 @@
-const CACHE_NAME = 'juckphai-main-menu-v10';
+const CACHE_NAME = 'juckphai-main-menu-v11';
 const urlsToCache = [
   './',
   './index.html',
