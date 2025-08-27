@@ -41,22 +41,8 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 #numberInput:focus { background-color: #bbdefb; border-color: #3f51b5; outline: none; }
 .form-footer { display: flex; justify-content: center; margin-top: 15px; }
 
-/* ---------- Popup Overlay (General) ---------- */
-.popup-overlay { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0, 0, 0, 0.7); 
-    z-index: 1000; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px 0; 
-    box-sizing: border-box; 
-    overflow-y: auto; 
-}
+/* ---------- Popup Overlay ---------- */
+.popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px 0; box-sizing: border-box; overflow-y: auto; }
 
 .popup-content {
     background-color: #fffde7;
@@ -128,8 +114,8 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 }
 
 /* Popup Buttons */
-.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 15px; }
-.popup-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.popup-buttons-container { display: flex; flex-direction: column; align-items: center; gap: 5px; padding-top: 15px; }
+.popup-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; }
 .popup-button { padding: 8px 15px; background-color: #FF9800; }
 .popup-button:hover { background-color: #F57C00; }
 .popup-button.active { background-color: #4CAF50; }
@@ -140,7 +126,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .ball-group svg { margin: 0 0px; }
 
 /* สไตล์ร่วมของป้าย (เอฟเฟกต์ร่องลึก ตัวอักษรสีขาว) */
-.prize-label-blue, .prize-label-orange, .prize-label-green {
+.prize-label-blue, .prize-label-orange {
     display: inline-block;
     font-weight: bold;
     font-size: 22px;
@@ -152,36 +138,28 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     border-radius: 50px;
 }
 
-/* สไตล์สำหรับ "3 ตัวบน" (ลาว) / "เลขหน้า 3 ตัว" (ไทย) */
+/* สไตล์สำหรับ "3 ตัวบน" */
 .prize-label-blue {
     background: linear-gradient(to bottom, #47D359, #0066cc);
     border: 2px solid #004C99;
 }
-/* สไตล์สำหรับ "2 ตัวล่าง" (ลาว) / "เลขท้าย 2 ตัว" (ไทย) */
+/* สไตล์สำหรับ "2 ตัวล่าง" */
 .prize-label-orange {
     background: linear-gradient(to bottom, #FFB74D, #FF8C00);
     border: 2px solid #C66900;
 }
-/* สไตล์สำหรับ "เลขท้าย 3 ตัว" (ไทย) */
-.prize-label-green {
-    background: linear-gradient(to bottom, #90EE90, #008000);
-    border: 2px solid #006400;
-}
-
-
-/* Number Containers (Lao Specific) */
+/* Number Containers */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
 .circle-container { width: 88px; border: 3px solid #FF00FF; border-radius: 2%; }
 .square-container { width: 131px; border: 3px solid red; }
 .square-two-container { width: 88px; border: 3px solid blue; }
-
 /* Numbers Display */
-.numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin: 8px 0; }
+.numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
 .number-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     min-width: 150px;
 }
 /* Responsive */
@@ -197,7 +175,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: 2px solid green;
-    padding: 15px;
+    padding: 20px;
     line-height: 1.2;
     max-width: 600px;
     text-align: center;
@@ -205,7 +183,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 .thai-lottery-form .form-group { margin-bottom: 10px; }
 .thai-lottery-form label { display: block; font-size: 18px; margin-bottom: 5px; }
 .thai-lottery-form input { font-size: 18px; padding: 8px; margin: 5px 0; border: 2px solid #ddd; border-radius: 2px; width: 100%; max-width: 150px; box-sizing: border-box; }
-.thai-lottery-form .input-pair { display: flex; justify-content: center; gap: 10px; }
+.thai-lottery-form .input-pair { display: flex; justify-content: center; gap: 5px; }
 .thai-lottery-form .date-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 320px; margin: 0 auto; }
 .thai-lottery-form .date-input-wrapper input#draw-date { flex-grow: 1; width: auto; max-width: none; margin: 0; text-align: center; }
 .thai-lottery-form .date-input-wrapper button#calendarButton { flex-shrink: 0; width: auto; max-width: none; margin: 0; padding: 8px 12px; font-size: 20px; background-color: #f0f0f0; border: 1.5px solid #ccc; cursor: pointer; border-radius: 2px; }
@@ -224,18 +202,18 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     z-index: 1000;
     justify-content: center;
     align-items: flex-start; /* เปลี่ยนเป็น flex-start */
-    padding: 20px 0; /* เพิ่ม padding ด้านบน */
+    padding: 40px 0 20px 0; /* เพิ่ม padding ด้านบน */
     box-sizing: border-box;
     overflow-y: auto; /* เพิ่ม scroll */
 }
 
 #thaiLotteryPopupContent {
     background-color: #FFFFD1;
-    border-radius: 1px;
+    border-radius: 10px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     width: 100%;
     max-width: 600px;
-    padding: 8px;
+    padding: 10px;
     position: relative;
     box-sizing: border-box;
 }
@@ -249,8 +227,8 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
 }
-#thaiLotteryPopupContent .draw-date { display: inline-block; color: #fff; padding: 10px 15px; font-size: 15px; font-weight: bold; border: 2px solid #E65100; background: linear-gradient(to bottom, #FFB74D, #FB8C00); border-radius: 10px; margin-top: 5px; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
-#thaiLotteryPopupContent .prize-title { font-size: 22px; font-weight: bold; border: 2px solid #D32F2F; border-radius: 10px; padding: 10px 15px; margin: 4px 0 7px; background: linear-gradient(to bottom, #EF9A9A, #E53935); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); color: #fff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); display: inline-block; }
+#thaiLotteryPopupContent .draw-date { display: inline-block; color: #fff; padding: 10px 15px; font-size: 15px; font-weight: bold; border: 2px solid #E65100; background: linear-gradient(to bottom, #FFB74D, #FB8C00); border-radius: 50px; margin-top: 5px; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
+#thaiLotteryPopupContent .prize-title { font-size: 22px; font-weight: bold; border: 2px solid #D32F2F; border-radius: 50px; padding: 15px 20px; margin: 4px 0 7px; background: linear-gradient(to bottom, #EF9A9A, #E53935); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); color: #fff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); display: inline-block; }
 #thaiLotteryPopupContent .prize-label-blue, #thaiLotteryPopupContent .prize-label-green, #thaiLotteryPopupContent .prize-label-orange { display: inline-block; font-weight: bold; font-size: 20px; margin: 0; padding: 8px 15px; color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); text-shadow: -1px -1px 1px rgba(0,0,0,0.6), 1px 1px 1px rgba(255,255,255,0.5); }
 #thaiLotteryPopupContent .prize-label-blue { background: linear-gradient(to bottom, #89CFF0, #007FFF); border: 2px solid #0059B3; border-radius: 20px; }
 #thaiLotteryPopupContent .prize-label-green { background: linear-gradient(to bottom, #90EE90, #008000); border: 2px solid #006400; border-radius: 20px; }
@@ -267,11 +245,11 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     flex-direction: row; /* จัดเรียงเป็นแนวนอน */
     justify-content: center; /* จัดให้อยู่กึ่งกลาง */
     align-items: center;
-    gap: 3px; /* เพิ่มช่องว่างระหว่างลูกบอลเล็กน้อย */
+    gap: 1px; /* เพิ่มช่องว่างระหว่างลูกบอลเล็กน้อย */
     margin: 0;
     min-height: 42px;
 }
-#thaiLotteryPopupContent .flex-row { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 3px 20px; }
+#thaiLotteryPopupContent .flex-row { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 5px 20px; }
 #thaiLotteryPopupContent .popup-controls { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px; }
 #thaiLotteryPopupContent .popup-button { border: none; border-radius: 5px; font-weight: bold; color: white; cursor: pointer; transition: background-color: 0.3s; padding: 10px 20px; background-color: #007bff; width: 90%; max-width: 200px; font-size: 16px; }
 #thaiLotteryPopupContent .popup-button:hover { background-color: #0056b3; }
