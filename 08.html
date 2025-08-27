@@ -41,8 +41,22 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 #numberInput:focus { background-color: #bbdefb; border-color: #3f51b5; outline: none; }
 .form-footer { display: flex; justify-content: center; margin-top: 15px; }
 
-/* ---------- Popup Overlay ---------- */
-.popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px 0; box-sizing: border-box; overflow-y: auto; }
+/* ---------- Popup Overlay (General) ---------- */
+.popup-overlay { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1000; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px 0; 
+    box-sizing: border-box; 
+    overflow-y: auto; 
+}
 
 .popup-content {
     background-color: #fffde7;
@@ -126,7 +140,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 .ball-group svg { margin: 0 0px; }
 
 /* สไตล์ร่วมของป้าย (เอฟเฟกต์ร่องลึก ตัวอักษรสีขาว) */
-.prize-label-blue, .prize-label-orange {
+.prize-label-blue, .prize-label-orange, .prize-label-green {
     display: inline-block;
     font-weight: bold;
     font-size: 22px;
@@ -138,21 +152,29 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     border-radius: 50px;
 }
 
-/* สไตล์สำหรับ "3 ตัวบน" */
+/* สไตล์สำหรับ "3 ตัวบน" (ลาว) / "เลขหน้า 3 ตัว" (ไทย) */
 .prize-label-blue {
     background: linear-gradient(to bottom, #47D359, #0066cc);
     border: 2px solid #004C99;
 }
-/* สไตล์สำหรับ "2 ตัวล่าง" */
+/* สไตล์สำหรับ "2 ตัวล่าง" (ลาว) / "เลขท้าย 2 ตัว" (ไทย) */
 .prize-label-orange {
     background: linear-gradient(to bottom, #FFB74D, #FF8C00);
     border: 2px solid #C66900;
 }
-/* Number Containers */
+/* สไตล์สำหรับ "เลขท้าย 3 ตัว" (ไทย) */
+.prize-label-green {
+    background: linear-gradient(to bottom, #90EE90, #008000);
+    border: 2px solid #006400;
+}
+
+
+/* Number Containers (Lao Specific) */
 .circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
 .circle-container { width: 88px; border: 3px solid #FF00FF; border-radius: 2%; }
 .square-container { width: 131px; border: 3px solid red; }
 .square-two-container { width: 88px; border: 3px solid blue; }
+
 /* Numbers Display */
 .numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin: 8px 0; }
 .number-group {
