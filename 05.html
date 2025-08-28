@@ -149,71 +149,140 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     border: 2px solid #C66900;
 }
 /* Number Containers */
-.circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
-.circle-container { width: 88px; border: 3px solid #FF00FF; border-radius: 2%; }
-.square-container { width: 131px; border: 3px solid red; }
-.square-two-container { width: 88px; border: 3px solid blue; }
+.circle-container, .square-container, .square-two-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px; /* เพิ่มความสูงเป็น 60px (50px ลูกบอล + 5px padding บน + 5px padding ล่าง) */
+    margin: 0 0.5px;
+    padding: 2px;
+    background: transparent;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4);
+}
+.circle-container {
+    width: 100px; /* เดิม 88px, สำหรับ 2 ลูกบอล 50px + 5px*4 padding + 3px*2 border + ช่องว่าง */
+    border: 3px solid #FF00FF;
+    border-radius: 2%;
+}
+.square-container {
+    width: 150px; /* เดิม 131px, สำหรับ 3 ลูกบอล 50px + 5px*4 padding + 3px*2 border + ช่องว่าง */
+    border: 3px solid red;
+}
+.square-two-container {
+    width: 100px; /* เดิม 88px, สำหรับ 2 ลูกบอล 50px + 5px*4 padding + 3px*2 border + ช่องว่าง */
+    border: 3px solid blue;
+}
 /* Numbers Display */
 .numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
 .number-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    min-width: 150px;
+    gap: 10px;
+    min-width: 110px;
 }
 /* Responsive */
 @media (max-width: 480px) { #numberInput { font-size: 18px; padding: 8px; } }
 footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
 
+.thai-lottery-form {
+    display: none; /* ซ่อนไว้ก่อน */
+    background-color: lightyellow;
+    margin: 10px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid green;
+    padding: 10px;
+    line-height: 0.5;
+    max-width: 600px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.thai-lottery-form .form-group {
+    margin-bottom: 10px;
+}
+
+.thai-lottery-form label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.thai-lottery-form input {
+    font-size: 18px;
+    padding: 8px;
+    margin: 5px 0;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 .thai-lottery-form .input-pair {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    text-align: center;
     flex-wrap: nowrap; /* ✅ บังคับให้อยู่ในบรรทัดเดียว */
     width: 100%;
     box-sizing: border-box;
 }
 
-.thai-lottery-form .input-pair input {
-    flex: 1 1 45%;  /* ✅ กว้างได้เท่ากัน แต่อยู่ในขอบเขตที่ไม่ล้น */
-    max-width: 150px;
-    min-width: 50px;
-    padding: 10px;
-    font-size: 18px;
+/* --- เริ่มการแก้ไขสำหรับ input date ของรัฐบาลไทย --- */
+.thai-lottery-form .date-input-wrapper {
+    display: flex; /* ตรวจสอบให้แน่ใจว่าเป็น flex container */
+    flex-direction: row; /* เปลี่ยนเป็นจัดเรียงแนวนอน */
+    justify-content: center; /* จัดให้อยู่กึ่งกลาง */
+    align-items: center; /* จัดให้ไอเท็มอยู่ตรงกลางในแนวตั้ง */
+    gap: 10px; /* เพิ่มช่องว่างระหว่าง input และ button */
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: nowrap; /* เพิ่มเพื่อให้แน่ใจว่าไม่อยู่ในบรรทัดเดียวกัน */
+}
+/* --- สิ้นสุดการแก้ไข --- */
+
+.thai-lottery-form .button-container button {
+    font-size: 20px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    width: 100%;
+    max-width: 300px;
     box-sizing: border-box;
 }
 
-/* ปรับให้ยังดูดีบนหน้าจอขนาดเล็ก */
+/* ✅ Responsive ปรับขนาดเมื่อจอเล็ก */
 @media (max-width: 480px) {
-    .thai-lottery-form .input-pair {
+    .thai-lottery-form {
+        padding: 10px 5px;
+    }
+
+    .thai-lottery-form input,
+    .thai-lottery-form .button-container button {
+        font-size: 16px;
+    }
+
+    /* ลบส่วนนี้ออก เพราะเราจะไม่มีปุ่มปฏิทินแยกแล้ว */
+    /*
+    .thai-lottery-form .date-input-wrapper {
+        flex-direction: column;
         gap: 8px;
     }
 
-    .thai-lottery-form .input-pair input {
-        font-size: 16px;
-        padding: 8px;
-        max-width: 100%;
+    .thai-lottery-form .date-input-wrapper button#calendarButton {
+        width: 100%;
     }
+    */
 }
 
-.thai-display-button {
-    background-color: #4CAF50; /* สีเขียว */
-    padding: 12px 24px;
-    font-size: 18px;
-    border-radius: 8px;
-    margin-top: 10px;
-    color: white;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.thai-display-button:hover {
-    background-color: #45a049; /* สีเขียวเข้มขึ้นเมื่อเมาส์ชี้ */
 
 /* Popup สำหรับรัฐบาลไทย */
 #thaiLotteryPopupOverlay {
@@ -331,9 +400,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             <div class="form-group"><label>เลขท้าย 3 ตัว</label><div class="input-pair"><input type="text" id="back-three-1" maxlength="3" placeholder="ชุดที่ 1"><input type="text" id="back-three-2" maxlength="3" placeholder="ชุดที่ 2"></div></div>
             <div class="form-group"><label for="back-two">เลขท้าย 2 ตัว</label><input type="text" id="back-two" maxlength="2" placeholder="กรอกเลขท้าย 2 ตัว"></div>
             <div class="form-group"><label for="first-prize">รางวัลที่ 1 (6 ตัว)</label><input type="text" id="first-prize" maxlength="6" placeholder="กรอกเลขรางวัลที่ 1"></div>
-            <div class="form-footer">
-    <button id="displayThaiResultsButton" class="thai-display-button">แสดงผล</button>
-</div>
+            <div class="button-container"><button id="displayThaiResultsButton">แสดงผล</button></div>
         </div>
     </div>
 
@@ -664,7 +731,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const { twoDigits } = getNumbersForToggle();
             
             if (button.classList.toggle("active")) {
-                display.innerHTML = `<div class="circle-container">${createPingPongNumbers(twoDigits, 'orange', 38, 20)}</div>`;
+                display.innerHTML = `<div class="circle-container">${createPingPongNumbers(twoDigits, 'orange', 50, 26)}</div>`;
             } else {
                 display.innerHTML = createPingPongNumbers(twoDigits, 'orange', 50, 26);
             }
@@ -676,7 +743,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const { threeDigits } = getNumbersForToggle();
 
             if (button.classList.toggle("active")) {
-                display.innerHTML = `<div class="square-container">${createPingPongNumbers(threeDigits, 'blue', 38, 20)}</div>`;
+                display.innerHTML = `<div class="square-container">${createPingPongNumbers(threeDigits, 'blue', 50, 26)}</div>`;
             } else {
                 display.innerHTML = createPingPongNumbers(threeDigits, 'blue', 50, 26);
             }
@@ -688,7 +755,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const { threeDigits, threeDigits_first, threeDigits_lastTwo } = getNumbersForToggle();
 
             if (button.classList.toggle("active")) {
-                display.innerHTML = `${createPingPongBall(threeDigits_first, 'blue', 38, 20)}<div class="square-two-container">${createPingPongNumbers(threeDigits_lastTwo, 'blue', 38, 20)}</div>`;
+                display.innerHTML = `${createPingPongBall(threeDigits_first, 'blue', 50, 26)}<div class="square-two-container">${createPingPongNumbers(threeDigits_lastTwo, 'blue', 50, 26)}</div>`;
             } else {
                 display.innerHTML = createPingPongNumbers(threeDigits, 'blue', 50, 26);
             }
