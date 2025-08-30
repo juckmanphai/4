@@ -279,8 +279,9 @@ box-sizing: border-box;
         padding: 10px;
     }
     .result-container-popup {
-        margin: 10px 2px;
-        width: calc(100% - 4px);
+        margin: 10px auto; /* แก้ไข: เปลี่ยนจาก 10px 2px เป็น 10px auto */
+        width: calc(100% - 20px); /* แก้ไข: เปลี่ยนจาก calc(100% - 4px) */
+        max-width: 100%; /* เพิ่ม: จำกัดความกว้างสูงสุด */
     }
     #resultContentWrapper .number-list,
     #resultContentWrapper .number-list-3digit {
