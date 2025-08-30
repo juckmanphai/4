@@ -105,9 +105,7 @@ box-sizing: border-box;
     overflow: hidden;
     background: #FAFAD2; 
 }
-
-/* เปลี่ยนจากการใช้ pseudo-element มาใช้ element จริง */
-.background-logo-real {
+.background-logo {
   content: "";
   background-image: url('logo.png');
   background-size: 90% auto;
@@ -119,9 +117,28 @@ box-sizing: border-box;
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.4; /* ใช้ opacity แทน filter เพื่อความเข้ากันได้กับ html2canvas */
+  filter: brightness(100%) contrast(100%) opacity(0.4);
   pointer-events: none; /* เพื่อไม่ให้รบกวนการคลิก */
 }
+.result-container-popup::before {
+    content: "";
+    background-image: url('logo.png');
+    background-size: 90% auto;
+    background-repeat: no-repeat;
+    background-position: center 15px; /* ปรับตรงนี้ */
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 0;
+
+    filter: brightness(100%) contrast(100%) opacity(0.4);
+    pointer-events: none;
+}
+
 
 /* Result Content & Controls - Adjusting to 03.html styles */
 #resultContentWrapper {
@@ -250,26 +267,25 @@ box-sizing: border-box;
 /* Responsive Styles */
 @media only screen and (max-width: 600px) {
     .form-container {
-        margin: 20px auto;
+        margin: 20px;
         width: calc(100% - 40px);
     }
     input, select, button, .select-wrapper, .date-input-wrapper {
         width: 90%;
     }
     .popup-content {
-        margin: 0 10px;
+        margin: 0 10px; /* Adjust margin for small screens */
         width: calc(100% - 20px);
-        padding: 15px;
+        padding: 10px;
     }
     .result-container-popup {
-        margin: 0 auto;
-        width: 100%;
-        max-width: 100%;
-        padding: 10px;
+        margin: 5px auto; /* แก้ไข: เปลี่ยนจาก 10px 2px เป็น 10px auto */
+        width: calc(100% - 10px); /* แก้ไข: เปลี่ยนจาก calc(100% - 4px) */
+        max-width: 100%; /* เพิ่ม: จำกัดความกว้างสูงสุด */
     }
     #resultContentWrapper .number-list,
     #resultContentWrapper .number-list-3digit {
-        font-size: calc(1.8vw + 10px);
+        font-size: calc(1.8vw + 10px); /* Adjust font size responsively */
     }
 }
 </style>
@@ -351,7 +367,7 @@ box-sizing: border-box;
 <div id="resultPopupOverlay" class="popup-overlay">
 <div class="popup-content">
 <div id="resultContainerDiv" class="result-container-popup">
-  <div class="background-logo-real"></div> <!-- เปลี่ยนมาใช้ element จริงแทน pseudo-element -->
+  <div class="background-logo"></div> <!-- เพิ่ม element นี้ -->
   <div id="resultContentWrapper"></div>
 </div>
 <div class="controls">
@@ -1171,7 +1187,6 @@ function getFormattedDate(date) {
   const year = date.getFullYear() + 543;
   return `${day}/${month}/${year}`;
 }
-
 // === LOGIC FOR 4-DIGIT NUMBERS ===
 function generate4DigitHTML(num, commonData) {
 const twoDigitPairs = ((n) => { const p = new Set(); for (let i = 0; i < n.length; i++) { for (let j = i + 1; j < n.length; j++) { p.add([n[i], n[j]].sort().join('')); } } return Array.from(p).sort(); })(num);
@@ -1829,19 +1844,11 @@ document.getElementById("saveResultAsImageBtn").addEventListener("click", functi
   const originalPadding = captureElement.style.padding;
   captureElement.style.padding = '7px'; // ปรับ padding ชั่วคราว
 
-  // ใช้ html2canvas พร้อมกับกำหนด background color ให้ตรงกับ popup
   html2canvas(captureElement, {
     useCORS: true,
     scale: 4, // เพิ่ม scale เพื่อคุณภาพที่ดีขึ้น
     backgroundColor: '#FFFFD1', // กำหนดพื้นหลังให้ตรงกับ .result-container-popup
-    allowTaint: true,
-    onclone: function(clonedDoc) {
-      // ตรวจสอบให้แน่ใจว่าพื้นหลังแสดงผลใน cloned document
-      const clonedBackground = clonedDoc.querySelector('.background-logo-real');
-      if (clonedBackground) {
-        clonedBackground.style.opacity = '0.4'; // ตั้งค่า opacity ให้ชัดเจน
-      }
-    }
+    allowTaint: true
   }).then(canvas => {
     const link = document.createElement('a');
     link.download = 'เลขแปล.png';
@@ -1993,7 +2000,7 @@ document.getElementById(`reset${type.charAt(0).toUpperCase() + type.slice(1)}Btn
 if (confirm(`คุณต้องการคืนค่ารายการ${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ทั้งหมดใช่หรือไม่?\n(รายการที่สร้างเองและซ่อนไว้จะถูกลบทั้งหมด)`)) {
 localStorage.removeItem(STORAGE_KEY);
 localStorage.removeItem(HIDDEN_STORAGE_KEY);
-location.release();
+location.reload();
 }
 });
 
