@@ -287,6 +287,27 @@ overflow-y: auto;
   width: 2.5rem;
   flex-shrink: 0;
 }
+.topic-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.topic-center {
+  text-align: center;
+  grid-column: 2;
+  justify-self: center;
+}
+
+.topic-logo {
+  height: 2.5rem;
+  width: 2.5rem;
+  justify-self: center;
+}
 /* Responsive Styles */
 @media only screen and (max-width: 600px) {
     .form-container {
@@ -1227,10 +1248,23 @@ return `
      ${commonData.textShadow};
 ">
 <div class="result-header">
-  <div class="topic-container">
-    <img src="logo.png" class="logo-left" alt="logo">
-    <div class="topic-text">${commonData.topicName}</div>
-    <img src="logo.png" class="logo-right" alt="logo">
+  <div class="topic-grid">
+    <img src="logo.png" class="topic-logo" alt="logo" style="grid-column: 1;">
+    <div class="topic-center" style="
+      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale));
+      font-weight: bold;
+      text-shadow: 
+        2px 2px 3px rgba(0,0,0,0.3),
+        4px 4px 6px rgba(0,0,0,0.2),
+        ${commonData.textShadow};
+      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    ">
+      ${commonData.topicName}
+    </div>
+    <img src="logo.png" class="topic-logo" alt="logo" style="grid-column: 3;">
   </div>
 </div>
   
@@ -1317,10 +1351,23 @@ return `
 <div style="position: relative; text-align: center; color: blue; --font-scale: 1;">
   <!-- หัวข้อหลัก -->
 <div class="result-header">
-  <div class="topic-container">
-    <img src="logo.png" class="logo-left" alt="logo">
-    <div class="topic-text">${commonData.topicName}</div>
-    <img src="logo.png" class="logo-right" alt="logo">
+  <div class="topic-grid">
+    <img src="logo.png" class="topic-logo" alt="logo" style="grid-column: 1;">
+    <div class="topic-center" style="
+      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale));
+      font-weight: bold;
+      text-shadow: 
+        2px 2px 3px rgba(0,0,0,0.3),
+        4px 4px 6px rgba(0,0,0,0.2),
+        ${commonData.textShadow};
+      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    ">
+      ${commonData.topicName}
+    </div>
+    <img src="logo.png" class="topic-logo" alt="logo" style="grid-column: 3;">
   </div>
 </div>
 
@@ -1571,10 +1618,23 @@ return `
 <div style="position: relative; text-align: center; color: blue; --font-scale: 1;">
   <!-- หัวข้อหลัก -->
 <div class="result-header">
-  <div class="topic-container">
-    <img src="logo.png" class="logo-left" alt="logo">
-    <div class="topic-text">${commonData.topicName}</div>
-    <img src="logo.png" class="logo-right" alt="logo">
+  <div class="topic-grid">
+    <img src="logo.png" class="topic-logo" alt="logo" style="grid-column: 1;">
+    <div class="topic-center" style="
+      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale));
+      font-weight: bold;
+      text-shadow: 
+        2px 2px 3px rgba(0,0,0,0.3),
+        4px 4px 6px rgba(0,0,0,0.2),
+        ${commonData.textShadow};
+      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    ">
+      ${commonData.topicName}
+    </div>
+    <img src="logo.png" class="topic-logo" alt="logo" style="grid-column: 3;">
   </div>
 </div>
 
