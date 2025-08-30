@@ -1775,20 +1775,34 @@ showResultPopup();
 
 // Called when the popup is generated to set initial states
 function initializePopupControls() {
-const lhSlider = document.getElementById("popupLineHeightSlider");
-const numLength = document.getElementById("numberInput").value.length;
+  const lhSlider = document.getElementById("popupLineHeightSlider");
+  const fsSlider = document.getElementById("popupFontSizeSlider");
+  const fsValueSpan = document.getElementById("popupFontSizeValue");
+  const numLength = document.getElementById("numberInput").value.length;
+  const resultDiv = document.querySelector("#resultContentWrapper > div");
 
-// Set line-height slider properties based on content
-if (numLength === 2) {
-lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.7";
-} else if (numLength === 3) {
-lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.0";
-} else { // 4 digits
-lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.4";
-}
+  // ตั้งค่าเริ่มต้นของ font scale ตามจำนวนตัวเลข
+  let defaultFontScale;
+  if (numLength === 2) {
+    defaultFontScale = 1.0;    // 100% สำหรับ 2 ตัว
+    lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.7";
+  } else if (numLength === 3) {
+    defaultFontScale = 0.85;   // 85% สำหรับ 3 ตัว
+    lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.0";
+  } else { // 4 digits
+    defaultFontScale = 1.0;    // 100% สำหรับ 4 ตัว
+    lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.4";
+  }
 
-updateFontSize();
-updateLineHeight();
+  // ตั้งค่า slider และค่าเริ่มต้น
+  fsSlider.value = defaultFontScale;
+  if (resultDiv) {
+    resultDiv.style.setProperty('--font-scale', defaultFontScale);
+  }
+  fsValueSpan.textContent = `ขนาด: ${Math.round(defaultFontScale * 100)}%`;
+
+  // ตั้งค่า line height
+  updateLineHeight();
 }
 
 // Global scope functions for slider controls
