@@ -1787,7 +1787,7 @@ function initializePopupControls() {
     defaultFontScale = 1.0;    // 100% สำหรับ 2 ตัว
     lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.7";
   } else if (numLength === 3) {
-    defaultFontScale = 0.85;   // 85% สำหรับ 3 ตัว
+    defaultFontScale = 0.90;   // 90% สำหรับ 3 ตัว
     lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.0";
   } else { // 4 digits
     defaultFontScale = 1.0;    // 100% สำหรับ 4 ตัว
@@ -1842,7 +1842,7 @@ document.getElementById("saveResultAsImageBtn").addEventListener("click", functi
 
   controlsElement.style.display = 'none'; // ซ่อนปุ่มควบคุม
   const originalPadding = captureElement.style.padding;
-  captureElement.style.padding = '7px'; // ปรับ padding ชั่วคราว
+  captureElement.style.padding = '5px'; // ปรับ padding ชั่วคราว
 
   html2canvas(captureElement, {
     useCORS: true,
