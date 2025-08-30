@@ -91,12 +91,13 @@ overflow-y: auto;
 }
 
 .result-container-popup {
-    border: 1.5px solid #4CAF50;
-    margin: 8px 3px;
-    padding: 0px;
+    border: 2px solid #4CAF50; /* Matching 03.html's .result-container */
+    background-color: #FAFAD2; /* Matching 03.html's .result-container */
+    margin: 20px 5px; /* Added margins to match 03.html */
+    padding: 5px; /* Matching 03.html's .result-container */
     border-radius: 10px;
-    width: auto;
-    max-width: calc(100% - 10px);
+    width: auto; /* Allow content to define width, with max-width from parent */
+    max-width: calc(100% - 10px); /* Adjust based on padding/margin */
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
     position: relative;
@@ -124,7 +125,7 @@ overflow-y: auto;
     background-image: url('logo.png');
     background-size: 90% auto;
     background-repeat: no-repeat;
-    background-position: center top 15px;
+    background-position: center 15px; /* ปรับตรงนี้ */
 
     position: absolute;
     top: 0;
@@ -134,8 +135,8 @@ overflow-y: auto;
 
     z-index: 0;
 
-    /* ลดความคมชัดของโลโก้ด้วย filter แทน opacity */
-    filter: brightness(100%) contrast(100%) opacity(0.7);
+    filter: brightness(100%) contrast(100%) opacity(0.4);
+    pointer-events: none;
 }
 
 
@@ -1185,27 +1186,24 @@ document.getElementById("convertButton").addEventListener("click", displayResult
 document.getElementById("saveResultAsImageBtn").addEventListener("click", function() {
   const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
   const controlsElement = captureElement.querySelector('.controls');
-  const backgroundLogo = document.querySelector('.background-logo');
-  
-  // แสดงโลโก้ก่อนจับภาพ
-  if(backgroundLogo) backgroundLogo.style.display = 'block';
-  
-  controlsElement.style.display = 'none';
-  const originalPadding = captureElement.style.padding;
-  captureElement.style.padding = '7px';
 
-  html2canvas(captureElement, { 
-    useCORS: true, 
-    scale: 4, 
-    backgroundColor: '#FFFFD1',
+  controlsElement.style.display = 'none'; // ซ่อนปุ่มควบคุม
+  const originalPadding = captureElement.style.padding;
+  captureElement.style.padding = '7px'; // ปรับ padding ชั่วคราว
+
+  html2canvas(captureElement, {
+    useCORS: true,
+    scale: 4, // เพิ่ม scale เพื่อคุณภาพที่ดีขึ้น
+    backgroundColor: '#FFFFD1', // กำหนดพื้นหลังให้ตรงกับ .result-container-popup
     allowTaint: true
   }).then(canvas => {
-    // ... code การบันทึกภาพ ...
+    const link = document.createElement('a');
+    link.download = 'เลขแปล.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
   }).finally(() => {
-    // คืนค่าการแสดงผลเดิม
-    controlsElement.style.display = '';
-    captureElement.style.padding = originalPadding;
-    if(backgroundLogo) backgroundLogo.style.display = '';
+    controlsElement.style.display = ''; // คืนค่าปุ่มควบคุม
+    captureElement.style.padding = originalPadding; // คืนค่า padding
   });
 });
 
