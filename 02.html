@@ -64,30 +64,33 @@ box-sizing: border-box;
 
 /* ===== START: POPUP Styles Matching 03.html ===== */
 .popup-overlay {
-display: none;
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.7);
-z-index: 1000;
-justify-content: center;
-align-items: flex-start;
-padding: 40px 0 20px 0; /* MODIFIED: Removed left/right padding */
-box-sizing: border-box;
-overflow-y: auto;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 0 20px 0; /* ยังคงมี padding สำหรับ desktop */
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .popup-content {
-    background-color: #FEFEF0; /* Matching 03.html's .form-container background */
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    width: 100%; /* Matching form-container width */
-    max-width: 600px; /* Matching form-container max-width */
-    padding: 5px; /* Matching form-container padding */
+    background-color: #FEFEF0;
+    border-radius: 10px; /* ยังคงมี border-radius สำหรับ desktop */
+    box-shadow: 0 0 20px rgba(0,0,0,0.3); /* ยังคงมี box-shadow สำหรับ desktop */
+    width: 90%; /* ยังคงมี width 90% สำหรับ desktop */
+    max-width: 600px; /* ยังคงมี max-width สำหรับ desktop */
+    padding: 5px; /* ยังคงมี padding สำหรับ desktop */
     position: relative;
     box-sizing: border-box;
+    min-height: 300px;
+    overflow: hidden;
+    background: #FAFAD2;
 }
 
 .result-container-popup {
@@ -265,26 +268,49 @@ overflow-y: auto;
 .modal-button-group button { width: 45%; margin: 0; }
 
 /* Responsive Styles */
-@media only screen and (max-width: 600px) {
-    .form-container {
-        margin: 20px;
-        width: calc(100% - 40px);
+@media only screen and (max-width: 768px) { /* ใช้ 768px เพื่อให้ครอบคลุมแท็บเล็ตแนวตั้งด้วย */
+    .popup-overlay {
+        padding: 0; /* ลบ padding ออกบนมือถือ */
+        align-items: stretch; /* ให้ popup-content ยืดเต็มความสูงแนวตั้ง */
     }
-    input, select, button, .select-wrapper, .date-input-wrapper {
-        width: 90%;
-    }
+
     .popup-content {
-        margin: 0 10px; /* Adjust margin for small screens */
-        width: calc(100% - 20px);
-        padding: 10px;
+        width: 100%; /* ทำให้กว้างเต็ม 100% */
+        max-width: none; /* ยกเลิก max-width */
+        margin: 0; /* ลบ margin เพื่อให้ชิดขอบซ้ายขวา */
+        padding: 0; /* ลบ padding ภายใน */
+        border-radius: 0; /* ลบขอบโค้ง */
+        box-shadow: none; /* ลบเงา */
+        min-height: 100%; /* ให้ popup-content สูงอย่างน้อยเต็มหน้าจอ */
+        display: flex; /* ใช้ flexbox เพื่อจัดเรียงเนื้อหาภายใน */
+        flex-direction: column; /* จัดเรียงเป็นคอลัมน์ */
     }
+
     .result-container-popup {
-        margin: 10px 2px;
-        width: calc(100% - 4px);
+        border-radius: 0; /* ลบขอบโค้งของ result-container-popup */
+        margin: 0; /* ลบ margin ออกเพื่อให้ชิดขอบ popup-content */
+        width: 100%; /* ทำให้กว้างเต็ม 100% */
+        border: none; /* ลบเส้นขอบออก (ถ้าต้องการให้เต็มพื้นที่จริงๆ) */
+        flex-grow: 1; /* ให้ result-container-popup ยืดเต็มพื้นที่ที่เหลือในแนวตั้ง */
+        min-height: auto; /* ไม่ต้องมี min-height ตายตัวแล้ว ให้ flex-grow จัดการ */
     }
-    #resultContentWrapper .number-list,
-    #resultContentWrapper .number-list-3digit {
-        font-size: calc(1.8vw + 10px); /* Adjust font size responsively */
+
+    /* ปรับ padding ภายใน .result-container-popup เพื่อไม่ให้เนื้อหาติดขอบจอเกินไป */
+    #resultContentWrapper {
+        padding: 10px; /* เพิ่ม padding ภายใน content เพื่อไม่ให้ข้อความชิดขอบมากเกินไป */
+    }
+
+    .controls {
+        padding-bottom: 20px; /* เพิ่ม padding ด้านล่างของปุ่มควบคุม */
+        margin-top: auto; /* ผลักปุ่มควบคุมไปด้านล่างสุดของ popup-content */
+    }
+
+    .close-popup-btn {
+        width: 95%; /* ขยายปุ่มให้กว้างขึ้นเล็กน้อย */
+        max-width: 300px; /* จำกัดความกว้างสูงสุด */
+    }
+    .modal-button-group button {
+        width: 48%; /* ปรับความกว้างของปุ่มใน modal */
     }
 }
 </style>
