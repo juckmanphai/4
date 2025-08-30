@@ -1204,27 +1204,36 @@ return `
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    gap: 12px; /* เพิ่มช่องว่างระหว่างโลโก้ */
-    flex-wrap: wrap; /* รองรับมือถือ */
+    width: 100%;
+    position: relative;
   ">
-    <img src="logo.png" class="header-logo" alt="logo" style="height: 2.5rem;">
+    <img src="logo.png" class="header-logo" alt="logo" style="
+      height: 2.5rem; 
+      position: absolute; 
+      left: 10px;
+    ">
     <span style="
-      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale)); /* ขนาดใหญ่ */
-      font-weight: bold; /* ตัวหนา */
+      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale));
+      font-weight: bold;
       text-shadow: 
         2px 2px 3px rgba(0,0,0,0.3),
         4px 4px 6px rgba(0,0,0,0.2),
         ${commonData.textShadow};
-      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107); /* gradient สีสด */
+      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      white-space: nowrap;
+      text-align: center;
+      flex: 1;
     ">
       ${commonData.topicName}
     </span>
-    <img src="logo.png" class="header-logo" alt="logo" style="height: 2.5rem;">
-    </div>
+    <img src="logo.png" class="header-logo" alt="logo" style="
+      height: 2.5rem; 
+      position: absolute; 
+      right: 10px;
+    ">
   </div>
+</div>
   
   <!-- 2 แถวบนสุด -->
   <div style="font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale)); font-weight: normal;">
@@ -1313,27 +1322,36 @@ return `
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    gap: 12px; /* ช่องว่างระหว่างโลโก้ */
-    flex-wrap: wrap; /* รองรับมือถือ */
+    width: 100%;
+    position: relative;
   ">
-    <img src="logo.png" class="header-logo" alt="logo" style="height: 2.5rem;">
+    <img src="logo.png" class="header-logo" alt="logo" style="
+      height: 2.5rem; 
+      position: absolute; 
+      left: 10px;
+    ">
     <span style="
-      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale)); /* ใหญ่สุด */
+      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale));
       font-weight: bold;
       text-shadow: 
         2px 2px 3px rgba(0,0,0,0.3),
         4px 4px 6px rgba(0,0,0,0.2),
         ${commonData.textShadow};
-      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107); /* gradient สีสด */
+      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      white-space: nowrap;
+      text-align: center;
+      flex: 1;
     ">
       ${commonData.topicName}
     </span>
-    <img src="logo.png" class="header-logo" alt="logo" style="height: 2.5rem;">
-    </div>
+    <img src="logo.png" class="header-logo" alt="logo" style="
+      height: 2.5rem; 
+      position: absolute; 
+      right: 10px;
+    ">
   </div>
+</div>
 
   <!-- 2 แถวบนสุด -->
   <div style="
@@ -1581,34 +1599,41 @@ const sortedPairs = [...new Set(uniquePairs)].sort();
 return `
 <div style="position: relative; text-align: center; color: blue; --font-scale: 1;">
   <!-- หัวข้อหลัก -->
-  <div class="result-header">
-    <div class="topic-box" style="
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 12px; /* เพิ่มช่องว่างเล็กน้อยให้โลโก้ไม่ชิด */
-      flex-wrap: wrap; /* รองรับมือถือ */
+<div class="result-header">
+  <div class="topic-box" style="
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 100%;
+    position: relative;
+  ">
+    <img src="logo.png" class="header-logo" alt="logo" style="
+      height: 2.5rem; 
+      position: absolute; 
+      left: 10px;
     ">
-      <img src="logo.png" class="header-logo" alt="logo" style="height: 2.5rem;">
-      <span style="
-        font-size: calc(clamp(2rem, 8vw, 3rem) * var(--font-scale)); /* ขนาดใหญ่ */
-        font-weight: bold; /* ตัวหนา */
-        text-shadow: 
-          -1px -1px 0 white,
-           1px -1px 0 white,
-          -1px  1px 0 white,
-           1px  1px 0 white,
-           ${commonData.textShadow};
-        background: linear-gradient(90deg, #0d47a1, #42a5f5);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        white-space: nowrap; /* ป้องกันหัวข้อแตกบรรทัด */
-      ">
-        ${commonData.topicName}
-      </span>
-      <img src="logo.png" class="header-logo" alt="logo" style="height: 2.5rem;">
-    </div>
+    <span style="
+      font-size: calc(clamp(2.5rem, 9vw, 3.5rem) * var(--font-scale));
+      font-weight: bold;
+      text-shadow: 
+        2px 2px 3px rgba(0,0,0,0.3),
+        4px 4px 6px rgba(0,0,0,0.2),
+        ${commonData.textShadow};
+      background: linear-gradient(90deg, #ff5722, #ff9800, #ffc107);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      flex: 1;
+    ">
+      ${commonData.topicName}
+    </span>
+    <img src="logo.png" class="header-logo" alt="logo" style="
+      height: 2.5rem; 
+      position: absolute; 
+      right: 10px;
+    ">
   </div>
+</div>
 
   <!-- เนื้อหาอื่นยังเหมือนเดิม -->
   <div style="
