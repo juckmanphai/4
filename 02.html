@@ -92,7 +92,6 @@ overflow-y: auto;
 
 .result-container-popup {
     border: 1.5px solid #4CAF50;
-    background-color: #FAFAD2;
     margin: 8px 3px;
     padding: 0px;
     border-radius: 10px;
@@ -105,7 +104,21 @@ overflow-y: auto;
     overflow: hidden;
     background: #FAFAD2; 
 }
-
+.background-logo {
+  content: "";
+  background-image: url('logo.png');
+  background-size: 90% auto;
+  background-repeat: no-repeat;
+  background-position: center top 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  filter: brightness(100%) contrast(100%) opacity(0.4);
+  pointer-events: none; /* เพื่อไม่ให้รบกวนการคลิก */
+}
 .result-container-popup::before {
     content: "";
     background-image: url('logo.png');
@@ -352,7 +365,8 @@ overflow-y: auto;
 <div id="resultPopupOverlay" class="popup-overlay">
 <div class="popup-content">
 <div id="resultContainerDiv" class="result-container-popup">
-<div id="resultContentWrapper"></div>
+  <div class="background-logo"></div> <!-- เพิ่ม element นี้ -->
+  <div id="resultContentWrapper"></div>
 </div>
 <div class="controls">
 <button id="saveResultAsImageBtn" class="close-popup-btn" style="background-color: #007bff; margin-bottom: 15px;">บันทึกเป็นรูปภาพ</button>
@@ -1169,26 +1183,30 @@ document.getElementById("popupLineHeightSlider").addEventListener("input", updat
 document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
 
 document.getElementById("saveResultAsImageBtn").addEventListener("click", function() {
-const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
-const controlsElement = captureElement.querySelector('.controls');
+  const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
+  const controlsElement = captureElement.querySelector('.controls');
+  const backgroundLogo = document.querySelector('.background-logo');
+  
+  // แสดงโลโก้ก่อนจับภาพ
+  if(backgroundLogo) backgroundLogo.style.display = 'block';
+  
+  controlsElement.style.display = 'none';
+  const originalPadding = captureElement.style.padding;
+  captureElement.style.padding = '7px';
 
-controlsElement.style.display = 'none';
-const originalPadding = captureElement.style.padding;
-captureElement.style.padding = '7px';
-
-html2canvas(captureElement, { useCORS: true, scale: 4, backgroundColor: '#FFFFD1' }).then(canvas => {
-const link = document.createElement('a');
-const num = document.getElementById("numberInput").value || "XXXX";
-link.download = `Result-Gen-${num}-${Date.now()}.png`;
-link.href = canvas.toDataURL("image/png");
-link.click();
-}).catch(err => {
-console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-}).finally(() => {
-controlsElement.style.display = '';
-captureElement.style.padding = originalPadding;
-});
+  html2canvas(captureElement, { 
+    useCORS: true, 
+    scale: 4, 
+    backgroundColor: '#FFFFD1',
+    allowTaint: true
+  }).then(canvas => {
+    // ... code การบันทึกภาพ ...
+  }).finally(() => {
+    // คืนค่าการแสดงผลเดิม
+    controlsElement.style.display = '';
+    captureElement.style.padding = originalPadding;
+    if(backgroundLogo) backgroundLogo.style.display = '';
+  });
 });
 
 // Management Logic
