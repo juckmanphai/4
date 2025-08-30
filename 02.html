@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ฟอร์มแปลตัวเลข 2, 3 และ 4 ตัว</title>
-
 <!-- PWA-related additions -->
 <link rel="manifest" href="manifest-unified.json">
 <meta name="theme-color" content="#f97316"/>
@@ -13,117 +12,270 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="แปลเลขครบวงจร">
 <!-- End of PWA-related additions -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <style>
-    /* Base Styles */
-    body { font-family: Arial, sans-serif; background-color: #fffde7; margin: 0; padding: 0; line-height: 1.2; }
-    h1 { text-align: center; font-size: 22px; color: blue; margin-top: 10px; margin-bottom: 10px; }
-    label { font-size: 18px; color: #2c3e50; display: block; text-align: center; margin-bottom: -5px; }
-    footer { text-align: center; padding: 20px; font-size: 14px; color: #95a5a6; }
-    /* Form Elements */
-    input, select, button { font-size: 18px; padding: 10px; width: 80%; margin: 10px auto; border-radius: 6px; border: 1.5px solid #ddd; display: block; text-align: center; box-sizing: border-box; }
-    button#convertButton { background-color: #4CAF50; color: white; cursor: pointer; transition: background-color 0.3s ease; }
-    button#convertButton:hover { background-color: #45a049; }
-    /* Home Button */
-    .homeButton { display: block; width: 90%; max-width: 600px; margin: 20px auto 10px; padding: 10px 20px; background-color: orange; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
-    .homeButton:hover { background-color: darkorange; }
-    
-    .form-container { 
-        border: 1.5px solid orange; 
-        background-color: #FEFEF0; 
-        margin: 30px auto; 
-        padding: 15px 5px;
-        border-radius: 10px; 
-        width: 90%; 
-        max-width: 600px; 
-        box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); 
-        box-sizing: border-box; 
+/* Base Styles */
+body { font-family: Arial, sans-serif; background-color: #fffde7; margin: 0; padding: 0; line-height: 1.2; }
+h1 { text-align: center; font-size: 22px; color: blue; margin-top: 10px; margin-bottom: 10px; }
+label { font-size: 18px; color: #2c3e50; display: block; text-align: center; margin-bottom: -5px; }
+footer { text-align: center; padding: 20px; font-size: 14px; color: #95a5a6; }
+/* Form Elements */
+input, select, button { font-size: 18px; padding: 10px; width: 80%; margin: 10px auto; border-radius: 6px; border: 1.5px solid #ddd; display: block; text-align: center; box-sizing: border-box; }
+button#convertButton { background-color: #4CAF50; color: white; cursor: pointer; transition: background-color 0.3s ease; }
+button#convertButton:hover { background-color: #45a049; }
+/* Home Button */
+.homeButton { display: block; width: 90%; max-width: 600px; margin: 20px auto 10px; padding: 10px 20px; background-color: orange; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+.homeButton:hover { background-color: darkorange; }
+
+.form-container {
+border: 1.5px solid orange;
+background-color: #FEFEF0;
+margin: 30px auto;
+padding: 15px 5px;
+border-radius: 10px;
+width: 90%;
+max-width: 600px;
+box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+box-sizing: border-box;
+}
+
+/* CSS สำหรับช่องวันที่ */
+.date-input-wrapper { display: flex; align-items: center; width: 80%; margin: 10px auto; gap: 8px; }
+#dateInput { flex-grow: 1; margin: 0; width: auto; }
+#calendarButton { flex-shrink: 0; width: auto; margin: 0; padding: 8px 12px; font-size: 20px; background-color: #f0f0f0; border: 1.5px solid #ccc; cursor: pointer; }
+#calendarButton:hover { background-color: #e0e0e0; }
+
+/* Inline Management Buttons */
+.select-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; width: 80%; margin: 10px auto; }
+.select-wrapper select { flex-grow: 1; width: auto; margin: 0; }
+.manage-btn-inline { flex-shrink: 0; width: 44px; height: 44px; padding: 0; font-size: 24px; border-radius: 8px; background-color: #6c757d; color: white; border: none; cursor: pointer; transition: all 0.2s ease; line-height: 44px; }
+.manage-btn-inline:hover { background-color: #5a6268; transform: rotate(45deg); }
+.management-actions { display: none; justify-content: center; gap: 10px; margin: 5px auto 15px; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.management-actions button { width: auto; padding: 6px 12px; font-size: 14px; margin: 0; border: none; color: white; transition: background-color 0.2s ease; }
+.add-btn { background-color: #28a745; }
+.add-btn:hover { background-color: #218838; }
+.edit-btn { background-color: #ffc107; color: #212529 !important; }
+.edit-btn:hover { background-color: #e0a800; }
+.delete-btn { background-color: #dc3545; }
+.delete-btn:hover { background-color: #c82333; }
+.reset-btn { background-color: #17a2b8; }
+.reset-btn:hover { background-color: #138496; }
+
+/* ===== START: POPUP Styles Matching 03.html ===== */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    padding: 20px 0; /* Vertical padding only */
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.popup-content {
+    background-color: #FEFEF0; /* Matching 03.html's .form-container background */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    width: 90%; /* Matching form-container width */
+    max-width: 600px; /* Matching form-container max-width */
+    padding: 5px; /* Matching form-container padding */
+    position: relative;
+    box-sizing: border-box;
+}
+
+.result-container-popup {
+    border: 1.5px solid #4CAF50; /* Matching 03.html's .result-container */
+    background-color: #FAFAD2; /* Matching 03.html's .result-container */
+    margin: 8px 3px;
+    padding: 0px;
+    border-radius: 10px;
+    width: auto;
+    max-width: calc(100% - 10px);
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+    position: relative;
+    min-height: 300px;
+    overflow: hidden; /* Ensure background image doesn't spill */
+
+    /* Background image from 03.html */
+    background-image: url('logo.png'); /* Ensure 'logo.png' is in the correct path */
+    background-size: 90% auto;
+    background-repeat: no-repeat;
+    background-position: center top 15px;
+    opacity: 1; /* Keep content opaque */
+}
+
+.result-container-popup::before {
+    content: "";
+    background-image: url('logo.png'); /* Ensure 'logo.png' is in the correct path */
+    background-size: 50% auto;
+    background-repeat: no-repeat;
+    background-position: center top 15px;
+    opacity: 0.05; /* Semi-transparent */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    margin: auto;
+}
+
+
+/* Result Content & Controls - Adjusting to 03.html styles */
+#resultContentWrapper {
+    position: relative;
+    z-index: 1; /* Ensure text is above pseudo-element background */
+    color: blue;
+    line-height: 1.3; /* Default line height from 03.html */
+    font-size: 20px; /* Default font size from 03.html */
+    white-space: nowrap;       /* บังคับไม่ให้ตัดบรรทัด */
+    overflow-x: auto;          /* เลื่อนซ้ายขวาได้ถ้าข้อความยาวเกิน */
+    text-align: center;        /* จัดกึ่งกลาง */
+    margin-top: 10px;
+}
+
+#resultContentWrapper p,
+#resultContentWrapper h2,
+#resultContentWrapper h3 {
+    margin: 6px 0; /* Matching 03.html's h2, h3 margins */
+    line-height: inherit; /* Inherit from wrapper or set individually */
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; /* White outline */
+    color: blue; /* Default text color */
+}
+
+#resultContentWrapper h2 {
+    font-size: 22px; /* Base for h2 */
+    font-weight: bold;
+}
+
+#resultContentWrapper h3 {
+    font-size: 20px; /* Base for h3 */
+    font-weight: bold;
+}
+
+#resultContentWrapper p {
+    font-size: 16px; /* Base for p, will be overridden */
+}
+
+#resultContentWrapper .topic-main { /* For the main topic text */
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .date-text { /* For the main date text */
+    font-size: 18px;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .lunar-text { /* For lunar date text */
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+#resultContentWrapper .lunar-text.day-holy {
+    color: red; /* Red for วันพระ */
+}
+#resultContentWrapper .lunar-text.day-normal {
+    color: #002060; /* Dark blue for normal days */
+}
+
+
+#resultContentWrapper .number-by-person {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+#resultContentWrapper .number-by-person .number-red {
+    color: red;
+}
+#resultContentWrapper .number-by-person .person-green {
+    color: green;
+}
+
+
+#resultContentWrapper .set-heading { /* For "จัดชุดเด่น 2 ตัว", "จัดชุดรอง 2 ตัว" etc. */
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .number-list { /* For the actual number lists */
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    white-space: nowrap; /* Prevent wrapping if too long, will scroll */
+    overflow-x: auto; /* Enable horizontal scroll if nowrap content overflows */
+    -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+    display: block; /* Important for overflow to work */
+}
+#resultContentWrapper .number-list-3digit { /* For 3-digit number lists, slightly smaller */
+    font-size: 18px;
+}
+
+
+#resultContentWrapper .red-text { /* For "แนวทางเท่านั้น" and "แปลเพิ่ม" */
+    color: red;
+}
+#resultContentWrapper .green-text { /* For green text within results */
+    color: green;
+}
+
+#resultContentWrapper .disclose-text { /* For "Disclose" line */
+    font-size: 13px;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .note-text { /* For "หมายเหตุ" line */
+    font-size: 20px;
+    margin: 0 0 10px 0;
+}
+
+
+/* Hide result-header, topic-box, header-logo from 01.html when using 03.html style */
+.result-header, .topic-box, .header-logo {
+    display: none !important;
+}
+
+.controls { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px; }
+.control-group { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 15px; }
+.control-group label, .control-group span { font-size: 16px; color: blue; margin-bottom: 5px; }
+.control-group input[type="range"] { width: 80%; max-width: 300px; margin: 0; }
+.close-popup-btn { padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; width: 90%; max-width: 200px; text-align: center; }
+.close-popup-btn:hover { background-color: #d32f2f; }
+.modal-button-group { display: flex; justify-content: space-around; margin-top: 20px; }
+.modal-button-group button { width: 45%; margin: 0; }
+
+/* Responsive Styles */
+@media only screen and (max-width: 600px) {
+    .form-container {
+        margin: 20px;
+        width: calc(100% - 40px);
     }
-
-    /* CSS สำหรับช่องวันที่ */
-    .date-input-wrapper { display: flex; align-items: center; width: 80%; margin: 10px auto; gap: 8px; }
-    #dateInput { flex-grow: 1; margin: 0; width: auto; }
-    #calendarButton { flex-shrink: 0; width: auto; margin: 0; padding: 8px 12px; font-size: 20px; background-color: #f0f0f0; border: 1.5px solid #ccc; cursor: pointer; }
-    #calendarButton:hover { background-color: #e0e0e0; }
-
-    /* Inline Management Buttons */
-    .select-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; width: 80%; margin: 10px auto; }
-    .select-wrapper select { flex-grow: 1; width: auto; margin: 0; }
-    .manage-btn-inline { flex-shrink: 0; width: 44px; height: 44px; padding: 0; font-size: 24px; border-radius: 8px; background-color: #6c757d; color: white; border: none; cursor: pointer; transition: all 0.2s ease; line-height: 44px; }
-    .manage-btn-inline:hover { background-color: #5a6268; transform: rotate(45deg); }
-    .management-actions { display: none; justify-content: center; gap: 10px; margin: 5px auto 15px; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .management-actions button { width: auto; padding: 6px 12px; font-size: 14px; margin: 0; border: none; color: white; transition: background-color 0.2s ease; }
-    .add-btn { background-color: #28a745; }
-    .add-btn:hover { background-color: #218838; }
-    .edit-btn { background-color: #ffc107; color: #212529 !important; }
-    .edit-btn:hover { background-color: #e0a800; }
-    .delete-btn { background-color: #dc3545; }
-    .delete-btn:hover { background-color: #c82333; }
-    .reset-btn { background-color: #17a2b8; }
-    .reset-btn:hover { background-color: #138496; }
-
-    /* ===== START: POPUP Styles Final Correction ===== */
-    .popup-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        z-index: 1000;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 40px 0 20px 0; /* MODIFIED: Removed left/right padding */
-        box-sizing: border-box;
-        overflow-y: auto;
+    input, select, button, .select-wrapper, .date-input-wrapper {
+        width: 90%;
     }
-    /* ===== END: POPUP Styles Final Correction ===== */
-    
-    .popup-content { 
-        background-color: #FFFFD1; 
-        border-radius: 10px; 
-        box-shadow: 0 0 20px rgba(0,0,0,0.3); 
-        width: 100%; 
-        max-width: 600px; 
-        padding: 25px 5px;
-        position: relative; 
-        box-sizing: border-box; 
+    .popup-content {
+        margin: 0 10px; /* Adjust margin for small screens */
+        width: calc(100% - 20px);
+        padding: 10px;
     }
-
-    .result-container-popup { border: 1.5px solid #4CAF50; background-color: #FFFFD1; margin: 0; padding: 15px 5px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); position: relative; min-height: 300px; box-sizing: border-box; overflow: hidden; }
-
-    /* Result Header & Logo */
-    .result-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
-    .header-logo { width: 60px; height: auto; }
-    .topic-box { background-color: #FF75FF; border: 3px solid #0070C0; color: white; border-radius: 15px; padding: 8px 15px; font-size: 22px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); text-align: center; }
-    .topic-time { font-size: 18px; color: blue; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; margin-top: 0; margin-bottom: 10px; }
-
-    /* Result Content & Controls */
-    #resultContentWrapper { position: relative; z-index: 1; color: blue; line-height: 1.3; }
-    #resultContentWrapper p, #resultContentWrapper h2, #resultContentWrapper h3 { margin: 0 0 10px 0; line-height: inherit; }
-    .controls { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px; }
-    .control-group { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 15px; }
-    .control-group label, .control-group span { font-size: 16px; color: blue; margin-bottom: 5px; }
-    .control-group input[type="range"] { width: 80%; max-width: 300px; margin: 0; }
-    .close-popup-btn { padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; width: 90%; max-width: 200px; text-align: center; }
-    .close-popup-btn:hover { background-color: #d32f2f; }
-    .modal-button-group { display: flex; justify-content: space-around; margin-top: 20px; }
-    .modal-button-group button { width: 45%; margin: 0; }
-
-    /* Responsive Styles */
-    @media only screen and (max-width: 600px) {
-        .form-container {
-            margin: 20px;
-            width: calc(100% - 40px);
-        }
-        input, select, button, .select-wrapper, .date-input-wrapper {
-            width: 90%;
-        }
+    .result-container-popup {
+        margin: 10px 2px;
+        width: calc(100% - 4px);
     }
+    #resultContentWrapper .number-list,
+    #resultContentWrapper .number-list-3digit {
+        font-size: calc(1.8vw + 10px); /* Adjust font size responsively */
+    }
+}
 </style>
 </head>
 <body>
@@ -132,7 +284,6 @@
     <input type="text" id="numberInput" placeholder="กรอกตัวเลข 2, 3 หรือ 4 หลัก" pattern="\d*" maxlength="4" inputmode="numeric" />
 
     <!-- Unified Topic Section -->
-    <label for="topicSelect">หัวข้อ:</label>
     <div class="select-wrapper">
         <select id="topicSelect" onchange="checkCustomTopicOption(this)">
             <option value="ลาวประตูชัย เวลา 05.45 น." data-default="true">ลาวประตูชัย เวลา 05.45 น.</option>
@@ -172,11 +323,10 @@
     </div>
 
     <!-- Unified Person Section -->
-    <label for="personSelect">ผู้บอก:</label>
     <div class="select-wrapper">
         <select id="personSelect" onchange="checkCustomOption(this)">
-            <option value="Team" data-default="true">Team</option>        
-            <option value="@" data-default="true">@</option> 
+           <option value="Team" data-default="true">Team</option>
+           <option value="@" data-default="true">@</option>
             <option value="Udon Don" data-default="true">Udon Don</option>
             <option value="custom">อื่นๆ (พิมพ์เอง)</option>
         </select>
@@ -201,66 +351,153 @@
 </div>
 
 <button id="homeButton" class="homeButton" onclick="window.location.href='https://juckmanphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
-
 <!-- Result Popup -->
 <div id="resultPopupOverlay" class="popup-overlay">
-    <div class="popup-content">
-        <div id="resultContainerDiv" class="result-container-popup">
-            <div id="resultContentWrapper"></div>
-        </div>
-        <div class="controls">
-            <button id="saveResultAsImageBtn" class="close-popup-btn" style="background-color: #007bff; margin-bottom: 15px;">บันทึกเป็นรูปภาพ</button>
-            <div class="control-group">
-                <label for="popupFontSizeSlider">ปรับขนาดตัวอักษร:</label>
-                <input type="range" id="popupFontSizeSlider" min="0.7" max="1.5" step="0.05" value="1.0">
-                <span id="popupFontSizeValue">ขนาด: 100%</span>
-            </div>
-            <div class="control-group">
-                <label for="popupLineHeightSlider">ปรับขนาดของบรรทัด:</label>
-                <input type="range" id="popupLineHeightSlider" step="0.1">
-                <span id="popupLineHeightValue">ความสูงบรรทัด: 1.3</span>
-            </div>
-            <button class="close-popup-btn" onclick="closeResultPopup()">ปิดหน้าต่างนี้</button>
-        </div>
-    </div>
+<div class="popup-content">
+<div id="resultContainerDiv" class="result-container-popup">
+<div id="resultContentWrapper"></div>
 </div>
-
+<div class="controls">
+<button id="saveResultAsImageBtn" class="close-popup-btn" style="background-color: #007bff; margin-bottom: 15px;">บันทึกเป็นรูปภาพ</button>
+<div class="control-group">
+<label for="popupFontSizeSlider">ปรับขนาดตัวอักษร:</label>
+<input type="range" id="popupFontSizeSlider" min="0.7" max="2.0" step="0.05" value="1.0">
+<span id="popupFontSizeValue">ขนาด: 100%</span>
+</div>
+<div class="control-group">
+<label for="popupLineHeightSlider">ปรับขนาดของบรรทัด:</label>
+<input type="range" id="popupLineHeightSlider" step="0.1">
+<span id="popupLineHeightValue">ความสูงบรรทัด: 1.3</span>
+</div>
+<button class="close-popup-btn" onclick="closeResultPopup()">ปิดหน้าต่างนี้</button>
+</div>
+</div>
+</div>
 <!-- Management Modals -->
 <div id="topicModal" class="popup-overlay">
-    <div class="popup-content" style="max-width: 400px; background-color: #f0f8ff;">
-        <h2 id="topicModalTitle" style="color: #0056b3; text-align: center;"></h2>
-        <input type="hidden" id="topicEditIndex">
-        <input type="text" id="modalTopicName" placeholder="ชื่อหัวข้อ (เช่น ลาวมิตรภาพ)">
-        <input type="text" id="modalTopicTime" placeholder="เวลา (เช่น 20.30)">
-        <div class="modal-button-group">
-            <button id="saveTopicBtn" style="background-color: #28a745;">บันทึก</button>
-            <button id="cancelTopicBtn" class="close-popup-btn">ยกเลิก</button>
-        </div>
-    </div>
+<div class="popup-content" style="max-width: 400px; background-color: #f0f8ff;">
+<h2 id="topicModalTitle" style="color: #0056b3; text-align: center;"></h2>
+<input type="hidden" id="topicEditIndex">
+<input type="text" id="modalTopicName" placeholder="ชื่อหัวข้อ (เช่น ลาวมิตรภาพ)">
+<input type="text" id="modalTopicTime" placeholder="เวลา (เช่น 20.30)">
+<div class="modal-button-group">
+<button id="saveTopicBtn" style="background-color: #28a745;">บันทึก</button>
+<button id="cancelTopicBtn" class="close-popup-btn">ยกเลิก</button>
+</div>
+</div>
 </div>
 <div id="personModal" class="popup-overlay">
-    <div class="popup-content" style="max-width: 400px; background-color: #f0f8ff;">
-        <h2 id="personModalTitle" style="color: #0056b3; text-align: center;"></h2>
-        <input type="hidden" id="personEditValue">
-        <input type="text" id="modalPersonName" placeholder="ชื่อผู้บอก">
-        <div class="modal-button-group">
-            <button id="savePersonBtn" style="background-color: #28a745;">บันทึก</button>
-            <button id="cancelPersonBtn" class="close-popup-btn">ยกเลิก</button>
-        </div>
-    </div>
+<div class="popup-content" style="max-width: 400px; background-color: #f0f8ff;">
+<h2 id="personModalTitle" style="color: #0056b3; text-align: center;"></h2>
+<input type="hidden" id="personEditValue">
+<input type="text" id="modalPersonName" placeholder="ชื่อผู้บอก">
+<div class="modal-button-group">
+<button id="savePersonBtn" style="background-color: #28a745;">บันทึก</button>
+<button id="cancelPersonBtn" class="close-popup-btn">ยกเลิก</button>
 </div>
-
+</div>
+</div>
 <footer>
-    <div style="text-align: center; margin-bottom: 20px;">
-        &copy; 2025 Juckmanphai. All Rights Reserved.
-    </div>
+<div style="text-align: center; margin-bottom: 20px;">
+&copy; 2025 Juckmanphai. All Rights Reserved.
+</div>
 </footer>
-
 <script>
 // === MERGED LUNAR DATA ===
 const lunarData = {
-  "01/01/2568": "วันพุธ ขึ้น 3 ค่ำ เดือนยี่ (2) ปีมะโรง", "02/01/2568": "วันพฤหัสบดี ขึ้น 4 ค่ำ เดือนยี่ (2) ปีมะโรง", "03/01/2568": "วันศุกร์ ขึ้น 5 ค่ำ เดือนยี่ (2) ปีมะโรง", "04/01/2568": "วันเสาร์ ขึ้น 6 ค่ำ เดือนยี่ (2) ปีมะโรง", "05/01/2568": "วันอาทิตย์ ขึ้น 7 ค่ำ เดือนยี่ (2) ปีมะโรง", "06/01/2568": "วันจันทร์ (วันพระ) ขึ้น 8 ค่ำ เดือนยี่ (2) ปีมะโรง", "07/01/2568": "วันอังคาร ขึ้น 9 ค่ำ เดือนยี่ (2) ปีมะโรง", "08/01/2568": "วันพุธ ขึ้น 10 ค่ำ เดือนยี่ (2) ปีมะโรง", "09/01/2568": "วันพฤหัสบดี ขึ้น 11 ค่ำ เดือนยี่ (2) ปีมะโรง", "10/01/2568": "วันศุกร์ ขึ้น 12 ค่ำ เดือนยี่ (2) ปีมะโรง", "11/01/2568": "วันเสาร์ ขึ้น 13 ค่ำ เดือนยี่ (2) ปีมะโรง", "12/01/2568": "วันอาทิตย์ ขึ้น 14 ค่ำ เดือนยี่ (2) ปีมะโรง", "13/01/2568": "วันจันทร์ (วันพระ) ขึ้น 15 ค่ำ เดือนยี่ (2) ปีมะโรง", "14/01/2568": "วันอังคาร แรม 1 ค่ำ เดือนยี่ (2) ปีมะโรง", "15/01/2568": "วันพุธ แรม 2 ค่ำ เดือนยี่ (2) ปีมะโรง", "16/01/2568": "วันพฤหัสบดี แรม 3 ค่ำ เดือนยี่ (2) ปีมะโรง", "17/01/2568": "วันศุกร์ แรม 4 ค่ำ เดือนยี่ (2) ปีมะโรง", "18/01/2568": "วันเสาร์ แรม 5 ค่ำ เดือนยี่ (2) ปีมะโรง", "19/01/2568": "วันอาทิตย์ แรม 6 ค่ำ เดือนยี่ (2) ปีมะโรง", "20/01/2568": "วันจันทร์ แรม 7 ค่ำ เดือนยี่ (2) ปีมะโรง", "21/01/2568": "วันอังคาร (วันพระ) แรม 8 ค่ำ เดือนยี่ (2) ปีมะโรง", "22/01/2568": "วันพุธ แรม 9 ค่ำ เดือนยี่ (2) ปีมะโรง", "23/01/2568": "วันพฤหัสบดี แรม 10 ค่ำ เดือนยี่ (2) ปีมะโรง", "24/01/2568": "วันศุกร์ แรม 11 ค่ำ เดือนยี่ (2) ปีมะโรง", "25/01/2568": "วันเสาร์ แรม 12 ค่ำ เดือนยี่ (2) ปีมะโรง", "26/01/2568": "วันอาทิตย์ แรม 13 ค่ำ เดือนยี่ (2) ปีมะโรง", "27/01/2568": "วันจันทร์ แรม 14 ค่ำ เดือนยี่ (2) ปีมะโรง", "28/01/2568": "วันอังคาร (วันพระ) แรม 15 ค่ำ เดือนยี่ (2) ปีมะโรง", "29/01/2568": "วันพุธ ขึ้น 1 ค่ำ เดือนสาม (3) ปีมะโรง", "30/01/2568": "วันพฤหัสบดี ขึ้น 2 ค่ำ เดือนสาม (3) ปีมะโรง", "31/01/2568": "วันศุกร์ ขึ้น 3 ค่ำ เดือนสาม (3) ปีมะโรง", "01/02/2568": "วันเสาร์ ขึ้น 4 ค่ำ เดือนสาม (3) ปีมะโรง", "02/02/2568": "วันอาทิตย์ ขึ้น 5 ค่ำ เดือนสาม (3) ปีมะโรง", "03/02/2568": "วันจันทร์ ขึ้น 6 ค่ำ เดือนสาม (3) ปีมะโรง", "04/02/2568": "วันอังคาร ขึ้น 7 ค่ำ เดือนสาม (3) ปีมะโรง", "05/02/2568": "วันพุธ (วันพระ) ขึ้น 8 ค่ำ เดือนสาม (3) ปีมะโรง", "06/02/2568": "วันพฤหัสบดี ขึ้น 9 ค่ำ เดือนสาม (3) ปีมะโรง", "07/02/2568": "วันศุกร์ ขึ้น 10 ค่ำ เดือนสาม (3) ปีมะโรง", "08/02/2568": "วันเสาร์ ขึ้น 11 ค่ำ เดือนสาม (3) ปีมะโรง", "09/02/2568": "วันอาทิตย์ ขึ้น 12 ค่ำ เดือนสาม (3) ปีมะโรง", "10/02/2568": "วันจันทร์ ขึ้น 13 ค่ำ เดือนสาม (3) ปีมะโรง", "11/02/2568": "วันอังคาร ขึ้น 14 ค่ำ เดือนสาม (3) ปีมะโรง", "12/02/2568": "วันพุธ (วันมาฆบูชา) ขึ้น 15 ค่ำ เดือนสาม (3) ปีมะโรง", "13/02/2568": "วันพฤหัสบดี แรม 1 ค่ำ เดือนสาม (3) ปีมะโรง", "14/02/2568": "วันศุกร์ แรม 2 ค่ำ เดือนสาม (3) ปีมะโรง", "15/02/2568": "วันเสาร์ แรม 3 ค่ำ เดือนสาม (3) ปีมะโรง", "16/02/2568": "วันอาทิตย์ แรม 4 ค่ำ เดือนสาม (3) ปีมะโรง", "17/02/2568": "วันจันทร์ แรม 5 ค่ำ เดือนสาม (3) ปีมะโรง", "18/02/2568": "วันอังคาร แรม 6 ค่ำ เดือนสาม (3) ปีมะโรง", "19/02/2568": "วันพุธ แรม 7 ค่ำ เดือนสาม (3) ปีมะโรง", "20/02/2568": "วันพฤหัสบดี (วันพระ) แรม 8 ค่ำ เดือนสาม (3) ปีมะโรง", "21/02/2568": "วันศุกร์ แรม 9 ค่ำ เดือนสาม (3) ปีมะโรง", "22/02/2568": "วันเสาร์ แรม 10 ค่ำ เดือนสาม (3) ปีมะโรง", "23/02/2568": "วันอาทิตย์ แรม 11 ค่ำ เดือนสาม (3) ปีมะโรง", "24/02/2568": "วันจันทร์ แรม 12 ค่ำ เดือนสาม (3) ปีมะโรง", "25/02/2568": "วันอังคาร แรม 13 ค่ำ เดือนสาม (3) ปีมะโรง", "26/02/2568": "วันพุธ (วันพระ) แรม 14 ค่ำ เดือนสาม (3) ปีมะโรง", "27/02/2568": "วันพฤหัสบดี ขึ้น 1 ค่ำ เดือนสี่ (4) ปีมะโรง", "28/02/2568": "วันศุกร์ ขึ้น 2 ค่ำ เดือนสี่ (4) ปีมะโรง", "01/03/2568": "วันเสาร์ ขึ้น 3 ค่ำ เดือนสี่ (4) ปีมะโรง", "02/03/2568": "วันอาทิตย์ ขึ้น 4 ค่ำ เดือนสี่ (4) ปีมะโรง", "03/03/2568": "วันจันทร์ ขึ้น 5 ค่ำ เดือนสี่ (4) ปีมะโรง", "04/03/2568": "วันอังคาร ขึ้น 6 ค่ำ เดือนสี่ (4) ปีมะโรง", "05/03/2568": "วันพุธ ขึ้น 7 ค่ำ เดือนสี่ (4) ปีมะโรง", "06/03/2568": "วันพฤหัสบดี (วันพระ) ขึ้น 8 ค่ำ เดือนสี่ (4) ปีมะโรง", "07/03/2568": "วันศุกร์ ขึ้น 9 ค่ำ เดือนสี่ (4) ปีมะโรง", "08/03/2568": "วันเสาร์ ขึ้น 10 ค่ำ เดือนสี่ (4) ปีมะโรง", "09/03/2568": "วันอาทิตย์ ขึ้น 11 ค่ำ เดือนสี่ (4) ปีมะโรง", "10/03/2568": "วันจันทร์ ขึ้น 12 ค่ำ เดือนสี่ (4) ปีมะโรง", "11/03/2568": "วันอังคาร ขึ้น 13 ค่ำ เดือนสี่ (4) ปีมะโรง", "12/03/2568": "วันพุธ ขึ้น 14 ค่ำ เดือนสี่ (4) ปีมะโรง", "13/03/2568": "วันพฤหัสบดี (วันพระ) ขึ้น 15 ค่ำ เดือนสี่ (4) ปีมะโรง", "14/03/2568": "วันศุกร์ แรม 1 ค่ำ เดือนสี่ (4) ปีมะโรง", "15/03/2568": "วันเสาร์ แรม 2 ค่ำ เดือนสี่ (4) ปีมะโรง", "16/03/2568": "วันอาทิตย์ แรม 3 ค่ำ เดือนสี่ (4) ปีมะโรง", "17/03/2568": "วันจันทร์ แรม 4 ค่ำ เดือนสี่ (4) ปีมะโรง", "18/03/2568": "วันอังคาร แรม 5 ค่ำ เดือนสี่ (4) ปีมะโรง", "19/03/2568": "วันพุธ แรม 6 ค่ำ เดือนสี่ (4) ปีมะโรง", "20/03/2568": "วันพฤหัสบดี แรม 7 ค่ำ เดือนสี่ (4) ปีมะโรง", "21/03/2568": "วันศุกร์ (วันพระ) แรม 8 ค่ำ เดือนสี่ (4) ปีมะโรง", "22/03/2568": "วันเสาร์ แรม 9 ค่ำ เดือนสี่ (4) ปีมะโรง", "23/03/2568": "วันอาทิตย์ แรม 10 ค่ำ เดือนสี่ (4) ปีมะโรง", "24/03/2568": "วันจันทร์ แรม 11 ค่ำ เดือนสี่ (4) ปีมะโรง", "25/03/2568": "วันอังคาร แรม 12 ค่ำ เดือนสี่ (4) ปีมะโรง", "26/03/2568": "วันพุธ แรม 13 ค่ำ เดือนสี่ (4) ปีมะโรง", "27/03/2568": "วันพฤหัสบดี แรม 14 ค่ำ เดือนสี่ (4) ปีมะโรง", "28/03/2568": "วันศุกร์ (วันพระ) แรม 15 ค่ำ เดือนสี่ (4) ปีมะโรง", "29/03/2568": "วันเสาร์ ขึ้น 1 ค่ำ เดือนห้า (5) ปีมะเส็ง", "30/03/2568": "วันอาทิตย์ ขึ้น 2 ค่ำ เดือนห้า (5) ปีมะเส็ง", "31/03/2568": "วันจันทร์ ขึ้น 3 ค่ำ เดือนห้า (5) ปีมะเส็ง", "01/04/2568": "วันอังคาร ขึ้น 4 ค่ำ เดือนห้า (5) ปีมะเส็ง", "02/04/2568": "วันพุธ ขึ้น 5 ค่ำ เดือนห้า (5) ปีมะเส็ง", "03/04/2568": "วันพฤหัสบดี ขึ้น 6 ค่ำ เดือนห้า (5) ปีมะเส็ง", "04/04/2568": "วันศุกร์ ขึ้น 7 ค่ำ เดือนห้า (5) ปีมะเส็ง", "05/04/2568": "วันเสาร์ (วันพระ) ขึ้น 8 ค่ำ เดือนห้า (5) ปีมะเส็ง", "06/04/2568": "วันอาทิตย์ ขึ้น 9 ค่ำ เดือนห้า (5) ปีมะเส็ง", "07/04/2568": "วันจันทร์ ขึ้น 10 ค่ำ เดือนห้า (5) ปีมะเส็ง", "08/04/2568": "วันอังคาร ขึ้น 11 ค่ำ เดือนห้า (5) ปีมะเส็ง", "09/04/2568": "วันพุธ ขึ้น 12 ค่ำ เดือนห้า (5) ปีมะเส็ง", "10/04/2568": "วันพฤหัสบดี ขึ้น 13 ค่ำ เดือนห้า (5) ปีมะเส็ง", "11/04/2568": "วันศุกร์ ขึ้น 14 ค่ำ เดือนห้า (5) ปีมะเส็ง", "12/04/2568": "วันเสาร์ (วันพระ) ขึ้น 15 ค่ำ เดือนห้า (5) ปีมะเส็ง", "13/04/2568": "วันอาทิตย์ แรม 1 ค่ำ เดือนห้า (5) ปีมะเส็ง", "14/04/2568": "วันจันทร์ แรม 2 ค่ำ เดือนห้า (5) ปีมะเส็ง", "15/04/2568": "วันอังคาร แรม 3 ค่ำ เดือนห้า (5) ปีมะเส็ง", "16/04/2568": "วันพุธ แรม 4 ค่ำ เดือนห้า (5) ปีมะเส็ง", "17/04/2568": "วันพฤหัสบดี แรม 5 ค่ำ เดือนห้า (5) ปีมะเส็ง", "18/04/2568": "วันศุกร์ แรม 6 ค่ำ เดือนห้า (5) ปีมะเส็ง", "19/04/2568": "วันเสาร์ แรม 7 ค่ำ เดือนห้า (5) ปีมะเส็ง", "20/04/2568": "วันอาทิตย์ (วันพระ) แรม 8 ค่ำ เดือนห้า (5) ปีมะเส็ง", "21/04/2568": "วันจันทร์ แรม 9 ค่ำ เดือนห้า (5) ปีมะเส็ง", "22/04/2568": "วันอังคาร แรม 10 ค่ำ เดือนห้า (5) ปีมะเส็ง", "23/04/2568": "วันพุธ แรม 11 ค่ำ เดือนห้า (5) ปีมะเส็ง", "24/04/2568": "วันพฤหัสบดี แรม 12 ค่ำ เดือนห้า (5) ปีมะเส็ง", "25/04/2568": "วันศุกร์ แรม 13 ค่ำ เดือนห้า (5) ปีมะเส็ง", "26/04/2568": "วันเสาร์ (วันพระ) แรม 14 ค่ำ เดือนห้า (5) ปีมะเส็ง", "27/04/2568": "วันอาทิตย์ ขึ้น 1 ค่ำ เดือนหก (6) ปีมะเส็ง", "28/04/2568": "วันจันทร์ ขึ้น 2 ค่ำ เดือนหก (6) ปีมะเส็ง", "29/04/2568": "วันอังคาร ขึ้น 3 ค่ำ เดือนหก (6) ปีมะเส็ง", "30/04/2568": "วันพุธ ขึ้น 4 ค่ำ เดือนหก (6) ปีมะเส็ง", "01/05/2568": "วันพฤหัสบดี ขึ้น 5 ค่ำ เดือนหก (6) ปีมะเส็ง", "02/05/2568": "วันศุกร์ ขึ้น 6 ค่ำ เดือนหก (6) ปีมะเส็ง", "03/05/2568": "วันเสาร์ ขึ้น 7 ค่ำ เดือนหก (6) ปีมะเส็ง", "04/05/2568": "วันอาทิตย์ (วันพระ) ขึ้น 8 ค่ำ เดือนหก (6) ปีมะเส็ง", "05/05/2568": "วันจันทร์ ขึ้น 9 ค่ำ เดือนหก (6) ปีมะเส็ง", "06/05/2568": "วันอังคาร ขึ้น 10 ค่ำ เดือนหก (6) ปีมะเส็ง", "07/05/2568": "วันพุธ ขึ้น 11 ค่ำ เดือนหก (6) ปีมะเส็ง", "08/05/2568": "วันพฤหัสบดี ขึ้น 12 ค่ำ เดือนหก (6) ปีมะเส็ง", "09/05/2568": "วันศุกร์ ขึ้น 13 ค่ำ เดือนหก (6) ปีมะเส็ง", "10/05/2568": "วันเสาร์ ขึ้น 14 ค่ำ เดือนหก (6) ปีมะเส็ง", "11/05/2568": "วันอาทิตย์ (วันวิสาขบูชา) ขึ้น 15 ค่ำ เดือนหก (6) ปีมะเส็ง", "12/05/2568": "วันจันทร์ แรม 1 ค่ำ เดือนหก (6) ปีมะเส็ง", "13/05/2568": "วันอังคาร แรม 2 ค่ำ เดือนหก (6) ปีมะเส็ง", "14/05/2568": "วันพุธ แรม 3 ค่ำ เดือนหก (6) ปีมะเส็ง", "15/05/2568": "วันพฤหัสบดี แรม 4 ค่ำ เดือนหก (6) ปีมะเส็ง", "16/05/2568": "วันศุกร์ แรม 5 ค่ำ เดือนหก (6) ปีมะเส็ง", "17/05/2568": "วันเสาร์ แรม 6 ค่ำ เดือนหก (6) ปีมะเส็ง", "18/05/2568": "วันอาทิตย์ แรม 7 ค่ำ เดือนหก (6) ปีมะเส็ง", "19/05/2568": "วันจันทร์ (วันอัฏฐมีบูชา) แรม 8 ค่ำ เดือนหก (6) ปีมะเส็ง", "20/05/2568": "วันอังคาร แรม 9 ค่ำ เดือนหก (6) ปีมะเส็ง", "21/05/2568": "วันพุธ แรม 10 ค่ำ เดือนหก (6) ปีมะเส็ง", "22/05/2568": "วันพฤหัสบดี แรม 11 ค่ำ เดือนหก (6) ปีมะเส็ง", "23/05/2568": "วันศุกร์ แรม 12 ค่ำ เดือนหก (6) ปีมะเส็ง", "24/05/2568": "วันเสาร์ แรม 13 ค่ำ เดือนหก (6) ปีมะเส็ง", "25/05/2568": "วันอาทิตย์ แรม 14 ค่ำ เดือนหก (6) ปีมะเส็ง", "26/05/2568": "วันจันทร์ (วันพระ) แรม 15 ค่ำ เดือนหก (6) ปีมะเส็ง", "27/05/2568": "วันอังคาร ขึ้น 1 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "28/05/2568": "วันพุธ ขึ้น 2 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "29/05/2568": "วันพฤหัสบดี ขึ้น 3 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "30/05/2568": "วันศุกร์ ขึ้น 4 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "31/05/2568": "วันเสาร์ ขึ้น 5 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "01/06/2568": "วันอาทิตย์ ขึ้น 6 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "02/06/2568": "วันจันทร์ ขึ้น 7 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "03/06/2568": "วันอังคาร (วันพระ) ขึ้น 8 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "04/06/2568": "วันพุธ ขึ้น 9 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "05/06/2568": "วันพฤหัสบดี ขึ้น 10 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "06/06/2568": "วันศุกร์ ขึ้น 11 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "07/06/2568": "วันเสาร์ ขึ้น 12 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "08/06/2568": "วันอาทิตย์ ขึ้น 13 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "09/06/2568": "วันจันทร์ ขึ้น 14 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "10/06/2568": "วันอังคาร (วันพระ) ขึ้น 15 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "11/06/2568": "วันพุธ แรม 1 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "12/06/2568": "วันพฤหัสบดี แรม 2 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "13/06/2568": "วันศุกร์ แรม 3 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "14/06/2568": "วันเสาร์ แรม 4 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "15/06/2568": "วันอาทิตย์ แรม 5 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "16/06/2568": "วันจันทร์ แรม 6 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "17/06/2568": "วันอังคาร แรม 7 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "18/06/2568": "วันพุธ (วันพระ) แรม 8 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "19/06/2568": "วันพฤหัสบดี แรม 9 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "20/06/2568": "วันศุกร์ แรม 10 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "21/06/2568": "วันเสาร์ แรม 11 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "22/06/2568": "วันอาทิตย์ แรม 12 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "23/06/2568": "วันจันทร์ แรม 13 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "24/06/2568": "วันอังคาร แรม 14 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "25/06/2568": "วันพุธ (วันพระ) แรม 15 ค่ำ เดือนเจ็ด (7) ปีมะเส็ง", "26/06/2568": "วันพฤหัสบดี ขึ้น 1 ค่ำ เดือนแปด (8) ปีมะเส็ง", "27/06/2568": "วันศุกร์ ขึ้น 2 ค่ำ เดือนแปด (8) ปีมะเส็ง", "28/06/2568": "วันเสาร์ ขึ้น 3 ค่ำ เดือนแปด (8) ปีมะเส็ง", "29/06/2568": "วันอาทิตย์ ขึ้น 4 ค่ำ เดือนแปด (8) ปีมะเส็ง", "30/06/2568": "วันจันทร์ ขึ้น 5 ค่ำ เดือนแปด (8) ปีมะเส็ง", "01/07/2568": "วันอังคาร ขึ้น 6 ค่ำ เดือนแปด (8) ปีมะเส็ง", "02/07/2568": "วันพุธ ขึ้น 7 ค่ำ เดือนแปด (8) ปีมะเส็ง", "03/07/2568": "วันพฤหัสบดี (วันพระ) ขึ้น 8 ค่ำ เดือนแปด (8) ปีมะเส็ง", "04/07/2568": "วันศุกร์ ขึ้น 9 ค่ำ เดือนแปด (8) ปีมะเส็ง", "05/07/2568": "วันเสาร์ ขึ้น 10 ค่ำ เดือนแปด (8) ปีมะเส็ง", "06/07/2568": "วันอาทิตย์ ขึ้น 11 ค่ำ เดือนแปด (8) ปีมะเส็ง", "07/07/2568": "วันจันทร์ ขึ้น 12 ค่ำ เดือนแปด (8) ปีมะเส็ง", "08/07/2568": "วันอังคาร ขึ้น 13 ค่ำ เดือนแปด (8) ปีมะเส็ง", "09/07/2568": "วันพุธ ขึ้น 14 ค่ำ เดือนแปด (8) ปีมะเส็ง", "10/07/2568": "วันพฤหัสบดี (วันอาสาฬหบูชา) ขึ้น 15 ค่ำ เดือนแปด (8) ปีมะเส็ง", "11/07/2568": "วันศุกร์ (วันเข้าพรรษา) แรม 1 ค่ำ เดือนแปด (8) ปีมะเส็ง", "12/07/2568": "วันเสาร์ แรม 2 ค่ำ เดือนแปด (8) ปีมะเส็ง", "13/07/2568": "วันอาทิตย์ แรม 3 ค่ำ เดือนแปด (8) ปีมะเส็ง", "14/07/2568": "วันจันทร์ แรม 4 ค่ำ เดือนแปด (8) ปีมะเส็ง", "15/07/2568": "วันอังคาร แรม 5 ค่ำ เดือนแปด (8) ปีมะเส็ง", "16/07/2568": "วันพุธ แรม 6 ค่ำ เดือนแปด (8) ปีมะเส็ง", "17/07/2568": "วันพฤหัสบดี แรม 7 ค่ำ เดือนแปด (8) ปีมะเส็ง", "18/07/2568": "วันศุกร์ (วันพระ) แรม 8 ค่ำ เดือนแปด (8) ปีมะเส็ง", "19/07/2568": "วันเสาร์ แรม 9 ค่ำ เดือนแปด (8) ปีมะเส็ง", "20/07/2568": "วันอาทิตย์ แรม 10 ค่ำ เดือนแปด (8) ปีมะเส็ง", "21/07/2568": "วันจันทร์ แรม 11 ค่ำ เดือนแปด (8) ปีมะเส็ง", "22/07/2568": "วันอังคาร แรม 12 ค่ำ เดือนแปด (8) ปีมะเส็ง", "23/07/2568": "วันพุธ แรม 13 ค่ำ เดือนแปด (8) ปีมะเส็ง", "24/07/2568": "วันพฤหัสบดี แรม 14 ค่ำ เดือนแปด (8) ปีมะเส็ง", "25/07/2568": "วันศุกร์ (วันพระ) แรม 15 ค่ำ เดือนแปด (8) ปีมะเส็ง", "26/07/2568": "วันเสาร์ ขึ้น 1 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "27/07/2568": "วันอาทิตย์ ขึ้น 2 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "28/07/2568": "วันจันทร์ ขึ้น 3 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "29/07/2568": "วันอังคาร ขึ้น 4 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "30/07/2568": "วันพุธ ขึ้น 5 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "31/07/2568": "วันพฤหัสบดี ขึ้น 6 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "01/08/2568": "วันศุกร์ ขึ้น 7 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "02/08/2568": "วันเสาร์ (วันพระ) ขึ้น 8 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "03/08/2568": "วันอาทิตย์ ขึ้น 9 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "04/08/2568": "วันจันทร์ ขึ้น 10 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "05/08/2568": "วันอังคาร ขึ้น 11 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "06/08/2568": "วันพุธ ขึ้น 12 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "07/08/2568": "วันพฤหัสบดี ขึ้น 13 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "08/08/2568": "วันศุกร์ ขึ้น 14 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "09/08/2568": "วันเสาร์ (วันพระ) ขึ้น 15 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "10/08/2568": "วันอาทิตย์ แรม 1 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "11/08/2568": "วันจันทร์ แรม 2 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "12/08/2568": "วันอังคาร แรม 3 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "13/08/2568": "วันพุธ แรม 4 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "14/08/2568": "วันพฤหัสบดี แรม 5 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "15/08/2568": "วันศุกร์ แรม 6 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "16/08/2568": "วันเสาร์ แรม 7 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "17/08/2568": "วันอาทิตย์ (วันพระ) แรม 8 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "18/08/2568": "วันจันทร์ แรม 9 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "19/08/2568": "วันอังคาร แรม 10 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "20/08/2568": "วันพุธ แรม 11 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "21/08/2568": "วันพฤหัสบดี แรม 12 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "22/08/2568": "วันศุกร์ แรม 13 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "23/08/2568": "วันเสาร์ (วันพระ) แรม 14 ค่ำ เดือนเก้า (9) ปีมะเส็ง", "24/08/2568": "วันอาทิตย์ ขึ้น 1 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "25/08/2568": "วันจันทร์ ขึ้น 2 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "26/08/2568": "วันอังคาร ขึ้น 3 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "27/08/2568": "วันพุธ ขึ้น 4 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "28/08/2568": "วันพฤหัสบดี ขึ้น 5 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "29/08/2568": "วันศุกร์ ขึ้น 6 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "30/08/2568": "วันเสาร์ ขึ้น 7 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "31/08/2568": "วันอาทิตย์ (วันพระ) ขึ้น 8 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "01/09/2568": "วันจันทร์ ขึ้น 9 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "02/09/2568": "วันอังคาร ขึ้น 10 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "03/09/2568": "วันพุธ ขึ้น 11 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "04/09/2568": "วันพฤหัสบดี ขึ้น 12 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "05/09/2568": "วันศุกร์ ขึ้น 13 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "06/09/2568": "วันเสาร์ ขึ้น 14 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "07/09/2568": "วันอาทิตย์ (วันพระ) ขึ้น 15 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "08/09/2568": "วันจันทร์ แรม 1 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "09/09/2568": "วันอังคาร แรม 2 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "10/09/2568": "วันพุธ แรม 3 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "11/09/2568": "วันพฤหัสบดี แรม 4 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "12/09/2568": "วันศุกร์ แรม 5 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "13/09/2568": "วันเสาร์ แรม 6 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "14/09/2568": "วันอาทิตย์ แรม 7 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "15/09/2568": "วันจันทร์ (วันพระ) แรม 8 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "16/09/2568": "วันอังคาร แรม 9 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "17/09/2568": "วันพุธ แรม 10 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "18/09/2568": "วันพฤหัสบดี แรม 11 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "19/09/2568": "วันศุกร์ แรม 12 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "20/09/2568": "วันเสาร์ แรม 13 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "21/09/2568": "วันอาทิตย์ แรม 14 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "22/09/2568": "วันจันทร์ (วันพระ) แรม 15 ค่ำ เดือนสิบ (10) ปีมะเส็ง", "23/09/2568": "วันอังคาร ขึ้น 1 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "24/09/2568": "วันพุธ ขึ้น 2 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "25/09/2568": "วันพฤหัสบดี ขึ้น 3 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "26/09/2568": "วันศุกร์ ขึ้น 4 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "27/09/2568": "วันเสาร์ ขึ้น 5 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "28/09/2568": "วันอาทิตย์ ขึ้น 6 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "29/09/2568": "วันจันทร์ ขึ้น 7 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "30/09/2568": "วันอังคาร (วันพระ) ขึ้น 8 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "01/10/2568": "วันพุธ ขึ้น 9 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "02/10/2568": "วันพฤหัสบดี ขึ้น 10 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "03/10/2568": "วันศุกร์ ขึ้น 11 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "04/10/2568": "วันเสาร์ ขึ้น 12 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "05/10/2568": "วันอาทิตย์ ขึ้น 13 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "06/10/2568": "วันจันทร์ ขึ้น 14 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "07/10/2568": "วันอังคาร (วันออกพรรษา) ขึ้น 15 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "08/10/2568": "วันพุธ แรม 1 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "09/10/2568": "วันพฤหัสบดี แรม 2 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "10/10/2568": "วันศุกร์ แรม 3 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "11/10/2568": "วันเสาร์ แรม 4 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "12/10/2568": "วันอาทิตย์ แรม 5 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "13/10/2568": "วันจันทร์ แรม 6 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "14/10/2568": "วันอังคาร แรม 7 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "15/10/2568": "วันพุธ (วันพระ) แรม 8 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "16/10/2568": "วันพฤหัสบดี แรม 9 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "17/10/2568": "วันศุกร์ แรม 10 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "18/10/2568": "วันเสาร์ แรม 11 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "19/10/2568": "วันอาทิตย์ แรม 12 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "20/10/2568": "วันจันทร์ แรม 13 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "21/10/2568": "วันอังคาร (วันพระ) แรม 14 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง", "22/10/2568": "วันพุธ ขึ้น 1 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "23/10/2568": "วันพฤหัสบดี ขึ้น 2 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "24/10/2568": "วันศุกร์ ขึ้น 3 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "25/10/2568": "วันเสาร์ ขึ้น 4 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "26/10/2568": "วันอาทิตย์ ขึ้น 5 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "27/10/2568": "วันจันทร์ ขึ้น 6 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "28/10/2568": "วันอังคาร ขึ้น 7 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "29/10/2568": "วันพุธ (วันพระ) ขึ้น 8 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "30/10/2568": "วันพฤหัสบดี ขึ้น 9 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "31/10/2568": "วันศุกร์ ขึ้น 10 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "01/11/2568": "วันเสาร์ ขึ้น 11 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "02/11/2568": "วันอาทิตย์ ขึ้น 12 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "03/11/2568": "วันจันทร์ ขึ้น 13 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "04/11/2568": "วันอังคาร ขึ้น 14 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "05/11/2568": "วันพุธ (วันพระ) ขึ้น 15 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "06/11/2568": "วันพฤหัสบดี แรม 1 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "07/11/2568": "วันศุกร์ แรม 2 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "08/11/2568": "วันเสาร์ แรม 3 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "09/11/2568": "วันอาทิตย์ แรม 4 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "10/11/2568": "วันจันทร์ แรม 5 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "11/11/2568": "วันอังคาร แรม 6 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "12/11/2568": "วันพุธ แรม 7 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "13/11/2568": "วันพฤหัสบดี (วันพระ) แรม 8 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "14/11/2568": "วันศุกร์ แรม 9 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "15/11/2568": "วันเสาร์ แรม 10 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "16/11/2568": "วันอาทิตย์ แรม 11 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "17/11/2568": "วันจันทร์ แรม 12 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "18/11/2568": "วันอังคาร แรม 13 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "19/11/2568": "วันพุธ แรม 14 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "20/11/2568": "วันพฤหัสบดี (วันพระ) แรม 15 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง", "21/11/2568": "วันศุกร์ ขึ้น 1 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "22/11/2568": "วันเสาร์ ขึ้น 2 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "23/11/2568": "วันอาทิตย์ ขึ้น 3 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "24/11/2568": "วันจันทร์ ขึ้น 4 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "25/11/2568": "วันอังคาร ขึ้น 5 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "26/11/2568": "วันพุธ ขึ้น 6 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "27/11/2568": "วันพฤหัสบดี ขึ้น 7 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "28/11/2568": "วันศุกร์ (วันพระ) ขึ้น 8 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "29/11/2568": "วันเสาร์ ขึ้น 9 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "30/11/2568": "วันอาทิตย์ ขึ้น 10 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "01/12/2568": "วันจันทร์ ขึ้น 11 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "02/12/2568": "วันอังคาร ขึ้น 12 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "03/12/2568": "วันพุธ ขึ้น 13 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "04/12/2568": "วันพฤหัสบดี ขึ้น 14 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "05/12/2568": "วันศุกร์ (วันพระ) ขึ้น 15 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "06/12/2568": "วันเสาร์ แรม 1 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "07/12/2568": "วันอาทิตย์ แรม 2 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "08/12/2568": "วันจันทร์ แรม 3 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "09/12/2568": "วันอังคาร แรม 4 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "10/12/2568": "วันพุธ แรม 5 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "11/12/2568": "วันพฤหัสบดี แรม 6 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "12/12/2568": "วันศุกร์ แรม 7 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "13/12/2568": "วันเสาร์ (วันพระ) แรม 8 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "14/12/2568": "วันอาทิตย์ แรม 9 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "15/12/2568": "วันจันทร์ แรม 10 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "16/12/2568": "วันอังคาร แรม 11 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "17/12/2568": "วันพุธ แรม 12 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "18/12/2568": "วันพฤหัสบดี แรม 13 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "19/12/2568": "วันศุกร์ (วันพระ) แรม 14 ค่ำ เดือนอ้าย (1) ปีมะเส็ง", "20/12/2568": "วันเสาร์ ขึ้น 1 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "21/12/2568": "วันอาทิตย์ ขึ้น 2 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "22/12/2568": "วันจันทร์ ขึ้น 3 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "23/12/2568": "วันอังคาร ขึ้น 4 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "24/12/2568": "วันพุธ ขึ้น 5 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "25/12/2568": "วันพฤหัสบดี ขึ้น 6 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "26/12/2568": "วันศุกร์ ขึ้น 7 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "27/12/2568": "วันเสาร์ (วันพระ) ขึ้น 8 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "28/12/2568": "วันอาทิตย์ ขึ้น 9 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "29/12/2568": "วันจันทร์ ขึ้น 10 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "30/12/2568": "วันอังคาร ขึ้น 11 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "31/12/2568": "วันพุธ ขึ้น 12 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "01/01/2569": "วันพฤหัสบดี ขึ้น 13 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "02/01/2569": "วันศุกร์ ขึ้น 14 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "03/01/2569": "วันเสาร์ (วันพระ) ขึ้น 15 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "04/01/2569": "วันอาทิตย์ แรม 1 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "05/01/2569": "วันจันทร์ แรม 2 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "06/01/2569": "วันอังคาร แรม 3 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "07/01/2569": "วันพุธ แรม 4 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "08/01/2569": "วันพฤหัสบดี แรม 5 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "09/01/2569": "วันศุกร์ แรม 6 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "10/01/2569": "วันเสาร์ แรม 7 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "11/01/2569": "วันอาทิตย์ (วันพระ) แรม 8 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "12/01/2569": "วันจันทร์ แรม 9 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "13/01/2569": "วันอังคาร แรม 10 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "14/01/2569": "วันพุธ แรม 11 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "15/01/2569": "วันพฤหัสบดี แรม 12 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "16/01/2569": "วันศุกร์ แรม 13 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "17/01/2569": "วันเสาร์ แรม 14 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "18/01/2569": "วันอาทิตย์ (วันพระ) แรม 15 ค่ำ เดือนยี่ (2) ปีมะเส็ง", "19/01/2569": "วันจันทร์ ขึ้น 1 ค่ำ เดือนสาม (3) ปีมะเส็ง", "20/01/2569": "วันอังคาร ขึ้น 2 ค่ำ เดือนสาม (3) ปีมะเส็ง", "21/01/2569": "วันพุธ ขึ้น 3 ค่ำ เดือนสาม (3) ปีมะเส็ง", "22/01/2569": "วันพฤหัสบดี ขึ้น 4 ค่ำ เดือนสาม (3) ปีมะเส็ง", "23/01/2569": "วันศุกร์ ขึ้น 5 ค่ำ เดือนสาม (3) ปีมะเส็ง", "24/01/2569": "วันเสาร์ ขึ้น 6 ค่ำ เดือนสาม (3) ปีมะเส็ง", "25/01/2569": "วันอาทิตย์ ขึ้น 7 ค่ำ เดือนสาม (3) ปีมะเส็ง", "26/01/2569": "วันจันทร์ (วันพระ) ขึ้น 8 ค่ำ เดือนสาม (3) ปีมะเส็ง", "27/01/2569": "วันอังคาร ขึ้น 9 ค่ำ เดือนสาม (3) ปีมะเส็ง", "28/01/2569": "วันพุธ ขึ้น 10 ค่ำ เดือนสาม (3) ปีมะเส็ง", "29/01/2569": "วันพฤหัสบดี ขึ้น 11 ค่ำ เดือนสาม (3) ปีมะเส็ง", "30/01/2569": "วันศุกร์ ขึ้น 12 ค่ำ เดือนสาม (3) ปีมะเส็ง", "31/01/2569": "วันเสาร์ ขึ้น 13 ค่ำ เดือนสาม (3) ปีมะเส็ง", "01/02/2569": "วันอาทิตย์ ขึ้น 14 ค่ำ เดือนสาม (3) ปีมะเส็ง", "02/02/2569": "วันจันทร์ (วันพระ) ขึ้น 15 ค่ำ เดือนสาม (3) ปีมะเส็ง", "03/02/2569": "วันอังคาร แรม 1 ค่ำ เดือนสาม (3) ปีมะเส็ง", "04/02/2569": "วันพุธ แรม 2 ค่ำ เดือนสาม (3) ปีมะเส็ง", "05/02/2569": "วันพฤหัสบดี แรม 3 ค่ำ เดือนสาม (3) ปีมะเส็ง", "06/02/2569": "วันศุกร์ แรม 4 ค่ำ เดือนสาม (3) ปีมะเส็ง", "07/02/2569": "วันเสาร์ แรม 5 ค่ำ เดือนสาม (3) ปีมะเส็ง", "08/02/2569": "วันอาทิตย์ แรม 6 ค่ำ เดือนสาม (3) ปีมะเส็ง", "09/02/2569": "วันจันทร์ แรม 7 ค่ำ เดือนสาม (3) ปีมะเส็ง", "10/02/2569": "วันอังคาร (วันพระ) แรม 8 ค่ำ เดือนสาม (3) ปีมะเส็ง", "11/02/2569": "วันพุธ แรม 9 ค่ำ เดือนสาม (3) ปีมะเส็ง", "12/02/2569": "วันพฤหัสบดี แรม 10 ค่ำ เดือนสาม (3) ปีมะเส็ง", "13/02/2569": "วันศุกร์ แรม 11 ค่ำ เดือนสาม (3) ปีมะเส็ง", "14/02/2569": "วันเสาร์ แรม 12 ค่ำ เดือนสาม (3) ปีมะเส็ง", "15/02/2569": "วันอาทิตย์ แรม 13 ค่ำ เดือนสาม (3) ปีมะเส็ง", "16/02/2569": "วันจันทร์ (วันพระ) แรม 14 ค่ำ เดือนสาม (3) ปีมะเส็ง", "17/02/2569": "วันอังคาร ขึ้น 1 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "18/02/2569": "วันพุธ ขึ้น 2 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "19/02/2569": "วันพฤหัสบดี ขึ้น 3 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "20/02/2569": "วันศุกร์ ขึ้น 4 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "21/02/2569": "วันเสาร์ ขึ้น 5 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "22/02/2569": "วันอาทิตย์ ขึ้น 6 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "23/02/2569": "วันจันทร์ ขึ้น 7 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "24/02/2569": "วันอังคาร (วันพระ) ขึ้น 8 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "25/02/2569": "วันพุธ ขึ้น 9 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "26/02/2569": "วันพฤหัสบดี ขึ้น 10 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "27/02/2569": "วันศุกร์ ขึ้น 11 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "28/02/2569": "วันเสาร์ ขึ้น 12 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "01/03/2569": "วันอาทิตย์ ขึ้น 13 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "02/03/2569": "วันจันทร์ ขึ้น 14 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "03/03/2569": "วันอังคาร (วันพระ) ขึ้น 15 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "04/03/2569": "วันพุธ แรม 1 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "05/03/2569": "วันพฤหัสบดี แรม 2 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "06/03/2569": "วันศุกร์ แรม 3 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "07/03/2569": "วันเสาร์ แรม 4 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "08/03/2569": "วันอาทิตย์ แรม 5 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "09/03/2569": "วันจันทร์ แรม 6 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "10/03/2569": "วันอังคาร แรม 7 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "11/03/2569": "วันพุธ (วันพระ) แรม 8 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "12/03/2569": "วันพฤหัสบดี แรม 9 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "13/03/2569": "วันศุกร์ แรม 10 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "14/03/2569": "วันเสาร์ แรม 11 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "15/03/2569": "วันอาทิตย์ แรม 12 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "16/03/2569": "วันจันทร์ แรม 13 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "17/03/2569": "วันอังคาร แรม 14 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "18/03/2569": "วันพุธ (วันพระ) แรม 15 ค่ำ เดือนสี่ (4) ปีมะเส็ง", "19/03/2569": "วันพฤหัสบดี ขึ้น 1 ค่ำ เดือนห้า (5) ปีมะเมีย", "20/03/2569": "วันศุกร์ ขึ้น 2 ค่ำ เดือนห้า (5) ปีมะเมีย", "21/03/2569": "วันเสาร์ ขึ้น 3 ค่ำ เดือนห้า (5) ปีมะเมีย", "22/03/2569": "วันอาทิตย์ ขึ้น 4 ค่ำ เดือนห้า (5) ปีมะเมีย", "23/03/2569": "วันจันทร์ ขึ้น 5 ค่ำ เดือนห้า (5) ปีมะเมีย", "24/03/2569": "วันอังคาร ขึ้น 6 ค่ำ เดือนห้า (5) ปีมะเมีย", "25/03/2569": "วันพุธ ขึ้น 7 ค่ำ เดือนห้า (5) ปีมะเมีย", "26/03/2569": "วันพฤหัสบดี (วันพระ) ขึ้น 8 ค่ำ เดือนห้า (5) ปีมะเมีย", "27/03/2569": "วันศุกร์ ขึ้น 9 ค่ำ เดือนห้า (5) ปีมะเมีย", "28/03/2569": "วันเสาร์ ขึ้น 10 ค่ำ เดือนห้า (5) ปีมะเมีย", "29/03/2569": "วันอาทิตย์ ขึ้น 11 ค่ำ เดือนห้า (5) ปีมะเมีย", "30/03/2569": "วันจันทร์ ขึ้น 12 ค่ำ เดือนห้า (5) ปีมะเมีย", "31/03/2569": "วันอังคาร ขึ้น 13 ค่ำ เดือนห้า (5) ปีมะเมีย", "01/04/2569": "วันพุธ ขึ้น 14 ค่ำ เดือนห้า (5) ปีมะเมีย", "02/04/2569": "วันพฤหัสบดี (วันพระ) ขึ้น 15 ค่ำ เดือนห้า (5) ปีมะเมีย", "03/04/2569": "วันศุกร์ แรม 1 ค่ำ เดือนห้า (5) ปีมะเมีย", "04/04/2569": "วันเสาร์ แรม 2 ค่ำ เดือนห้า (5) ปีมะเมีย", "05/04/2569": "วันอาทิตย์ แรม 3 ค่ำ เดือนห้า (5) ปีมะเมีย", "06/04/2569": "วันจันทร์ แรม 4 ค่ำ เดือนห้า (5) ปีมะเมีย", "07/04/2569": "วันอังคาร แรม 5 ค่ำ เดือนห้า (5) ปีมะเมีย", "08/04/2569": "วันพุธ แรม 6 ค่ำ เดือนห้า (5) ปีมะเมีย", "09/04/2569": "วันพฤหัสบดี แรม 7 ค่ำ เดือนห้า (5) ปีมะเมีย", "10/04/2569": "วันศุกร์ (วันพระ) แรม 8 ค่ำ เดือนห้า (5) ปีมะเมีย", "11/04/2569": "วันเสาร์ แรม 9 ค่ำ เดือนห้า (5) ปีมะเมีย", "12/04/2569": "วันอาทิตย์ แรม 10 ค่ำ เดือนห้า (5) ปีมะเมีย", "13/04/2569": "วันจันทร์ แรม 11 ค่ำ เดือนห้า (5) ปีมะเมีย", "14/04/2569": "วันอังคาร แรม 12 ค่ำ เดือนห้า (5) ปีมะเมีย", "15/04/2569": "วันพุธ แรม 13 ค่ำ เดือนห้า (5) ปีมะเมีย", "16/04/2569": "วันพฤหัสบดี (วันพระ) แรม 14 ค่ำ เดือนห้า (5) ปีมะเมีย", "17/04/2569": "วันศุกร์ ขึ้น 1 ค่ำ เดือนหก (6) ปีมะเมีย", "18/04/2569": "วันเสาร์ ขึ้น 2 ค่ำ เดือนหก (6) ปีมะเมีย", "19/04/2569": "วันอาทิตย์ ขึ้น 3 ค่ำ เดือนหก (6) ปีมะเมีย", "20/04/2569": "วันจันทร์ ขึ้น 4 ค่ำ เดือนหก (6) ปีมะเมีย", "21/04/2569": "วันอังคาร ขึ้น 5 ค่ำ เดือนหก (6) ปีมะเมีย", "22/04/2569": "วันพุธ ขึ้น 6 ค่ำ เดือนหก (6) ปีมะเมีย", "23/04/2569": "วันพฤหัสบดี ขึ้น 7 ค่ำ เดือนหก (6) ปีมะเมีย", "24/04/2569": "วันศุกร์ (วันพระ) ขึ้น 8 ค่ำ เดือนหก (6) ปีมะเมีย", "25/04/2569": "วันเสาร์ ขึ้น 9 ค่ำ เดือนหก (6) ปีมะเมีย", "26/04/2569": "วันอาทิตย์ ขึ้น 10 ค่ำ เดือนหก (6) ปีมะเมีย", "27/04/2569": "วันจันทร์ ขึ้น 11 ค่ำ เดือนหก (6) ปีมะเมีย", "28/04/2569": "วันอังคาร ขึ้น 12 ค่ำ เดือนหก (6) ปีมะเมีย", "29/04/2569": "วันพุธ ขึ้น 13 ค่ำ เดือนหก (6) ปีมะเมีย", "30/04/2569": "วันพฤหัสบดี ขึ้น 14 ค่ำ เดือนหก (6) ปีมะเมีย", "01/05/2569": "วันศุกร์ (วันพระ) ขึ้น 15 ค่ำ เดือนหก (6) ปีมะเมีย", "02/05/2569": "วันเสาร์ แรม 1 ค่ำ เดือนหก (6) ปีมะเมีย", "03/05/2569": "วันอาทิตย์ แรม 2 ค่ำ เดือนหก (6) ปีมะเมีย", "04/05/2569": "วันจันทร์ แรม 3 ค่ำ เดือนหก (6) ปีมะเมีย", "05/05/2569": "วันอังคาร แรม 4 ค่ำ เดือนหก (6) ปีมะเมีย", "06/05/2569": "วันพุธ แรม 5 ค่ำ เดือนหก (6) ปีมะเมีย", "07/05/2569": "วันพฤหัสบดี แรม 6 ค่ำ เดือนหก (6) ปีมะเมีย", "08/05/2569": "วันศุกร์ แรม 7 ค่ำ เดือนหก (6) ปีมะเมีย", "09/05/2569": "วันเสาร์ (วันพระ) แรม 8 ค่ำ เดือนหก (6) ปีมะเมีย", "10/05/2569": "วันอาทิตย์ แรม 9 ค่ำ เดือนหก (6) ปีมะเมีย", "11/05/2569": "วันจันทร์ แรม 10 ค่ำ เดือนหก (6) ปีมะเมีย", "12/05/2569": "วันอังคาร แรม 11 ค่ำ เดือนหก (6) ปีมะเมีย", "13/05/2569": "วันพุธ แรม 12 ค่ำ เดือนหก (6) ปีมะเมีย", "14/05/2569": "วันพฤหัสบดี แรม 13 ค่ำ เดือนหก (6) ปีมะเมีย", "15/05/2569": "วันศุกร์ แรม 14 ค่ำ เดือนหก (6) ปีมะเมีย", "16/05/2569": "วันเสาร์ (วันพระ) แรม 15 ค่ำ เดือนหก (6) ปีมะเมีย", "17/05/2569": "วันอาทิตย์ ขึ้น 1 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "18/05/2569": "วันจันทร์ ขึ้น 2 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "19/05/2569": "วันอังคาร ขึ้น 3 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "20/05/2569": "วันพุธ ขึ้น 4 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "21/05/2569": "วันพฤหัสบดี ขึ้น 5 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "22/05/2569": "วันศุกร์ ขึ้น 6 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "23/05/2569": "วันเสาร์ ขึ้น 7 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "24/05/2569": "วันอาทิตย์ (วันพระ) ขึ้น 8 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "25/05/2569": "วันจันทร์ ขึ้น 9 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "26/05/2569": "วันอังคาร ขึ้น 10 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "27/05/2569": "วันพุธ ขึ้น 11 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "28/05/2569": "วันพฤหัสบดี ขึ้น 12 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "29/05/2569": "วันศุกร์ ขึ้น 13 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "30/05/2569": "วันเสาร์ ขึ้น 14 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "31/05/2569": "วันอาทิตย์ (วันพระ) ขึ้น 15 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "01/06/2569": "วันจันทร์ แรม 1 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "02/06/2569": "วันอังคาร แรม 2 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "03/06/2569": "วันพุธ แรม 3 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "04/06/2569": "วันพฤหัสบดี แรม 4 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "05/06/2569": "วันศุกร์ แรม 5 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "06/06/2569": "วันเสาร์ แรม 6 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "07/06/2569": "วันอาทิตย์ แรม 7 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "08/06/2569": "วันจันทร์ (วันพระ) แรม 8 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "09/06/2569": "วันอังคาร แรม 9 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "10/06/2569": "วันพุธ แรม 10 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "11/06/2569": "วันพฤหัสบดี แรม 11 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "12/06/2569": "วันศุกร์ แรม 12 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "13/06/2569": "วันเสาร์ แรม 13 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "14/06/2569": "วันอาทิตย์ (วันพระ) แรม 14 ค่ำ เดือนเจ็ด (7) ปีมะเมีย", "15/06/2569": "วันจันทร์ ขึ้น 1 ค่ำ เดือนแปด (8) ปีมะเมีย", "16/06/2569": "วันอังคาร ขึ้น 2 ค่ำ เดือนแปด (8) ปีมะเมีย", "17/06/2569": "วันพุธ ขึ้น 3 ค่ำ เดือนแปด (8) ปีมะเมีย", "18/06/2569": "วันพฤหัสบดี ขึ้น 4 ค่ำ เดือนแปด (8) ปีมะเมีย", "19/06/2569": "วันศุกร์ ขึ้น 5 ค่ำ เดือนแปด (8) ปีมะเมีย", "20/06/2569": "วันเสาร์ ขึ้น 6 ค่ำ เดือนแปด (8) ปีมะเมีย", "21/06/2569": "วันอาทิตย์ ขึ้น 7 ค่ำ เดือนแปด (8) ปีมะเมีย", "22/06/2569": "วันจันทร์ (วันพระ) ขึ้น 8 ค่ำ เดือนแปด (8) ปีมะเมีย", "23/06/2569": "วันอังคาร ขึ้น 9 ค่ำ เดือนแปด (8) ปีมะเมีย", "24/06/2569": "วันพุธ ขึ้น 10 ค่ำ เดือนแปด (8) ปีมะเมีย", "25/06/2569": "วันพฤหัสบดี ขึ้น 11 ค่ำ เดือนแปด (8) ปีมะเมีย", "26/06/2569": "วันศุกร์ ขึ้น 12 ค่ำ เดือนแปด (8) ปีมะเมีย", "27/06/2569": "วันเสาร์ ขึ้น 13 ค่ำ เดือนแปด (8) ปีมะเมีย", "28/06/2569": "วันอาทิตย์ ขึ้น 14 ค่ำ เดือนแปด (8) ปีมะเมีย", "29/06/2569": "วันจันทร์ (วันพระ) ขึ้น 15 ค่ำ เดือนแปด (8) ปีมะเมีย", "30/06/2569": "วันอังคาร แรม 1 ค่ำ เดือนแปด (8) ปีมะเมีย", "01/07/2569": "วันพุธ แรม 2 ค่ำ เดือนแปด (8) ปีมะเมีย", "02/07/2569": "วันพฤหัสบดี แรม 3 ค่ำ เดือนแปด (8) ปีมะเมีย", "03/07/2569": "วันศุกร์ แรม 4 ค่ำ เดือนแปด (8) ปีมะเมีย", "04/07/2569": "วันเสาร์ แรม 5 ค่ำ เดือนแปด (8) ปีมะเมีย", "05/07/2569": "วันอาทิตย์ แรม 6 ค่ำ เดือนแปด (8) ปีมะเมีย", "06/07/2569": "วันจันทร์ แรม 7 ค่ำ เดือนแปด (8) ปีมะเมีย", "07/07/2569": "วันอังคาร (วันพระ) แรม 8 ค่ำ เดือนแปด (8) ปีมะเมีย", "08/07/2569": "วันพุธ แรม 9 ค่ำ เดือนแปด (8) ปีมะเมีย", "09/07/2569": "วันพฤหัสบดี แรม 10 ค่ำ เดือนแปด (8) ปีมะเมีย", "10/07/2569": "วันศุกร์ แรม 11 ค่ำ เดือนแปด (8) ปีมะเมีย", "11/07/2569": "วันเสาร์ แรม 12 ค่ำ เดือนแปด (8) ปีมะเมีย", "12/07/2569": "วันอาทิตย์ แรม 13 ค่ำ เดือนแปด (8) ปีมะเมีย", "13/07/2569": "วันจันทร์ แรม 14 ค่ำ เดือนแปด (8) ปีมะเมีย", "14/07/2569": "วันอังคาร (วันพระ) แรม 15 ค่ำ เดือนแปด (8) ปีมะเมีย", "15/07/2569": "วันพุธ ขึ้น 1 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "16/07/2569": "วันพฤหัสบดี ขึ้น 2 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "17/07/2569": "วันศุกร์ ขึ้น 3 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "18/07/2569": "วันเสาร์ ขึ้น 4 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "19/07/2569": "วันอาทิตย์ ขึ้น 5 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "20/07/2569": "วันจันทร์ ขึ้น 6 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "21/07/2569": "วันอังคาร ขึ้น 7 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "22/07/2569": "วันพุธ (วันพระ) ขึ้น 8 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "23/07/2569": "วันพฤหัสบดี ขึ้น 9 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "24/07/2569": "วันศุกร์ ขึ้น 10 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "25/07/2569": "วันเสาร์ ขึ้น 11 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "26/07/2569": "วันอาทิตย์ ขึ้น 12 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "27/07/2569": "วันจันทร์ ขึ้น 13 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "28/07/2569": "วันอังคาร ขึ้น 14 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "29/07/2569": "วันพุธ (วันพระ) ขึ้น 15 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "30/07/2569": "วันพฤหัสบดี แรม 1 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "31/07/2569": "วันศุกร์ แรม 2 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "01/08/2569": "วันเสาร์ แรม 3 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "02/08/2569": "วันอาทิตย์ แรม 4 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "03/08/2569": "วันจันทร์ แรม 5 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "04/08/2569": "วันอังคาร แรม 6 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "05/08/2569": "วันพุธ แรม 7 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "06/08/2569": "วันพฤหัสบดี (วันพระ) แรม 8 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "07/08/2569": "วันศุกร์ แรม 9 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "08/08/2569": "วันเสาร์ แรม 10 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "09/08/2569": "วันอาทิตย์ แรม 11 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "10/08/2569": "วันจันทร์ แรม 12 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "11/08/2569": "วันอังคาร แรม 13 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "12/08/2569": "วันพุธ แรม 14 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "13/08/2569": "วันพฤหัสบดี (วันพระ) แรม 15 ค่ำ เดือนแปดหลัง (88) ปีมะเมีย", "14/08/2569": "วันศุกร์ ขึ้น 1 ค่ำ เดือนเก้า (9) ปีมะเมีย", "15/08/2569": "วันเสาร์ ขึ้น 2 ค่ำ เดือนเก้า (9) ปีมะเมีย", "16/08/2569": "วันอาทิตย์ ขึ้น 3 ค่ำ เดือนเก้า (9) ปีมะเมีย", "17/08/2569": "วันจันทร์ ขึ้น 4 ค่ำ เดือนเก้า (9) ปีมะเมีย", "18/08/2569": "วันอังคาร ขึ้น 5 ค่ำ เดือนเก้า (9) ปีมะเมีย", "19/08/2569": "วันพุธ ขึ้น 6 ค่ำ เดือนเก้า (9) ปีมะเมีย", "20/08/2569": "วันพฤหัสบดี ขึ้น 7 ค่ำ เดือนเก้า (9) ปีมะเมีย", "21/08/2569": "วันศุกร์ (วันพระ) ขึ้น 8 ค่ำ เดือนเก้า (9) ปีมะเมีย", "22/08/2569": "วันเสาร์ ขึ้น 9 ค่ำ เดือนเก้า (9) ปีมะเมีย", "23/08/2569": "วันอาทิตย์ ขึ้น 10 ค่ำ เดือนเก้า (9) ปีมะเมีย", "24/08/2569": "วันจันทร์ ขึ้น 11 ค่ำ เดือนเก้า (9) ปีมะเมีย", "25/08/2569": "วันอังคาร ขึ้น 12 ค่ำ เดือนเก้า (9) ปีมะเมีย", "26/08/2569": "วันพุธ ขึ้น 13 ค่ำ เดือนเก้า (9) ปีมะเมีย", "27/08/2569": "วันพฤหัสบดี ขึ้น 14 ค่ำ เดือนเก้า (9) ปีมะเมีย", "28/08/2569": "วันศุกร์ (วันพระ) ขึ้น 15 ค่ำ เดือนเก้า (9) ปีมะเมีย", "29/08/2569": "วันเสาร์ แรม 1 ค่ำ เดือนเก้า (9) ปีมะเมีย", "30/08/2569": "วันอาทิตย์ แรม 2 ค่ำ เดือนเก้า (9) ปีมะเมีย", "31/08/2569": "วันจันทร์ แรม 3 ค่ำ เดือนเก้า (9) ปีมะเมีย", "01/09/2569": "วันอังคาร แรม 4 ค่ำ เดือนเก้า (9) ปีมะเมีย", "02/09/2569": "วันพุธ แรม 5 ค่ำ เดือนเก้า (9) ปีมะเมีย", "03/09/2569": "วันพฤหัสบดี แรม 6 ค่ำ เดือนเก้า (9) ปีมะเมีย", "04/09/2569": "วันศุกร์ แรม 7 ค่ำ เดือนเก้า (9) ปีมะเมีย", "05/09/2569": "วันเสาร์ (วันพระ) แรม 8 ค่ำ เดือนเก้า (9) ปีมะเมีย", "06/09/2569": "วันอาทิตย์ แรม 9 ค่ำ เดือนเก้า (9) ปีมะเมีย", "07/09/2569": "วันจันทร์ แรม 10 ค่ำ เดือนเก้า (9) ปีมะเมีย", "08/09/2569": "วันอังคาร แรม 11 ค่ำ เดือนเก้า (9) ปีมะเมีย", "09/09/2569": "วันพุธ แรม 12 ค่ำ เดือนเก้า (9) ปีมะเมีย", "10/09/2569": "วันพฤหัสบดี แรม 13 ค่ำ เดือนเก้า (9) ปีมะเมีย", "11/09/2569": "วันศุกร์ (วันพระ) แรม 14 ค่ำ เดือนเก้า (9) ปีมะเมีย", "12/09/2569": "วันเสาร์ ขึ้น 1 ค่ำ เดือนสิบ (10) ปีมะเมีย", "13/09/2569": "วันอาทิตย์ ขึ้น 2 ค่ำ เดือนสิบ (10) ปีมะเมีย", "14/09/2569": "วันจันทร์ ขึ้น 3 ค่ำ เดือนสิบ (10) ปีมะเมีย", "15/09/2569": "วันอังคาร ขึ้น 4 ค่ำ เดือนสิบ (10) ปีมะเมีย", "16/09/2569": "วันพุธ ขึ้น 5 ค่ำ เดือนสิบ (10) ปีมะเมีย", "17/09/2569": "วันพฤหัสบดี ขึ้น 6 ค่ำ เดือนสิบ (10) ปีมะเมีย", "18/09/2569": "วันศุกร์ ขึ้น 7 ค่ำ เดือนสิบ (10) ปีมะเมีย", "19/09/2569": "วันเสาร์ (วันพระ) ขึ้น 8 ค่ำ เดือนสิบ (10) ปีมะเมีย", "20/09/2569": "วันอาทิตย์ ขึ้น 9 ค่ำ เดือนสิบ (10) ปีมะเมีย", "21/09/2569": "วันจันทร์ ขึ้น 10 ค่ำ เดือนสิบ (10) ปีมะเมีย", "22/09/2569": "วันอังคาร ขึ้น 11 ค่ำ เดือนสิบ (10) ปีมะเมีย", "23/09/2569": "วันพุธ ขึ้น 12 ค่ำ เดือนสิบ (10) ปีมะเมีย", "24/09/2569": "วันพฤหัสบดี ขึ้น 13 ค่ำ เดือนสิบ (10) ปีมะเมีย", "25/09/2569": "วันศุกร์ ขึ้น 14 ค่ำ เดือนสิบ (10) ปีมะเมีย", "26/09/2569": "วันเสาร์ (วันพระ) ขึ้น 15 ค่ำ เดือนสิบ (10) ปีมะเมีย", "27/09/2569": "วันอาทิตย์ แรม 1 ค่ำ เดือนสิบ (10) ปีมะเมีย", "28/09/2569": "วันจันทร์ แรม 2 ค่ำ เดือนสิบ (10) ปีมะเมีย", "29/09/2569": "วันอังคาร แรม 3 ค่ำ เดือนสิบ (10) ปีมะเมีย", "30/09/2569": "วันพุธ แรม 4 ค่ำ เดือนสิบ (10) ปีมะเมีย", "01/10/2569": "วันพฤหัสบดี แรม 5 ค่ำ เดือนสิบ (10) ปีมะเมีย", "02/10/2569": "วันศุกร์ แรม 6 ค่ำ เดือนสิบ (10) ปีมะเมีย", "03/10/2569": "วันเสาร์ แรม 7 ค่ำ เดือนสิบ (10) ปีมะเมีย", "04/10/2569": "วันอาทิตย์ (วันพระ) แรม 8 ค่ำ เดือนสิบ (10) ปีมะเมีย", "05/10/2569": "วันจันทร์ แรม 9 ค่ำ เดือนสิบ (10) ปีมะเมีย", "06/10/2569": "วันอังคาร แรม 10 ค่ำ เดือนสิบ (10) ปีมะเมีย", "07/10/2569": "วันพุธ แรม 11 ค่ำ เดือนสิบ (10) ปีมะเมีย", "08/10/2569": "วันพฤหัสบดี แรม 12 ค่ำ เดือนสิบ (10) ปีมะเมีย", "09/10/2569": "วันศุกร์ แรม 13 ค่ำ เดือนสิบ (10) ปีมะเมีย", "10/10/2569": "วันเสาร์ แรม 14 ค่ำ เดือนสิบ (10) ปีมะเมีย", "11/10/2569": "วันอาทิตย์ (วันพระ) แรม 15 ค่ำ เดือนสิบ (10) ปีมะเมีย", "12/10/2569": "วันจันทร์ ขึ้น 1 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "13/10/2569": "วันอังคาร ขึ้น 2 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "14/10/2569": "วันพุธ ขึ้น 3 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "15/10/2569": "วันพฤหัสบดี ขึ้น 4 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "16/10/2569": "วันศุกร์ ขึ้น 5 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "17/10/2569": "วันเสาร์ ขึ้น 6 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "18/10/2569": "วันอาทิตย์ ขึ้น 7 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "19/10/2569": "วันจันทร์ (วันพระ) ขึ้น 8 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "20/10/2569": "วันอังคาร ขึ้น 9 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "21/10/2569": "วันพุธ ขึ้น 10 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "22/10/2569": "วันพฤหัสบดี ขึ้น 11 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "23/10/2569": "วันศุกร์ ขึ้น 12 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "24/10/2569": "วันเสาร์ ขึ้น 13 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "25/10/2569": "วันอาทิตย์ ขึ้น 14 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "26/10/2569": "วันจันทร์ (วันพระ) ขึ้น 15 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "27/10/2569": "วันอังคาร แรม 1 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "28/10/2569": "วันพุธ แรม 2 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "29/10/2569": "วันพฤหัสบดี แรม 3 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "30/10/2569": "วันศุกร์ แรม 4 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "31/10/2569": "วันเสาร์ แรม 5 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "01/11/2569": "วันอาทิตย์ แรม 6 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "02/11/2569": "วันจันทร์ แรม 7 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "03/11/2569": "วันอังคาร (วันพระ) แรม 8 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "04/11/2569": "วันพุธ แรม 9 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "05/11/2569": "วันพฤหัสบดี แรม 10 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "06/11/2569": "วันศุกร์ แรม 11 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "07/11/2569": "วันเสาร์ แรม 12 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "08/11/2569": "วันอาทิตย์ แรม 13 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "09/11/2569": "วันจันทร์ (วันพระ) แรม 14 ค่ำ เดือนสิบเอ็ด (11) ปีมะเมีย", "10/11/2569": "วันอังคาร ขึ้น 1 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "11/11/2569": "วันพุธ ขึ้น 2 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "12/11/2569": "วันพฤหัสบดี ขึ้น 3 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "13/11/2569": "วันศุกร์ ขึ้น 4 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "14/11/2569": "วันเสาร์ ขึ้น 5 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "15/11/2569": "วันอาทิตย์ ขึ้น 6 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "16/11/2569": "วันจันทร์ ขึ้น 7 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "17/11/2569": "วันอังคาร (วันพระ) ขึ้น 8 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "18/11/2569": "วันพุธ ขึ้น 9 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "19/11/2569": "วันพฤหัสบดี ขึ้น 10 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "20/11/2569": "วันศุกร์ ขึ้น 11 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "21/11/2569": "วันเสาร์ ขึ้น 12 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "22/11/2569": "วันอาทิตย์ ขึ้น 13 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "23/11/2569": "วันจันทร์ ขึ้น 14 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "24/11/2569": "วันอังคาร (วันพระ) ขึ้น 15 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "25/11/2569": "วันพุธ แรม 1 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "26/11/2569": "วันพฤหัสบดี แรม 2 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "27/11/2569": "วันศุกร์ แรม 3 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "28/11/2569": "วันเสาร์ แรม 4 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "29/11/2569": "วันอาทิตย์ แรม 5 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "30/11/2569": "วันจันทร์ แรม 6 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "01/12/2569": "วันอังคาร แรม 7 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "02/12/2569": "วันพุธ (วันพระ) แรม 8 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "03/12/2569": "วันพฤหัสบดี แรม 9 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "04/12/2569": "วันศุกร์ แรม 10 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "05/12/2569": "วันเสาร์ แรม 11 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "06/12/2569": "วันอาทิตย์ แรม 12 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "07/12/2569": "วันจันทร์ แรม 13 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "08/12/2569": "วันอังคาร แรม 14 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "09/12/2569": "วันพุธ (วันพระ) แรม 15 ค่ำ เดือนสิบสอง (12) ปีมะเมีย", "10/12/2569": "วันพฤหัสบดี ขึ้น 1 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "11/12/2569": "วันศุกร์ ขึ้น 2 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "12/12/2569": "วันเสาร์ ขึ้น 3 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "13/12/2569": "วันอาทิตย์ ขึ้น 4 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "14/12/2569": "วันจันทร์ ขึ้น 5 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "15/12/2569": "วันอังคาร ขึ้น 6 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "16/12/2569": "วันพุธ ขึ้น 7 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "17/12/2569": "วันพฤหัสบดี (วันพระ) ขึ้น 8 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "18/12/2569": "วันศุกร์ ขึ้น 9 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "19/12/2569": "วันเสาร์ ขึ้น 10 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "20/12/2569": "วันอาทิตย์ ขึ้น 11 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "21/12/2569": "วันจันทร์ ขึ้น 12 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "22/12/2569": "วันอังคาร ขึ้น 13 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "23/12/2569": "วันพุธ ขึ้น 14 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "24/12/2569": "วันพฤหัสบดี (วันพระ) ขึ้น 15 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "25/12/2569": "วันศุกร์ แรม 1 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "26/12/2569": "วันเสาร์ แรม 2 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "27/12/2569": "วันอาทิตย์ แรม 3 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "28/12/2569": "วันจันทร์ แรม 4 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "29/12/2569": "วันอังคาร แรม 5 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "30/12/2569": "วันพุธ แรม 6 ค่ำ เดือนอ้าย (1) ปีมะเมีย", "31/12/2569": "วันพฤหัสบดี แรม 7 ค่ำ เดือนอ้าย (1) ปีมะเมีย"
-};
+    "01/08/2568": "วันศุกร์ ขึ้น 7 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "02/08/2568": "วันเสาร์ (วันพระ) ขึ้น 8 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "03/08/2568": "วันอาทิตย์ ขึ้น 9 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "04/08/2568": "วันจันทร์ ขึ้น 10 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "05/08/2568": "วันอังคาร ขึ้น 11 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "06/08/2568": "วันพุธ ขึ้น 12 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "07/08/2568": "วันพฤหัสบดี ขึ้น 13 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "08/08/2568": "วันศุกร์ ขึ้น 14 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "09/08/2568": "วันเสาร์ (วันพระ) ขึ้น 15 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "10/08/2568": "วันอาทิตย์ แรม 1 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "11/08/2568": "วันจันทร์ แรม 2 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "12/08/2568": "วันอังคาร แรม 3 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "13/08/2568": "วันพุธ แรม 4 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "14/08/2568": "วันพฤหัสบดี แรม 5 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "15/08/2568": "วันศุกร์ แรม 6 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "16/08/2568": "วันเสาร์ แรม 7 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "17/08/2568": "วันอาทิตย์ (วันพระ) แรม 8 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "18/08/2568": "วันจันทร์ แรม 9 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "19/08/2568": "วันอังคาร แรม 10 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "20/08/2568": "วันพุธ แรม 11 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "21/08/2568": "วันพฤหัสบดี แรม 12 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "22/08/2568": "วันศุกร์ แรม 13 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "23/08/2568": "วันเสาร์ (วันพระ) แรม 14 ค่ำ เดือนเก้า (9) ปีมะเส็ง",
+  "24/08/2568": "วันอาทิตย์ ขึ้น 1 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "25/08/2568": "วันจันทร์ ขึ้น 2 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "26/08/2568": "วันอังคาร ขึ้น 3 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "27/08/2568": "วันพุธ ขึ้น 4 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "28/08/2568": "วันพฤหัสบดี ขึ้น 5 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "29/08/2568": "วันศุกร์ ขึ้น 6 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "30/08/2568": "วันเสาร์ ขึ้น 7 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "31/08/2568": "วันอาทิตย์ (วันพระ) ขึ้น 8 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "01/09/2568": "วันจันทร์ ขึ้น 9 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "02/09/2568": "วันอังคาร ขึ้น 10 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "03/09/2568": "วันพุธ ขึ้น 11 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "04/09/2568": "วันพฤหัสบดี ขึ้น 12 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "05/09/2568": "วันศุกร์ ขึ้น 13 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "06/09/2568": "วันเสาร์ ขึ้น 14 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "07/09/2568": "วันอาทิตย์ (วันพระ) ขึ้น 15 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "08/09/2568": "วันจันทร์ แรม 1 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "09/09/2568": "วันอังคาร แรม 2 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "10/09/2568": "วันพุธ แรม 3 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "11/09/2568": "วันพฤหัสบดี แรม 4 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "12/09/2568": "วันศุกร์ แรม 5 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "13/09/2568": "วันเสาร์ แรม 6 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "14/09/2568": "วันอาทิตย์ แรม 7 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "15/09/2568": "วันจันทร์ (วันพระ) แรม 8 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "16/09/2568": "วันอังคาร แรม 9 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "17/09/2568": "วันพุธ แรม 10 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "18/09/2568": "วันพฤหัสบดี แรม 11 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "19/09/2568": "วันศุกร์ แรม 12 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "20/09/2568": "วันเสาร์ แรม 13 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "21/09/2568": "วันอาทิตย์ แรม 14 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "22/09/2568": "วันจันทร์ (วันพระ) แรม 15 ค่ำ เดือนสิบ (10) ปีมะเส็ง",
+  "23/09/2568": "วันอังคาร ขึ้น 1 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "24/09/2568": "วันพุธ ขึ้น 2 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "25/09/2568": "วันพฤหัสบดี ขึ้น 3 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "26/09/2568": "วันศุกร์ ขึ้น 4 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "27/09/2568": "วันเสาร์ ขึ้น 5 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "28/09/2568": "วันอาทิตย์ ขึ้น 6 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "29/09/2568": "วันจันทร์ ขึ้น 7 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "30/09/2568": "วันอังคาร (วันพระ) ขึ้น 8 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "01/10/2568": "วันพุธ ขึ้น 9 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "02/10/2568": "วันพฤหัสบดี ขึ้น 10 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "03/10/2568": "วันศุกร์ ขึ้น 11 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "04/10/2568": "วันเสาร์ ขึ้น 12 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "05/10/2568": "วันอาทิตย์ ขึ้น 13 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "06/10/2568": "วันจันทร์ ขึ้น 14 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "07/10/2568": "วันอังคาร (วันออกพรรษา) ขึ้น 15 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "08/10/2568": "วันพุธ แรม 1 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "09/10/2568": "วันพฤหัสบดี แรม 2 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "10/10/2568": "วันศุกร์ แรม 3 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "11/10/2568": "วันเสาร์ แรม 4 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "12/10/2568": "วันอาทิตย์ แรม 5 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "13/10/2568": "วันจันทร์ แรม 6 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "14/10/2568": "วันอังคาร แรม 7 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "15/10/2568": "วันพุธ (วันพระ) แรม 8 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "16/10/2568": "วันพฤหัสบดี แรม 9 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "17/10/2568": "วันศุกร์ แรม 10 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "18/10/2568": "วันเสาร์ แรม 11 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "19/10/2568": "วันอาทิตย์ แรม 12 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "20/10/2568": "วันจันทร์ แรม 13 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "21/10/2568": "วันอังคาร (วันพระ) แรม 14 ค่ำ เดือนสิบเอ็ด (11) ปีมะเส็ง",
+  "22/10/2568": "วันพุธ ขึ้น 1 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "23/10/2568": "วันพฤหัสบดี ขึ้น 2 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "24/10/2568": "วันศุกร์ ขึ้น 3 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "25/10/2568": "วันเสาร์ ขึ้น 4 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "26/10/2568": "วันอาทิตย์ ขึ้น 5 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "27/10/2568": "วันจันทร์ ขึ้น 6 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "28/10/2568": "วันอังคาร ขึ้น 7 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "29/10/2568": "วันพุธ (วันพระ) ขึ้น 8 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "30/10/2568": "วันพฤหัสบดี ขึ้น 9 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+  "31/10/2568": "วันศุกร์ ขึ้น 10 ค่ำ เดือนสิบสอง (12) ปีมะเส็ง",
+ };
 
 // === SHARED UTILITY FUNCTIONS ===
 document.addEventListener('contextmenu', e => e.preventDefault());
@@ -270,407 +507,609 @@ function checkCustomOption(select) { document.getElementById('customPersonInput'
 function checkCustomTopicOption(select) { document.getElementById('customTopicInputs').style.display = select.value === 'custom' ? 'block' : 'none'; }
 function getSelectedPerson() { const select = document.getElementById('personSelect'); return select.value === 'custom' ? (document.getElementById('customPersonInput').value.trim() || '@') : select.value; }
 function getTopicName() { const select = document.getElementById('topicSelect'); if (select.value === 'custom') { return document.getElementById('customTopicName').value.trim() || 'ไม่ระบุหัวข้อ'; } return select.options[select.selectedIndex].text.split(' เวลา ')[0]; }
-function getTopicTime() { const select = document.getElementById('topicSelect'); if (select.value === 'custom') { const time = document.getElementById('customTopicTime').value.trim(); return time ? `เวลา ${time} น.` : ''; } const parts = select.options[select.selectedIndex].text.split(' เวลา '); return parts.length > 1 ? `เวลา ${parts[1]}` : ''; }
-function getThaiDate(date = new Date()) { const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"]; const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`; }
+function getTopicTime() {
+  const select = document.getElementById('topicSelect');
+  if (select.value === 'custom') {
+    const time = document.getElementById('customTopicTime').value.trim();
+    return time ? time : ''; // Return only time string
+  }
+  const parts = select.options[select.selectedIndex].text.split(' เวลา ');
+  return parts.length > 1 ? parts[1].replace(' น.', '') : ''; // Return only time string
+}
+function getThaiDate(date) {
+  const months = [
+    "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+    "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+  ];
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear() + 543;
+
+  return `วันที่ ${day} ${month} พ.ศ. ${year}`;
+}
 function getLunarDate(date = new Date()) { const key = `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()+543}`; return lunarData[key] || ""; }
 function getThaiTime() { const now = new Date(); return `เวลา ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')} น.`; }
-function parseThaiDate(dateStr) { if (!dateStr || dateStr.trim() === '') return new Date(); const parts = dateStr.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/); if (parts) { const day = parseInt(parts[1], 10); const month = parseInt(parts[2], 10); let year = parseInt(parts[3], 10); if (year > 2500) year -= 543; const d = new Date(year, month - 1, day); if (d && d.getMonth() === month - 1) return d; } return null; }
-
+function parseThaiDate(dateStr) { if (!dateStr || dateStr.trim() === '') return new Date(); const parts = dateStr.match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/); if (parts) { const day = parseInt(parts[1], 10); const month = parseInt(parts[2], 10); let year = parseInt(parts[3], 10); if (year > 2500) year -= 543; const d = new Date(year, month - 1, day); if (d && d.getMonth() === month - 1) return d; } return null; }
+function getFormattedDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear() + 543;
+  return `${day}/${month}/${year}`;
+}
 // === LOGIC FOR 4-DIGIT NUMBERS ===
 function generate4DigitHTML(num, commonData) {
-    const twoDigitPairs = ((n) => { const p = new Set(); for (let i = 0; i < n.length; i++) { for (let j = i + 1; j < n.length; j++) { p.add([n[i], n[j]].sort().join('')); } } return Array.from(p).sort(); })(num);
-    const threeDigitCombinations = ((n) => { const c = new Set(); if (n.length < 3) return []; for (let i = 0; i < n.length; i++) { for (let j = i + 1; j < n.length; j++) { for (let k = j + 1; k < n.length; k++) { c.add([n[i], n[j], n[k]].sort().join('')); } } } return Array.from(c).sort(); })(num);
-    
-    return `
-    <div style="position: relative; text-align: center; color: blue;">
-        <div class="result-header"> <img src="logo.png" class="header-logo" alt="logo"> <div class="topic-box">${commonData.topicName}</div> <img src="logo.png" class="header-logo" alt="logo"> </div>
-        ${commonData.topicTimeHtml}
-        <p style="font-size: 18px; ${commonData.textShadow}">${getThaiDate(commonData.date)}</p>
-        ${commonData.lunarHtml}
-        <h2 style="font-size: 24px; font-weight: bold; ${commonData.textShadow}">4 ตัว <span style="color: red;">${num}</span> By : <span style="color: green;">${commonData.selectedPerson}</span></h2>
-        <h3 style="font-size: 24px; font-weight: bold; ${commonData.textShadow}">จัดชุด 2 ตัว</h3> <p style="font-size: 26px; font-weight: bold; ${commonData.textShadow}">${twoDigitPairs.join(' - ')}</p>
-        <h3 style="font-size: 24px; font-weight: bold; ${commonData.textShadow}">จัดชุด 3 ตัว</h3> <p style="font-size: 26px; font-weight: bold; ${commonData.textShadow}">${threeDigitCombinations.join(' - ')}</p>
-        <h2 style="font-size: 24px; font-weight: bold; color: red; ${commonData.textShadow}">แนวทางเท่านั้น</h2>
-        <p style="font-size: 13px; ${commonData.textShadow}">แปล: ${getThaiDate(new Date())} ${getThaiTime()}</p>
-        <p style="font-size: 20px; ${commonData.textShadow}">${commonData.noteHtml}</p>
-    </div>`;
+const twoDigitPairs = ((n) => { const p = new Set(); for (let i = 0; i < n.length; i++) { for (let j = i + 1; j < n.length; j++) { p.add([n[i], n[j]].sort().join('')); } } return Array.from(p).sort(); })(num);
+const threeDigitCombinations = ((n) => { const c = new Set(); if (n.length < 3) return []; for (let i = 0; i < n.length; i++) { for (let j = i + 1; j < n.length; j++) { for (let k = j + 1; k < n.length; k++) { c.add([n[i], n[j], n[k]].sort().join('')); } } } return Array.from(c).sort(); })(num);
+
+return `
+<div style="position: relative; text-align: center; color: blue; --font-scale: 1;">
+  <div class="result-header">
+    <div class="topic-box" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+      <span style="font-size: calc(clamp(1.5rem, 6vw, 2.25rem) * var(--font-scale)); font-weight: bold; ${commonData.textShadow}">
+        ${commonData.topicName}
+      </span>
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+    </div>
+  </div>
+  
+  ${commonData.topicNameHtml}
+  ${commonData.topicTimeHtml}
+  
+  <!-- วันที่ -->
+  <p style="font-size: calc(clamp(0.875rem, 3vw, 1.125rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${getThaiDate(commonData.date)}
+  </p>
+  
+  ${commonData.lunarHtml}
+  
+  <!-- หัวข้อหลัก 4 ตัว -->
+  <h2 style="font-size: calc(clamp(1.5rem, 5.5vw, 2rem) * var(--font-scale)); font-weight: bold; ${commonData.textShadow}">
+    4 ตัว <span style="color: red;">${num}</span> By : <span style="color: green;">${commonData.selectedPerson}</span>
+  </h2>
+  
+  <!-- หัวข้อย่อย 2 ตัว -->
+  <h3 style="font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale)); font-weight: bold; ${commonData.textShadow}">
+    จัดชุด 2 ตัว
+  </h3> 
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1.25rem, 6vw, 1.625rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${twoDigitPairs.join(' - ')}
+  </p>
+  
+  <!-- หัวข้อย่อย 3 ตัว -->
+  <h3 style="font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale)); font-weight: bold; ${commonData.textShadow}">
+    จัดชุด 3 ตัว
+  </h3> 
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1.25rem, 6vw, 1.625rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${threeDigitCombinations.join(' - ')}
+  </p>
+  
+  <!-- ข้อความเตือน -->
+  <h2 style="font-size: calc(clamp(1.25rem, 5vw, 1.75rem) * var(--font-scale)); font-weight: bold; color: red; ${commonData.textShadow}">
+    แนวทางเท่านั้น
+  </h2>
+  
+  <!-- เวลา -->
+  <p style="font-size: calc(clamp(0.875rem, 3vw, 1.125rem) * var(--font-scale)); ${commonData.textShadow}">
+    Disclose : ${getFormattedDate(new Date())} ${getThaiTime()}
+  </p>
+  
+  <!-- Note -->
+  <p style="font-size: calc(clamp(1rem, 3.5vw, 1.25rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${commonData.noteHtml}
+  </p>
+</div>`;
 }
 
-// === LOGIC FOR 3-DIGIT NUMBERS ===
+// === LOGIC FOR 3-DIGIT NUMBERS (REVISED) ===
 function generate3DigitHTML(num, commonData) {
-    const transformRules = {'0':'1','1':'7','2':'5','3':'8','4':'9','5':'2','6':'9','7':'1','8':'3','9':'6'};
-    const transformed = num.split('').map(d => transformRules[d]).join('');
-    const sortPair = pair => (pair[0] > pair[1] ? pair[1] + pair[0] : pair);
-    
-    const generateAdditional = (inputSet, type) => {
-        const patterns = { '2digit': {'00':'02','11':'12','33':'23','44':'24','55':'25','66':'26','77':'27','88':'28','99':'29'}, '3digit': {'000': '002', '011': '012', '022': '022', '033': '023', '044': '024', '055': '025', '066': '026', '077': '027', '088': '028', '099': '029', '111': '112', '122': '122', '133': '123', '144': '124', '155': '125', '166': '126', '177': '127', '188': '128', '199': '129', '222': '222', '233': '223', '244': '224', '255': '225', '266': '226', '277': '227', '288': '228', '299': '229', '333': '233', '344': '234', '355': '235', '366': '236', '377': '237', '388': '238', '399': '239', '444': '244', '455': '245', '466': '246', '477': '247', '488': '248', '499': '249', '555': '255', '566': '256', '577': '257', '588': '258', '599': '259', '666': '266', '677': '267', '688': '268', '699': '269', '777': '277', '788': '278', '799': '279', '888': '288', '899': '289', '999': '299', '001': '012', '002': '022', '003': '023', '004': '024', '005': '025', '006': '026', '007': '027', '008': '028', '009': '029', '112': '122', '113': '123', '114': '124', '115': '125', '116': '126', '117': '127', '118': '128', '119': '129', '223': '223', '224': '224', '225': '225', '226': '226', '227': '227', '228': '228', '229': '229', '334': '234', '335': '235', '336': '236', '337': '237', '338': '238', '339': '239', '445': '245', '446': '246', '447': '247', '448': '248', '449': '249', '556': '256', '557': '257', '558': '258', '559': '259', '667': '267', '668': '268', '669': '269', '778': '278', '779': '279', '889': '289'} };
-        const additional = Array.from(inputSet).map(item => (patterns[type] || {})[item]).filter(Boolean);
-        return [...new Set(additional)];
-    };
-    
-    const firstSet = [...new Set([sortPair(`${num[0]}${num[1]}`), sortPair(`${num[0]}${num[2]}`), sortPair(`${num[1]}${num[2]}`)])].sort();
-    const secondSetSource = [sortPair(`${num[0]}${transformed[1]}`),sortPair(`${num[0]}${transformed[2]}`),sortPair(`${num[1]}${transformed[0]}`),sortPair(`${num[1]}${transformed[2]}`),sortPair(`${num[2]}${transformed[0]}`),sortPair(`${num[2]}${transformed[1]}`)];
-    const additional2d = generateAdditional(new Set([...firstSet, ...secondSetSource]), '2digit');
-    const secondSet = [...new Set([...secondSetSource, ...additional2d])].filter(p => !firstSet.includes(p)).sort();
-    const transformedPairs = [...new Set([sortPair(`${transformed[0]}${transformed[1]}`), sortPair(`${transformed[0]}${transformed[2]}`), sortPair(`${transformed[1]}${transformed[2]}`)])].filter(p => !firstSet.includes(p) && !secondSet.includes(p)).sort();
-    
-    const thirdSetSource = [`${num[0]}${num[1]}${num[2]}`,`${num[0]}${num[1]}${transformed[2]}`,`${num[0]}${transformed[1]}${num[2]}`,`${num[0]}${transformed[1]}${transformed[2]}`,`${transformed[0]}${num[1]}${num[2]}`,`${transformed[0]}${num[1]}${transformed[2]}`,`${transformed[0]}${transformed[1]}${num[2]}`,`${transformed[0]}${transformed[1]}${transformed[2]}`];
-    const thirdSet = [...new Set(thirdSetSource.map(t => t.split('').sort().join('')))].sort();
-    const additional3d = generateAdditional(new Set(thirdSet), '3digit').filter(t => !thirdSet.includes(t)).sort();
+const transformRules = {'0':'1','1':'7','2':'5','3':'8','4':'9','5':'2','6':'9','7':'1','8':'3','9':'6'};
+const transformed = num.split('').map(d => transformRules[d]).join('');
+const sortPair = pair => (pair[0] > pair[1] ? pair[1] + pair[0] : pair);
 
-    const redSpan = (text) => `<span style="color: red;">${text}</span>`;
-    const greenSpan = (text) => `<span style="color: green;">${text}</span>`;
-    const noDataSpan = '<span style="color: green; font-size: 18px;">ไม่มีชุดตัวเลขเพิ่ม</span>';
+const generateAdditional = (inputSet, type) => {
+const patterns = { '2digit': {'00':'02','11':'12','33':'23','44':'24','55':'25','66':'26','77':'27','88':'28','99':'29'}, '3digit': {'000': '002', '011': '012', '022': '022', '033': '023', '044': '024', '055': '025', '066': '026', '077': '027', '088': '028', '099': '029', '111': '112', '122': '122', '133': '123', '144': '124', '155': '125', '166': '126', '177': '127', '188': '128', '199': '129', '222': '222', '233': '223', '244': '224', '255': '225', '266': '226', '277': '227', '288': '228', '299': '229', '333': '233', '344': '234', '355': '235', '366': '236', '377': '237', '388': '238', '399': '239', '444': '244', '455': '245', '466': '246', '477': '247', '488': '248', '499': '249', '555': '255', '566': '256', '577': '257', '588': '258', '599': '259', '666': '266', '677': '267', '688': '268', '699': '269', '777': '277', '788': '278', '799': '279', '888': '288', '899': '289', '999': '299', '001': '012', '002': '022', '003': '023', '004': '024', '005': '025', '006': '026', '007': '027', '008': '028', '009': '029', '112': '122', '113': '123', '114': '124', '115': '125', '116': '126', '117': '127', '118': '128', '119': '129', '223': '223', '224': '224', '225': '225', '226': '226', '227': '227', '228': '228', '229': '229', '334': '234', '335': '235', '336': '236', '337': '237', '338': '238', '339': '239', '445': '245', '446': '246', '447': '247', '448': '248', '449': '249', '556': '256', '557': '257', '558': '258', '559': '259', '667': '267', '668': '268', '669': '269', '778': '278', '779': '279', '889': '289'} };
+const additional = Array.from(inputSet).map(item => (patterns[type] || {})[item]).filter(Boolean);
+return [...new Set(additional)];
+};
 
-    return `<div style="position: relative; text-align: center; color: blue;">
-        <div class="result-header"> <img src="logo.png" class="header-logo" alt="logo"> <div class="topic-box">${commonData.topicName}</div> <img src="logo.png" class="header-logo" alt="logo"> </div>
-        ${commonData.topicTimeHtml}
-        <p style="font-size: 18px; ${commonData.textShadow}">${getThaiDate(commonData.date)}</p>
-        ${commonData.lunarHtml}
-        <h2 style="font-weight: bold; ${commonData.textShadow}">3 ตัว ${redSpan(num)} By : ${greenSpan(commonData.selectedPerson)}</h2>
-        <h3 style="font-weight: bold; ${commonData.textShadow}">จัดชุดเด่น 2 ตัว</h3> <p style="font-size: 24px; font-weight: bold; ${commonData.textShadow}">${firstSet.join(' - ')}</p>
-        <h3 style="font-weight: bold; ${commonData.textShadow}">จัดชุดรอง 2 ตัว</h3> <p style="font-size: 24px; font-weight: bold; ${commonData.textShadow}">${secondSet.length > 0 ? secondSet.join(' - ') : noDataSpan}</p>
-        <h3 style="font-weight: bold; ${commonData.textShadow}">จัดชุด 2 ตัว ${redSpan('(แปลเพิ่ม)')}</h3> <p style="font-size: 24px; font-weight: bold; ${commonData.textShadow}">${transformedPairs.length > 0 ? transformedPairs.join(' - ') : noDataSpan}</p>
-        <h3 style="font-weight: bold; ${commonData.textShadow}">จัดชุด 3 ตัว (ปกติ)</h3> <p style="font-size: 19px; font-weight: bold; ${commonData.textShadow}">${thirdSet.join(' - ')}</p>
-        <h3 style="font-weight: bold; ${commonData.textShadow}">จัดชุด 3 ตัว ${redSpan('(แปลเพิ่ม)')}</h3> <p style="font-size: 19px; font-weight: bold; ${commonData.textShadow}">${additional3d.length > 0 ? additional3d.join(' - ') : noDataSpan}</p>
-        <h2 style="font-weight: bold; color: red; ${commonData.textShadow}">แนวทางเท่านั้น</h2>
-        <p style="font-size: 13px; ${commonData.textShadow}">แปล: ${getThaiDate(new Date())} ${getThaiTime()}</p>
-        <p style="font-size: 20px; ${commonData.textShadow}">${commonData.noteHtml.replace('No remarks', '<span style="color: red;">No remarks</span>')}</p>
-    </div>`;
+const firstSet = [...new Set([sortPair(`${num[0]}${num[1]}`), sortPair(`${num[0]}${num[2]}`), sortPair(`${num[1]}${num[2]}`)])].sort();
+const secondSetSource = [sortPair(`${num[0]}${transformed[1]}`),sortPair(`${num[0]}${transformed[2]}`),sortPair(`${num[1]}${transformed[0]}`),sortPair(`${num[1]}${transformed[2]}`),sortPair(`${num[2]}${transformed[0]}`),sortPair(`${num[2]}${transformed[1]}`)];
+const additional2d = generateAdditional(new Set([...firstSet, ...secondSetSource]), '2digit');
+const secondSet = [...new Set([...secondSetSource, ...additional2d])].filter(p => !firstSet.includes(p)).sort();
+const transformedPairs = [...new Set([sortPair(`${transformed[0]}${transformed[1]}`), sortPair(`${transformed[0]}${transformed[2]}`), sortPair(`${transformed[1]}${transformed[2]}`)])].filter(p => !firstSet.includes(p) && !secondSet.includes(p)).sort();
+
+const thirdSetSource = [`${num[0]}${num[1]}${num[2]}`,`${num[0]}${num[1]}${transformed[2]}`,`${num[0]}${transformed[1]}${num[2]}`,`${num[0]}${transformed[1]}${transformed[2]}`,`${transformed[0]}${num[1]}${num[2]}`,`${transformed[0]}${num[1]}${transformed[2]}`,`${transformed[0]}${transformed[1]}${num[2]}`,`${transformed[0]}${transformed[1]}${transformed[2]}`];
+const thirdSet = [...new Set(thirdSetSource.map(t => t.split('').sort().join('')))].sort();
+const additional3d = generateAdditional(new Set(thirdSet), '3digit').filter(t => !thirdSet.includes(t)).sort();
+
+const redSpan = (text) => `<span style="color: red;">${text}</span>`;
+const greenSpan = (text) => `<span style="color: green;">${text}</span>`;
+const noDataSpan = '<span style="color: green; font-size: 18px;">ไม่มีชุดตัวเลขเพิ่ม</span>';
+
+return `
+<div style="position: relative; text-align: center; color: blue; --font-scale: 1;">
+  <!-- หัวข้อหลัก -->
+  <div class="result-header">
+    <div class="topic-box" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+      <span style="
+        font-size: calc(clamp(1.5rem, 6vw, 2.25rem) * var(--font-scale));
+        font-weight: bold;
+        ${commonData.textShadow};
+        background: linear-gradient(90deg, #0d47a1, #42a5f5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      ">
+        ${commonData.topicName}
+      </span>
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+    </div>
+  </div>
+
+  ${commonData.topicNameHtml}
+  ${commonData.topicTimeHtml}
+
+  <!-- วันที่ -->
+  <p style="font-size: calc(clamp(0.875rem, 3vw, 1.125rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${getThaiDate(commonData.date)}
+  </p>
+
+  ${commonData.lunarHtml}
+
+  <!-- หัวข้อหลัก 3 ตัว -->
+  <h2 style="font-weight: bold; font-size: calc(clamp(1.5rem, 5.5vw, 2rem) * var(--font-scale)); ${commonData.textShadow}">
+    3 ตัว ${redSpan(num)} By : ${greenSpan(commonData.selectedPerson)}
+  </h2>
+
+  <!-- จัดชุดเด่น 2 ตัว -->
+  <h3 style="font-weight: bold; font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    จัดชุดเด่น 2 ตัว
+  </h3>
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1.1rem, 5vw, 1.5rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${firstSet.join(' - ')}
+  </p>
+
+  <!-- จัดชุดรอง 2 ตัว -->
+  <h3 style="font-weight: bold; font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    จัดชุดรอง 2 ตัว
+  </h3>
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1.1rem, 5vw, 1.5rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${secondSet.length > 0 ? secondSet.join(' - ') : noDataSpan}
+  </p>
+
+  <!-- จัดชุด 2 ตัว (แปลเพิ่ม) -->
+  <h3 style="font-weight: bold; font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    จัดชุด 2 ตัว ${redSpan('(แปลเพิ่ม)')}
+  </h3>
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1.1rem, 5vw, 1.5rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${transformedPairs.length > 0 ? transformedPairs.join(' - ') : noDataSpan}
+  </p>
+
+  <!-- จัดชุด 3 ตัว (ปกติ) -->
+  <h3 style="font-weight: bold; font-size: calc(clamp(1.1rem, 4.5vw, 1.5rem) * var(--font-scale)); ${commonData.textShadow}">
+    จัดชุด 3 ตัว (ปกติ)
+  </h3>
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1rem, 4.8vw, 1.35rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${thirdSet.join(' - ')}
+  </p>
+
+  <!-- จัดชุด 3 ตัว (แปลเพิ่ม) -->
+  <h3 style="font-weight: bold; font-size: calc(clamp(1.1rem, 4.5vw, 1.5rem) * var(--font-scale)); ${commonData.textShadow}">
+    จัดชุด 3 ตัว ${redSpan('(แปลเพิ่ม)')}
+  </h3>
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1rem, 4.8vw, 1.35rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${additional3d.length > 0 ? additional3d.join(' - ') : noDataSpan}
+  </p>
+
+  <!-- คำเตือน -->
+  <h2 style="font-weight: bold; color: red; font-size: calc(clamp(1.25rem, 5vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    แนวทางเท่านั้น
+  </h2>
+
+  <!-- Disclosure -->
+  <p style="font-size: calc(clamp(0.875rem, 3vw, 1.125rem) * var(--font-scale)); ${commonData.textShadow}">
+    Disclose : ${getFormattedDate(new Date())} ${getThaiTime()}
+  </p>
+
+  <!-- หมายเหตุ -->
+  <p style="font-size: calc(clamp(1rem, 3.5vw, 1.25rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${commonData.noteHtml.replace('No remarks', '<span style="color: red;">No remarks</span>')}
+  </p>
+</div>`;
 }
+
 
 // === LOGIC FOR 2-DIGIT NUMBERS ===
 function generate2DigitHTML(num, commonData) {
-    const transformRules = { '0': '1', '1': '7', '2': '5', '3': '8', '4': '9', '5': '2', '6': '9', '7': '1', '8': '3', '9': '6' }; 
-    const transformed = num.split('').map(d => transformRules[d]).join(''); 
-    const pairs = [`${num[0]}${transformed[1]}`, `${transformed[0]}${num[1]}`, `${transformed[0]}${transformed[1]}`, `${num[0]}${num[1]}`]; 
-    const formattedPairs = pairs.map(p => (p[0] <= p[1] ? p : `${p[1]}${p[0]}`)); 
-    let uniquePairs = [...new Set(formattedPairs)]; 
-    const additionRules = { '00': '02', '11': '12', '33': '23', '44': '24', '55': '25', '66': '26', '77': '27', '88': '28', '99': '29' }; 
-    if (additionRules[num]) uniquePairs.push(additionRules[num]);
-    const sortedPairs = [...new Set(uniquePairs)].sort(); 
-    
-    return `
-        <div style="position: relative; text-align: center; color: blue;">
-            <div class="result-header"><img src="logo.png" class="header-logo" alt="logo"><div class="topic-box">${commonData.topicName}</div><img src="logo.png" class="header-logo" alt="logo"></div>
-            ${commonData.topicTimeHtml}
-            <p style="font-size: 18px; ${commonData.textShadow}">${getThaiDate(commonData.date)}</p>
-            ${commonData.lunarHtml}
-            <h2 style="font-size: 26px; font-weight: bold; ${commonData.textShadow}">2 ตัว <span style="color: red;">${num}</span> By : <span style="color: green;">${commonData.selectedPerson}</span></h2>
-            <h3 style="font-size: 26px; font-weight: bold; ${commonData.textShadow}">จัดชุด 2 ตัว</h3>
-            <p style="font-size: 28px; font-weight: bold; ${commonData.textShadow}">${sortedPairs.join(' - ')}</p>
-            <h2 style="font-size: 26px; font-weight: bold; color: red; ${commonData.textShadow}">แนวทางเท่านั้น</h2>
-            <p style="font-size: 13px; ${commonData.textShadow}">แปล: ${getThaiDate(new Date())} ${getThaiTime()}</p>
-            <p style="font-size: 20px; ${commonData.textShadow}">${commonData.noteHtml}</p>
-        </div>
-    `;
+const transformRules = { '0': '1', '1': '7', '2': '5', '3': '8', '4': '9', '5': '2', '6': '9', '7': '1', '8': '3', '9': '6' };
+const transformed = num.split('').map(d => transformRules[d]).join('');
+const pairs = [`${num[0]}${transformed[1]}`, `${transformed[0]}${num[1]}`, `${transformed[0]}${transformed[1]}`, `${num[0]}${num[1]}`];
+const formattedPairs = pairs.map(p => (p[0] <= p[1] ? p : `${p[1]}${p[0]}`));
+let uniquePairs = [...new Set(formattedPairs)];
+const additionRules = { '00': '02', '11': '12', '33': '23', '44': '24', '55': '25', '66': '26', '77': '27', '88': '28', '99': '29' };
+if (additionRules[num]) uniquePairs.push(additionRules[num]);
+const sortedPairs = [...new Set(uniquePairs)].sort();
+
+return `
+<div style="position: relative; text-align: center; color: blue; --font-scale: 1;">
+  <!-- หัวข้อหลัก -->
+  <div class="result-header">
+    <div class="topic-box" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+      <span style="
+        font-size: calc(clamp(1.5rem, 6vw, 2.25rem) * var(--font-scale));
+        font-weight: bold;
+        ${commonData.textShadow};
+        background: linear-gradient(90deg, #0d47a1, #42a5f5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      ">
+        ${commonData.topicName}
+      </span>
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+    </div>
+  </div>
+
+  ${commonData.topicNameHtml}
+  ${commonData.topicTimeHtml}
+
+  <!-- วันที่ -->
+  <p style="font-size: calc(clamp(0.9rem, 3vw, 1.125rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${getThaiDate(commonData.date)}
+  </p>
+
+  ${commonData.lunarHtml}
+
+  <!-- หัวข้อหลัก 2 ตัว -->
+  <h2 style="font-weight: bold; font-size: calc(clamp(1.4rem, 6vw, 2rem) * var(--font-scale)); ${commonData.textShadow}">
+    2 ตัว <span style="color: red;">${num}</span> By : <span style="color: green;">${commonData.selectedPerson}</span>
+  </h2>
+
+  <!-- หัวข้อย่อย -->
+  <h3 style="font-weight: bold; font-size: calc(clamp(1.2rem, 5.5vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    จัดชุด 2 ตัว
+  </h3>
+
+  <!-- ตัวเลข -->
+  <p style="font-weight: bold; white-space: nowrap; font-size: calc(clamp(1.1rem, 7vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${sortedPairs.join(' - ')}
+  </p>
+
+  <!-- คำเตือน -->
+  <h2 style="font-weight: bold; color: red; font-size: calc(clamp(1.2rem, 5.5vw, 1.75rem) * var(--font-scale)); ${commonData.textShadow}">
+    แนวทางเท่านั้น
+  </h2>
+
+  <!-- Disclosure -->
+  <p style="font-size: calc(clamp(0.9rem, 3vw, 1.125rem) * var(--font-scale)); ${commonData.textShadow}">
+    Disclose : ${getFormattedDate(new Date())} ${getThaiTime()}
+  </p>
+
+  <!-- หมายเหตุ -->
+  <p style="font-size: calc(clamp(1rem, 3.5vw, 1.25rem) * var(--font-scale)); ${commonData.textShadow}">
+    ${commonData.noteHtml}
+  </p>
+</div>
+`;
 }
+
 
 // === MAIN DISPATCHER FUNCTION ===
 function generateResultHTML() {
-    const num = document.getElementById("numberInput").value;
-    if (isNaN(num) || (num.length < 2 || num.length > 4)) {
-        alert("กรุณากรอกตัวเลข 2, 3 หรือ 4 หลักให้ถูกต้อง");
-        return null;
-    }
+const num = document.getElementById("numberInput").value;
+if (isNaN(num) || (num.length < 2 || num.length > 4)) {
+alert("กรุณากรอกตัวเลข 2, 3 หรือ 4 หลักให้ถูกต้อง");
+return null;
+}
 
-    const dateInputStr = document.getElementById("dateInput").value;
-    const date = parseThaiDate(dateInputStr);
-    if (!date) {
-        alert("รูปแบบวันที่ไม่ถูกต้อง กรุณาใช้รูปแบบ: วว/ดด/ปปปป (เช่น 15/07/2568)");
-        return null;
-    }
+const dateInputStr = document.getElementById("dateInput").value;
+const date = parseThaiDate(dateInputStr);
+if (!date) {
+alert("รูปแบบวันที่ไม่ถูกต้อง กรุณาใช้รูปแบบ: วว/ดด/ปปปป (เช่น 15/07/2568)");
+return null;
+}
 
-    const lunarDate = getLunarDate(date);
-    let noteValue = document.getElementById("noteInput").value.trim();
-    const commonData = {
-        date: date,
-        topicName: getTopicName(),
-        topicTimeHtml: (() => { const t = getTopicTime(); return t ? `<p class="topic-time">${t}</p>` : ''; })(),
-        selectedPerson: getSelectedPerson(),
-        lunarHtml: lunarDate ? `<p style="font-size: 14px; color: ${lunarDate.includes('วันพระ') ? 'red' : '#002060'}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">( ${lunarDate} )</p>` : '',
-        noteHtml: `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`,
-        textShadow: "text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;"
-    };
+  const lunarDate = getLunarDate(date);
+  let noteValue = document.getElementById("noteInput").value.trim();
+  const engravedShadowStyle = "text-shadow: 1px 1px 1px rgba(0,0,0,0.3), -1px -1px 1px rgba(255,255,255,0.9);";
 
-    if (num.length === 2) { return generate2DigitHTML(num, commonData); } 
-    else if (num.length === 3) { return generate3DigitHTML(num, commonData); } 
-    else if (num.length === 4) { return generate4DigitHTML(num, commonData); }
-    return null;
+  // เปลี่ยนสีข้อความ lunarDate เป็นสีเขียวที่มีขอบสีขาว
+  const lunarStyle = "color: green; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;";
+  const color = lunarDate.includes('วันพระ') ? 'red' : 'green';
+const commonData = {
+    date: date,
+    topicName: getTopicName(),
+topicNameHtml: (() => { // New property for just the topic name
+      const name = getTopicName();
+      return name === 'ไม่ระบุหัวข้อ' ? '' : `<h2 class="topic-main" style="${engravedShadowStyle}">${name}</h2>`;
+    })(),
+    topicTimeHtml: (() => { // New property for just the time
+      const time = getTopicTime();
+      return time ? `<h3 class="date-text" style="${engravedShadowStyle}">เวลา ${time} น.</h3>` : '';
+    })(),
+    selectedPerson: getSelectedPerson(),
+    lunarHtml: lunarDate ? `<p style="font-size: 14px; color: ${color}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">( ${lunarDate} )</p>` : '',
+    noteHtml: `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`,
+    textShadow: engravedShadowStyle
+  };
+
+if (num.length === 2) { return generate2DigitHTML(num, commonData); }
+else if (num.length === 3) { return generate3DigitHTML(num, commonData); }
+else if (num.length === 4) { return generate4DigitHTML(num, commonData); }
+return null;
+}
+
+function displayResultInPopup() {
+const resultHtml = generateResultHTML();
+if (resultHtml) {
+const wrapper = document.getElementById("resultContentWrapper");
+wrapper.innerHTML = resultHtml;
+
+// Reset the slider and the CSS variable
+document.getElementById("popupFontSizeSlider").value = 1.0;
+const resultDiv = wrapper.querySelector('div');
+if (resultDiv) {
+resultDiv.style.setProperty('--font-scale', '1');
+}
+
+initializePopupControls();
+showResultPopup();
+}
 }
 
 // Called when the popup is generated to set initial states
 function initializePopupControls() {
-    const fsSlider = document.getElementById("popupFontSizeSlider");
-    const lhSlider = document.getElementById("popupLineHeightSlider");
-    const numLength = document.getElementById("numberInput").value.length;
+const lhSlider = document.getElementById("popupLineHeightSlider");
+const numLength = document.getElementById("numberInput").value.length;
 
-    // Reset slider values and original font sizes
-    fsSlider.value = 1.0;
-    const textElements = document.querySelectorAll("#resultContentWrapper p, #resultContentWrapper h2, #resultContentWrapper h3, #resultContentWrapper .topic-box");
-    textElements.forEach(el => { el.dataset.originalSize = ''; });
-
-    // Set line-height slider properties
-    if (numLength === 2) {
-        lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.3"; 
-    } else if (numLength === 3) {
-        lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "0.7"; 
-    } else { // 4 digits
-        lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.1"; 
-    }
-    
-    updateFontSize();
-    updateLineHeight();
+// Set line-height slider properties based on content
+if (numLength === 2) {
+lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.3";
+} else if (numLength === 3) {
+lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "0.7";
+} else { // 4 digits
+lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.1";
 }
 
-function displayResultInPopup() {
-    const resultHtml = generateResultHTML();
-    if (resultHtml) {
-        document.getElementById("resultContentWrapper").innerHTML = resultHtml;
-        initializePopupControls();
-        showResultPopup();
-    }
+updateFontSize();
+updateLineHeight();
 }
 
 // Global scope functions for slider controls
-function updateFontSize() { 
-    const fsSlider = document.getElementById("popupFontSizeSlider");
-    const fsValueSpan = document.getElementById("popupFontSizeValue");
-    const resultContentWrapper = document.getElementById("resultContentWrapper");
-    if (!fsSlider || !resultContentWrapper) return;
+function updateFontSize() {
+const fsSlider = document.getElementById("popupFontSizeSlider");
+const fsValueSpan = document.getElementById("popupFontSizeValue");
+const resultDiv = document.querySelector("#resultContentWrapper > div");
 
-    const scale = fsSlider.value; 
-    const textElements = resultContentWrapper.querySelectorAll('p, h2, h3, .topic-box');
-    
-    textElements.forEach(el => { 
-        if (!el.dataset.originalSize) { 
-            el.dataset.originalSize = parseFloat(window.getComputedStyle(el).fontSize); 
-        }
-        const originalSize = parseFloat(el.dataset.originalSize); 
-        if (originalSize) {
-            el.style.fontSize = (originalSize * scale) + 'px'; 
-        }
-    }); 
-    fsValueSpan.textContent = `ขนาด: ${Math.round(scale * 100)}%`; 
+if (!fsSlider || !resultDiv) return;
+
+const scale = fsSlider.value;
+resultDiv.style.setProperty('--font-scale', scale);
+fsValueSpan.textContent = `ขนาด: ${Math.round(scale * 100)}%`;
 }
-    
-function updateLineHeight() { 
-    const lhSlider = document.getElementById("popupLineHeightSlider");
-    const lhValueSpan = document.getElementById("popupLineHeightValue");
-    const resultContentWrapper = document.getElementById("resultContentWrapper");
-    if (!lhSlider || !resultContentWrapper) return;
 
-    const lineHeight = lhSlider.value; 
-    resultContentWrapper.style.lineHeight = lineHeight; 
-    lhValueSpan.textContent = `ความสูงบรรทัด: ${lineHeight}`; 
+function updateLineHeight() {
+const lhSlider = document.getElementById("popupLineHeightSlider");
+const lhValueSpan = document.getElementById("popupLineHeightValue");
+const resultContentWrapper = document.getElementById("resultContentWrapper");
+if (!lhSlider || !resultContentWrapper) return;
+
+const lineHeight = lhSlider.value;
+resultContentWrapper.style.lineHeight = lineHeight;
+lhValueSpan.textContent = `ความสูงบรรทัด: ${lineHeight}`;
 }
 
 // === PAGE INITIALIZATION & MANAGEMENT LOGIC ===
 document.addEventListener("DOMContentLoaded", function() {
-    // Attach event listeners ONCE
-    document.getElementById("popupFontSizeSlider").addEventListener("input", updateFontSize);
-    document.getElementById("popupLineHeightSlider").addEventListener("input", updateLineHeight);
-    document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
+// Attach event listeners ONCE
+document.getElementById("popupFontSizeSlider").addEventListener("input", updateFontSize);
+document.getElementById("popupLineHeightSlider").addEventListener("input", updateLineHeight);
+document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
 
-    document.getElementById("saveResultAsImageBtn").addEventListener("click", function() {
-        const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
-        const controlsElement = captureElement.querySelector('.controls');
-        
-        controlsElement.style.display = 'none';
-        const originalPadding = captureElement.style.padding;
-        captureElement.style.padding = '7px';
-        
-        html2canvas(captureElement, { useCORS: true, scale: 2, backgroundColor: '#FFFFD1' }).then(canvas => { 
-            const link = document.createElement('a'); 
-            const num = document.getElementById("numberInput").value || "XXXX"; 
-            link.download = `Result-Gen-${num}-${Date.now()}.png`; 
-            link.href = canvas.toDataURL("image/png"); 
-            link.click(); 
-        }).catch(err => { 
-            console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err); 
-            alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้"); 
-        }).finally(() => { 
-            controlsElement.style.display = '';
-            captureElement.style.padding = originalPadding;
-        });
-    });
-    
-    // Management Logic
-    const TOPIC_STORAGE_KEY = 'customTopics_unified';
-    const PERSON_STORAGE_KEY = 'customPersons_unified';
-    const HIDDEN_TOPICS_KEY = 'hiddenDefaultTopics_unified';
-    const HIDDEN_PERSONS_KEY = 'hiddenDefaultPersons_unified';
+document.getElementById("saveResultAsImageBtn").addEventListener("click", function() {
+const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
+const controlsElement = captureElement.querySelector('.controls');
 
-    const getStored = (key) => JSON.parse(localStorage.getItem(key)) || [];
-    const setStored = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-    
-    function applyHiddenDefaults(selectId, storageKey) {
-        const hiddenValues = getStored(storageKey);
-        if (hiddenValues.length > 0) {
-            document.querySelectorAll(`#${selectId} option[data-default="true"]`).forEach(opt => {
-                if (hiddenValues.includes(opt.value)) { opt.hidden = true; }
-            });
-        }
+controlsElement.style.display = 'none';
+const originalPadding = captureElement.style.padding;
+captureElement.style.padding = '7px';
+
+html2canvas(captureElement, { useCORS: true, scale: 4, backgroundColor: '#FFFFD1' }).then(canvas => {
+const link = document.createElement('a');
+const num = document.getElementById("numberInput").value || "XXXX";
+link.download = `Result-Gen-${num}-${Date.now()}.png`;
+link.href = canvas.toDataURL("image/png");
+link.click();
+}).catch(err => {
+console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
+alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
+}).finally(() => {
+controlsElement.style.display = '';
+captureElement.style.padding = originalPadding;
+});
+});
+
+// Management Logic
+const TOPIC_STORAGE_KEY = 'customTopics_unified';
+const PERSON_STORAGE_KEY = 'customPersons_unified';
+const HIDDEN_TOPICS_KEY = 'hiddenDefaultTopics_unified';
+const HIDDEN_PERSONS_KEY = 'hiddenDefaultPersons_unified';
+
+const getStored = (key) => JSON.parse(localStorage.getItem(key)) || [];
+const setStored = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+function applyHiddenDefaults(selectId, storageKey) {
+const hiddenValues = getStored(storageKey);
+if (hiddenValues.length > 0) {
+document.querySelectorAll(`#${selectId} option[data-default="true"]`).forEach(opt => {
+if (hiddenValues.includes(opt.value)) { opt.hidden = true; }
+});
+}
+}
+
+function loadOptions(selectId, storageKey) {
+const select = document.getElementById(selectId);
+select.querySelectorAll('option:not([data-default])').forEach(opt => opt.value !== 'custom' && opt.remove());
+const otherOption = select.querySelector('option[value="custom"]');
+const stored = getStored(storageKey);
+stored.forEach(item => {
+const opt = document.createElement('option');
+opt.value = item.value;
+opt.textContent = item.text;
+select.insertBefore(opt, otherOption);
+});
+}
+
+applyHiddenDefaults('topicSelect', HIDDEN_TOPICS_KEY);
+applyHiddenDefaults('personSelect', HIDDEN_PERSONS_KEY);
+loadOptions('topicSelect', TOPIC_STORAGE_KEY);
+loadOptions('personSelect', PERSON_STORAGE_KEY);
+
+document.getElementById('toggleTopicControls').addEventListener('click', () => {
+document.getElementById('topicActions').style.display = document.getElementById('topicActions').style.display === 'flex' ? 'none' : 'flex';
+});
+document.getElementById('togglePersonControls').addEventListener('click', () => {
+document.getElementById('personActions').style.display = document.getElementById('personActions').style.display === 'flex' ? 'none' : 'flex';
+});
+
+const setupManagement = (type) => {
+const SELECT_ID = `${type}Select`;
+const STORAGE_KEY = `custom${type.charAt(0).toUpperCase() + type.slice(1)}s_unified`;
+const HIDDEN_STORAGE_KEY = `hiddenDefault${type.charAt(0).toUpperCase() + type.slice(1)}s_unified`;
+const MODAL_ID = `${type}Modal`;
+
+document.getElementById(`add${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+document.getElementById(`${type}ModalTitle`).textContent = `เพิ่ม${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ใหม่`;
+if(type === 'topic') {
+document.getElementById('modalTopicName').value = ''; document.getElementById('modalTopicTime').value = ''; document.getElementById('topicEditIndex').value = '';
+} else {
+document.getElementById('modalPersonName').value = ''; document.getElementById('personEditValue').value = '';
+}
+document.getElementById(MODAL_ID).style.display = 'flex';
+});
+
+document.getElementById(`edit${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+const select = document.getElementById(SELECT_ID);
+const selectedOption = select.options[select.selectedIndex];
+if (selectedOption.value === 'custom' || selectedOption.hidden) return alert('ไม่สามารถแก้ไขรายการนี้ได้');
+
+document.getElementById(`${type}ModalTitle`).textContent = `แก้ไข${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}`;
+if (type === 'topic') {
+const [name, timePart] = selectedOption.value.split(' เวลา ');
+document.getElementById('modalTopicName').value = name;
+document.getElementById('modalTopicTime').value = timePart ? timePart.replace(' น.', '') : '';
+document.getElementById('topicEditIndex').value = selectedOption.value;
+} else {
+document.getElementById('modalPersonName').value = selectedOption.value;
+document.getElementById('personEditValue').value = selectedOption.value;
+}
+document.getElementById(MODAL_ID).style.display = 'flex';
+});
+
+document.getElementById(`delete${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+const select = document.getElementById(SELECT_ID);
+const selectedOption = select.options[select.selectedIndex];
+if (selectedOption.value === 'custom' || selectedOption.hidden) return alert('ไม่สามารถลบรายการนี้ได้');
+if (confirm(`คุณต้องการลบ "${selectedOption.textContent}" ใช่หรือไม่?`)) {
+if (selectedOption.hasAttribute('data-default')) {
+let hidden = getStored(HIDDEN_STORAGE_KEY);
+if (!hidden.includes(selectedOption.value)) { hidden.push(selectedOption.value); setStored(HIDDEN_STORAGE_KEY, hidden); }
+selectedOption.hidden = true;
+select.selectedIndex = [...select.options].findIndex(o => !o.hidden);
+} else {
+let options = getStored(STORAGE_KEY);
+options = options.filter(opt => opt.value !== selectedOption.value);
+setStored(STORAGE_KEY, options);
+loadOptions(SELECT_ID, STORAGE_KEY);
+}
+}
+});
+
+document.getElementById(`save${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+let name, time, oldValue, newValue;
+if (type === 'topic') {
+name = document.getElementById('modalTopicName').value.trim();
+time = document.getElementById('modalTopicTime').value.trim();
+oldValue = document.getElementById('topicEditIndex').value;
+if (!name) return alert('กรุณากรอกชื่อหัวข้อ');
+newValue = time ? `${name} เวลา ${time} น.` : name;
+} else {
+name = document.getElementById('modalPersonName').value.trim();
+oldValue = document.getElementById('personEditValue').value;
+if (!name) return alert('กรุณากรอกชื่อผู้บอก');
+newValue = name;
+}
+
+let options = getStored(STORAGE_KEY);
+const select = document.getElementById(SELECT_ID);
+
+if (oldValue) { // Edit Mode
+const oldOptionEl = select.querySelector(`option[value="${oldValue}"]`);
+if (oldOptionEl && oldOptionEl.hasAttribute('data-default')) {
+let hidden = getStored(HIDDEN_STORAGE_KEY);
+if (!hidden.includes(oldValue)) { hidden.push(oldValue); setStored(HIDDEN_STORAGE_KEY, hidden); }
+oldOptionEl.hidden = true;
+if (!options.some(opt => opt.value === newValue)) { options.push({ value: newValue, text: newValue }); }
+} else {
+const index = options.findIndex(opt => opt.value === oldValue);
+if (index > -1) options[index] = { value: newValue, text: newValue };
+else options.push({ value: newValue, text: newValue });
+}
+} else { // Add Mode
+if (options.some(opt => opt.value === newValue) || [...select.options].some(o => o.value === newValue && !o.hidden)) { return alert('มีรายการนี้อยู่แล้ว'); }
+options.push({ value: newValue, text: newValue });
+}
+setStored(STORAGE_KEY, options);
+loadOptions(SELECT_ID, STORAGE_KEY);
+select.value = newValue;
+document.getElementById(MODAL_ID).style.display = 'none';
+});
+
+document.getElementById(`reset${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+if (confirm(`คุณต้องการคืนค่ารายการ${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ทั้งหมดใช่หรือไม่?\n(รายการที่สร้างเองและซ่อนไว้จะถูกลบทั้งหมด)`)) {
+localStorage.removeItem(STORAGE_KEY);
+localStorage.removeItem(HIDDEN_STORAGE_KEY);
+location.reload();
+}
+});
+
+document.getElementById(`cancel${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+document.getElementById(MODAL_ID).style.display = 'none';
+});
+};
+
+setupManagement('topic');
+setupManagement('person');
+
+const dateInput = document.getElementById('dateInput');
+const calendarButton = document.getElementById('calendarButton');
+const hiddenDateInput = document.getElementById('hiddenDateInput');
+const today = new Date();
+dateInput.value = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear() + 543}`;
+calendarButton.addEventListener('click', () => {
+try { hiddenDateInput.showPicker(); } catch (error) { hiddenDateInput.click(); }
+});
+hiddenDateInput.addEventListener('change', (e) => {
+    const selectedDate = e.target.value;
+    if (selectedDate) {
+        const parts = selectedDate.split('-');
+        dateInput.value = `${parts[2]}/${parts[1]}/${parseInt(parts[0], 10) + 543}`;
+    } else {
+        // เมื่อผู้ใช้ล้างค่า ให้ตั้งเป็นวันปัจจุบัน
+        const today = new Date();
+        dateInput.value = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear() + 543}`;
     }
-
-    function loadOptions(selectId, storageKey) {
-        const select = document.getElementById(selectId);
-        const stored = getStored(storageKey);
-        select.querySelectorAll('option:not([data-default])').forEach(opt => opt.value !== 'custom' && opt.remove());
-        const otherOption = select.querySelector('option[value="custom"]');
-        stored.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item.value;
-            opt.textContent = item.text;
-            select.insertBefore(opt, otherOption);
-        });
-    }
-    
-    applyHiddenDefaults('topicSelect', HIDDEN_TOPICS_KEY);
-    applyHiddenDefaults('personSelect', HIDDEN_PERSONS_KEY);
-    loadOptions('topicSelect', TOPIC_STORAGE_KEY);
-    loadOptions('personSelect', PERSON_STORAGE_KEY);
-
-    document.getElementById('toggleTopicControls').addEventListener('click', () => {
-        document.getElementById('topicActions').style.display = document.getElementById('topicActions').style.display === 'flex' ? 'none' : 'flex';
-    });
-    document.getElementById('togglePersonControls').addEventListener('click', () => {
-        document.getElementById('personActions').style.display = document.getElementById('personActions').style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    const setupManagement = (type) => {
-        const SELECT_ID = `${type}Select`;
-        const STORAGE_KEY = `custom${type.charAt(0).toUpperCase() + type.slice(1)}s_unified`;
-        const HIDDEN_STORAGE_KEY = `hiddenDefault${type.charAt(0).toUpperCase() + type.slice(1)}s_unified`;
-        const MODAL_ID = `${type}Modal`;
-        
-        document.getElementById(`add${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
-            document.getElementById(`${type}ModalTitle`).textContent = `เพิ่ม${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ใหม่`;
-            if(type === 'topic') {
-                document.getElementById('modalTopicName').value = ''; document.getElementById('modalTopicTime').value = ''; document.getElementById('topicEditIndex').value = '';
-            } else {
-                document.getElementById('modalPersonName').value = ''; document.getElementById('personEditValue').value = '';
-            }
-            document.getElementById(MODAL_ID).style.display = 'flex';
-        });
-
-        document.getElementById(`edit${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
-            const select = document.getElementById(SELECT_ID);
-            const selectedOption = select.options[select.selectedIndex];
-            if (selectedOption.value === 'custom' || selectedOption.hidden) return alert('ไม่สามารถแก้ไขรายการนี้ได้');
-            
-            document.getElementById(`${type}ModalTitle`).textContent = `แก้ไข${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}`;
-            if (type === 'topic') {
-                const [name, timePart] = selectedOption.value.split(' เวลา ');
-                document.getElementById('modalTopicName').value = name;
-                document.getElementById('modalTopicTime').value = timePart ? timePart.replace(' น.', '') : '';
-                document.getElementById('topicEditIndex').value = selectedOption.value;
-            } else {
-                document.getElementById('modalPersonName').value = selectedOption.value;
-                document.getElementById('personEditValue').value = selectedOption.value;
-            }
-            document.getElementById(MODAL_ID).style.display = 'flex';
-        });
-        
-        document.getElementById(`delete${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
-            const select = document.getElementById(SELECT_ID);
-            const selectedOption = select.options[select.selectedIndex];
-            if (selectedOption.value === 'custom' || selectedOption.hidden) return alert('ไม่สามารถลบรายการนี้ได้');
-            if (confirm(`คุณต้องการลบ "${selectedOption.textContent}" ใช่หรือไม่?`)) {
-                if (selectedOption.hasAttribute('data-default')) {
-                    let hidden = getStored(HIDDEN_STORAGE_KEY);
-                    if (!hidden.includes(selectedOption.value)) { hidden.push(selectedOption.value); setStored(HIDDEN_STORAGE_KEY, hidden); }
-                    selectedOption.hidden = true;
-                    select.selectedIndex = [...select.options].findIndex(o => !o.hidden);
-                } else {
-                    let options = getStored(STORAGE_KEY);
-                    options = options.filter(opt => opt.value !== selectedOption.value);
-                    setStored(STORAGE_KEY, options);
-                    loadOptions(SELECT_ID, STORAGE_KEY);
-                }
-            }
-        });
-
-        document.getElementById(`save${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
-            let name, time, oldValue, newValue;
-            if (type === 'topic') {
-                name = document.getElementById('modalTopicName').value.trim();
-                time = document.getElementById('modalTopicTime').value.trim();
-                oldValue = document.getElementById('topicEditIndex').value;
-                if (!name) return alert('กรุณากรอกชื่อหัวข้อ');
-                newValue = time ? `${name} เวลา ${time} น.` : name;
-            } else {
-                name = document.getElementById('modalPersonName').value.trim();
-                oldValue = document.getElementById('personEditValue').value;
-                if (!name) return alert('กรุณากรอกชื่อผู้บอก');
-                newValue = name;
-            }
-
-            let options = getStored(STORAGE_KEY);
-            const select = document.getElementById(SELECT_ID);
-            
-            if (oldValue) { // Edit Mode
-                const oldOptionEl = select.querySelector(`option[value="${oldValue}"]`);
-                if (oldOptionEl && oldOptionEl.hasAttribute('data-default')) {
-                    let hidden = getStored(HIDDEN_STORAGE_KEY);
-                    if (!hidden.includes(oldValue)) { hidden.push(oldValue); setStored(HIDDEN_STORAGE_KEY, hidden); }
-                    oldOptionEl.hidden = true;
-                    if (!options.some(opt => opt.value === newValue)) { options.push({ value: newValue, text: newValue }); }
-                } else {
-                    const index = options.findIndex(opt => opt.value === oldValue);
-                    if (index > -1) options[index] = { value: newValue, text: newValue };
-                    else options.push({ value: newValue, text: newValue });
-                }
-            } else { // Add Mode
-                if (options.some(opt => opt.value === newValue) || [...select.options].some(o => o.value === newValue && !o.hidden)) { return alert('มีรายการนี้อยู่แล้ว'); }
-                options.push({ value: newValue, text: newValue });
-            }
-            setStored(STORAGE_KEY, options);
-            loadOptions(SELECT_ID, STORAGE_KEY);
-            select.value = newValue;
-            document.getElementById(MODAL_ID).style.display = 'none';
-        });
-        
-        document.getElementById(`reset${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
-             if (confirm(`คุณต้องการคืนค่ารายการ${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ทั้งหมดใช่หรือไม่?\n(รายการที่สร้างเองและซ่อนไว้จะถูกลบทั้งหมด)`)) {
-                localStorage.removeItem(STORAGE_KEY);
-                localStorage.removeItem(HIDDEN_STORAGE_KEY);
-                location.reload();
-            }
-        });
-
-        document.getElementById(`cancel${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
-            document.getElementById(MODAL_ID).style.display = 'none';
-        });
-    };
-    
-    setupManagement('topic');
-    setupManagement('person');
-    
-    const dateInput = document.getElementById('dateInput');
-    const calendarButton = document.getElementById('calendarButton');
-    const hiddenDateInput = document.getElementById('hiddenDateInput');
-    const today = new Date();
-    dateInput.value = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear() + 543}`;
-    calendarButton.addEventListener('click', () => {
-        try { hiddenDateInput.showPicker(); } catch (error) { hiddenDateInput.click(); }
-    });
-    hiddenDateInput.addEventListener('change', (e) => {
-        const selectedDate = e.target.value;
-        if (selectedDate) {
-            const parts = selectedDate.split('-');
-            dateInput.value = `${parts[2]}/${parts[1]}/${parseInt(parts[0], 10) + 543}`;
-        }
-    });
+});
 });
 
 // --- PWA Service Worker Registration ---
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw-unified.js')
-        .then(reg => console.log('Unified Service Worker registered successfully:', reg))
-        .catch(err => console.log('Service Worker registration failed:', err));
-    });
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('./sw-unified.js')
+.then(reg => console.log('Unified Service Worker registered successfully:', reg))
+.catch(err => console.log('Service Worker registration failed:', err));
+});
 }
 </script>
 </body>
