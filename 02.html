@@ -1843,7 +1843,7 @@ document.getElementById("saveResultAsImageBtn").addEventListener("click", functi
     }
   }).then(canvas => {
     const link = document.createElement('a');
-    link.download = `Result-Gen-${num}-${Date.now()}.png`;
+    link.download = `Result-Gen-${num}-${dateStr}_${timeStr}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   }).finally(() => {
