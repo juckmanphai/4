@@ -1279,7 +1279,7 @@ const greenSpan = (text) => `<span style="color: green;">${text}</span>`;
 const noDataSpan = '<span style="color: green; font-size: 18px;">ไม่มีชุดตัวเลขเพิ่ม</span>';
 
 return `
-<div style="position: relative; text-align: center; color: blue; --font-scale: 0.85;">
+<div style="position: relative; text-align: center; color: blue; --font-scale: 1.0;">
   <!-- หัวข้อหลัก -->
   <div class="result-header">
     <div class="topic-box" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -1768,14 +1768,14 @@ function initializePopupControls() {
   // ตั้งค่าเริ่มต้นของ font scale ตามจำนวนตัวเลข
   let defaultFontScale;
   if (numLength === 2) {
-    defaultFontScale = 1.0;    // 100% สำหรับ 2 ตัว
-    lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.7";
+    defaultFontScale = 1.0;    // 150% สำหรับ 2 ตัว
+    lhSlider.min = "0.8"; lhSlider.max = "2.5"; lhSlider.value = "1.4";
   } else if (numLength === 3) {
-    defaultFontScale = 0.90;   // 90% สำหรับ 3 ตัว
+    defaultFontScale = 0.90;   // 100% สำหรับ 3 ตัว
     lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.0";
   } else { // 4 digits
     defaultFontScale = 1.0;    // 100% สำหรับ 4 ตัว
-    lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.4";
+    lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.0";
   }
 
   // ตั้งค่า slider และค่าเริ่มต้น
