@@ -19,7 +19,7 @@
 <style>
 /* ---------- พื้นหลังและฟอนต์ของหน้า ---------- */
 body { font-family: Arial, sans-serif; background-color: #fffde7; margin: 0 auto; padding: 0 20px; max-width: 600px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-/* ---------- หัวเรื่อง ---------- */
+/* --------- ฮิดหัวเรื่อง ---------- */
 h1 { text-align: center; color: #e65100; margin: 10px 0 15px; font-size: 24px; }
 .blue { color: blue; }
 .red { color: red; }
@@ -75,7 +75,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     right: 0;
     bottom: 0;
     background-image: url('logo.png');
-    background-size: 300px auto;
+    background-size: 400px auto;
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0.7;
@@ -164,10 +164,10 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     border: 2px solid #C66900;
 }
 /* Number Containers */
-.circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 38px; margin: 0 0.5px; padding: 5px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
-.circle-container { width: 88px; border: 3px solid #FF00FF; border-radius: 2%; }
-.square-container { width: 131px; border: 3px solid red; }
-.square-two-container { width: 88px; border: 3px solid blue; }
+.circle-container, .square-container, .square-two-container { display: inline-flex; justify-content: center; align-items: center; height: 50px; margin: 0 0.5px; padding: 2px; background: transparent; box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.4); }
+.circle-container { width: 100px; border: 3px solid #FF00FF; border-radius: 2%; }
+.square-container { width: 150px; border: 3px solid red; }
+.square-two-container { width: 100px; border: 3px solid blue; }
 /* Numbers Display */
 .numbers-display { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
 .number-group {
@@ -255,12 +255,18 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
     right: 0;
     bottom: 0;
     background-image: url('logo.png');
-    background-size: 300px auto;
+    background-size: 700px auto;
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0.7;
     pointer-events: none;
     z-index: 0;
+}
+
+/* ปรับป้าย "ผลฉลากกินแบ่งรัฐบาล" ให้สูงขึ้น */
+#thaiLotteryPopupContent .topic-box {
+    padding: 15px 30px; /* เพิ่ม padding แนวตั้งเพื่อให้ป้ายสูงขึ้น */
+    font-size: 26px; /* เพิ่มขนาดฟอนต์เล็กน้อยเพื่อความสมดุล */
 }
 
 #thaiLotteryPopupContent .draw-date { display: inline-block; color: #fff; padding: 10px 15px; font-size: 15px; font-weight: bold; border: 2px solid #E65100; background: linear-gradient(to bottom, #FFB74D, #FB8C00); border-radius: 50px; margin-top: 5px; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
@@ -512,7 +518,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
         function getThaiDate(date = new Date()) {
             const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายन", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`;
         }
         
@@ -586,7 +592,6 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             
             const popupNameDisplay = document.getElementById("popupNameDisplay");
             popupNameDisplay.className = 'topic-box';
-            // เอาโลโก้ออกแล้วเหลือเพียงชื่อ
             popupNameDisplay.innerHTML = `<span>ผล${config.name}</span>`;
 
             const popupTimeDisplay = document.getElementById("popupTimeDisplay");
@@ -658,7 +663,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const { twoDigits } = getNumbersForToggle();
             
             if (button.classList.toggle("active")) {
-                display.innerHTML = `<div class="circle-container">${createPingPongNumbers(twoDigits, 'orange', 38, 20)}</div>`;
+                display.innerHTML = `<div class="circle-container">${createPingPongNumbers(twoDigits, 'orange', 50, 26)}</div>`;
             } else {
                 display.innerHTML = createPingPongNumbers(twoDigits, 'orange', 50, 26);
             }
@@ -670,7 +675,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const { threeDigits } = getNumbersForToggle();
 
             if (button.classList.toggle("active")) {
-                display.innerHTML = `<div class="square-container">${createPingPongNumbers(threeDigits, 'blue', 38, 20)}</div>`;
+                display.innerHTML = `<div class="square-container">${createPingPongNumbers(threeDigits, 'blue', 50, 26)}</div>`;
             } else {
                 display.innerHTML = createPingPongNumbers(threeDigits, 'blue', 50, 26);
             }
@@ -682,7 +687,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             const { threeDigits, threeDigits_first, threeDigits_lastTwo } = getNumbersForToggle();
 
             if (button.classList.toggle("active")) {
-                display.innerHTML = `${createPingPongBall(threeDigits_first, 'blue', 38, 20)}<div class="square-two-container">${createPingPongNumbers(threeDigits_lastTwo, 'blue', 38, 20)}</div>`;
+                display.innerHTML = `${createPingPongBall(threeDigits_first, 'blue', 50, 26)}<div class="square-two-container">${createPingPongNumbers(threeDigits_lastTwo, 'blue', 50, 26)}</div>`;
             } else {
                 display.innerHTML = createPingPongNumbers(threeDigits, 'blue', 50, 26);
             }
@@ -733,7 +738,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 return `งวดวันที่ ${dateString}`;
             }
             const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคм", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคм", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายन", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const dayOfWeek = days[date.getDay()];
             const monthName = months[date.getMonth()];
             return `งวดวัน${dayOfWeek}ที่ ${day} ${monthName} พ.ศ. ${thaiYear}`;
