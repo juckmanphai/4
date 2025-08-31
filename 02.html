@@ -249,44 +249,54 @@ box-sizing: border-box;
 .modal-button-group button { width: 45%; margin: 0; }
 
 /* Responsive Styles */
+
+/* จอเล็กกว่าหรือเท่ากับ 600px */
 @media only screen and (max-width: 600px) {
     .form-container {
         margin: 2px;
         width: calc(100% - 6px);
     }
 
-    /* เงื่อนไขพิเศษ: จอเล็กกว่า 480px */
-    @media only screen and (max-width: 480px) {
-        #numberInput {
-            font-size: 18px;
-            padding: 8px;
-        }
-
-        .topic-box {
-            font-size: 20px;
-            padding: 10px 20px;
-        }
-    }
-}
-
     input, select, button, .select-wrapper, .date-input-wrapper {
         width: 100%;
     }
+
     .popup-content {
         width: 100%; /* เปลี่ยนจาก calc(100% - 10px) เป็น 100% */
         padding: 2px 0; /* ปรับ padding ให้เป็น 10px บนล่าง, 0 ซ้ายขวา */
         /* margin: 0 auto; ยังคงอยู่ */
     }
+
     .result-container-popup {
         margin: 2px 2px; /* เปลี่ยนจาก margin: 5px auto; เป็น 5px 10px */
         width: auto; /* เปลี่ยนจาก width: calc(100% - 10px) เป็น auto */
         max-width: 100%; /* เปลี่ยนจาก max-width: 100% เป็น 100% */
     }
+
     #resultContentWrapper .number-list,
     #resultContentWrapper .number-list-3digit {
         font-size: calc(1.8vw + 10px);
     }
 }
+
+/* จอเล็กกว่าหรือเท่ากับ 480px */
+@media only screen and (max-width: 480px) {
+    #numberInput {
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    .topic-box {
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+
+    #resultContentWrapper .number-list,
+    #resultContentWrapper .number-list-3digit {
+        font-size: 18px; /* ลดลงอีกหน่อยเพื่อจอเล็ก */
+    }
+}
+
 </style>
 </head>
 <body>
