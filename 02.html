@@ -258,14 +258,14 @@ box-sizing: border-box;
         width: 90%;
     }
     .popup-content {
-        width: calc(100% - 10px); /* <<< ยืนยันค่าเดิม หรือปรับให้เหมาะสมกับหน้าจอเล็ก */
-        /* margin: 0 auto; <<< ไม่ต้องประกาศซ้ำ เพราะประกาศในส่วนหลักแล้ว */
-        padding: 10px; /* สามารถปรับ padding ภายใน content ได้ */
+        width: 100%; /* เปลี่ยนจาก calc(100% - 10px) เป็น 100% */
+        padding: 10px 0; /* ปรับ padding ให้เป็น 10px บนล่าง, 0 ซ้ายขวา */
+        /* margin: 0 auto; ยังคงอยู่ */
     }
     .result-container-popup {
-        margin: 5px auto;
-        width: calc(100% - 10px);
-        max-width: 100%;
+        margin: 5px 10px; /* เปลี่ยนจาก margin: 5px auto; เป็น 5px 10px */
+        width: auto; /* เปลี่ยนจาก width: calc(100% - 10px) เป็น auto */
+        max-width: 100%; /* เปลี่ยนจาก max-width: 100% เป็น 100% */
     }
     #resultContentWrapper .number-list,
     #resultContentWrapper .number-list-3digit {
