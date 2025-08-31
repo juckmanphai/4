@@ -1824,34 +1824,44 @@ document.getElementById("saveResultAsImageBtn").addEventListener("click", functi
   const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
   const controlsElement = captureElement.querySelector('.controls');
 
-  controlsElement.style.display = 'none'; // ซ่อนปุ่มควบคุม
+  controlsElement.style.display = 'none';
   const originalPadding = captureElement.style.padding;
-  captureElement.style.padding = '2px'; // ปรับ padding ชั่วคราว
+  captureElement.style.padding = '2px';
 
-  // ใช้ html2canvas พร้อมกับกำหนด background color ให้ตรงกับ popup
+  // ฟังก์ชันสร้างชื่อไฟล์ด้วย timestamp
+  function generateFileName() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    return `เลขแปล_${year}${month}${day}_${hours}${minutes}${seconds}.png`;
+  }
+
   html2canvas(captureElement, {
     useCORS: true,
-    scale: 4, // เพิ่ม scale เพื่อคุณภาพที่ดีขึ้น
-    backgroundColor: '#FFFFD1', // กำหนดพื้นหลังให้ตรงกับ .result-container-popup
+    scale: 4,
+    backgroundColor: '#FFFFD1',
     allowTaint: true,
     onclone: function(clonedDoc) {
-      // ตรวจสอบให้แน่ใจว่าพื้นหลังแสดงผลใน cloned document
       const clonedBackground = clonedDoc.querySelector('.background-logo-real');
       if (clonedBackground) {
-        clonedBackground.style.opacity = '0.5'; // ตั้งค่า opacity ให้ชัดเจน
+        clonedBackground.style.opacity = '0.5';
       }
     }
   }).then(canvas => {
     const link = document.createElement('a');
-    link.download = 'เลขแปล.png';
+    link.download = generateFileName(); // ใช้ชื่อไฟล์ใหม่
     link.href = canvas.toDataURL('image/png');
     link.click();
   }).finally(() => {
-    controlsElement.style.display = ''; // คืนค่าปุ่มควบคุม
-    captureElement.style.padding = originalPadding; // คืนค่า padding
+    controlsElement.style.display = '';
+    captureElement.style.padding = originalPadding;
   });
 });
-
 // Management Logic
 const TOPIC_STORAGE_KEY = 'customTopics_unified';
 const PERSON_STORAGE_KEY = 'customPersons_unified';
