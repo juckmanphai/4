@@ -1826,7 +1826,7 @@ document.getElementById("saveResultAsImageBtn").addEventListener("click", functi
 
   controlsElement.style.display = 'none'; // ซ่อนปุ่มควบคุม
   const originalPadding = captureElement.style.padding;
-  captureElement.style.padding = '5px'; // ปรับ padding ชั่วคราว
+  captureElement.style.padding = '2px'; // ปรับ padding ชั่วคราว
 
   // ใช้ html2canvas พร้อมกับกำหนด background color ให้ตรงกับ popup
   html2canvas(captureElement, {
@@ -1838,7 +1838,7 @@ document.getElementById("saveResultAsImageBtn").addEventListener("click", functi
       // ตรวจสอบให้แน่ใจว่าพื้นหลังแสดงผลใน cloned document
       const clonedBackground = clonedDoc.querySelector('.background-logo-real');
       if (clonedBackground) {
-        clonedBackground.style.opacity = '0.4'; // ตั้งค่า opacity ให้ชัดเจน
+        clonedBackground.style.opacity = '0.5'; // ตั้งค่า opacity ให้ชัดเจน
       }
     }
   }).then(canvas => {
