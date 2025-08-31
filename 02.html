@@ -73,22 +73,22 @@ box-sizing: border-box;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 1000;
     justify-content: center;
-    align-items: flex-start; /* <<< เปลี่ยนกลับเป็น flex-start */
-    padding: 40px 5px 10px 5px; /* <<< เพิ่ม padding ซ้าย-ขวา 10px และปรับ padding บน-ล่าง */
+    align-items: flex-start; /* ให้เนื้อหาเริ่มต้นจากด้านบน */
+    padding: 40px 0 20px 0; /* ลบ padding ซ้ายขวาที่นี่ออก ให้ popup-content จัดการเอง */
     box-sizing: border-box;
-    overflow-y: auto; /* <<< เพิ่ม overflow-y เพื่อให้เลื่อนได้ */
+    overflow-y: auto; /* เพื่อให้เลื่อนได้ในแนวตั้ง */
 }
 
 .popup-content {
     background-color: #FFFFD1;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    width: 100%; /* ให้เต็มความกว้างของ overlay ที่มี padding แล้ว */
+    width: calc(100% - 10px); /* <<< ปรับตรงนี้: กำหนดความกว้างให้มีช่องว่าง 10px ซ้ายและ 10px ขวา */
     max-width: 600px;
-    padding: 10px 5px;
+    padding: 10px 5px; /* padding ภายใน content */
     position: relative;
     box-sizing: border-box;
-    /* margin: 0; <<< ลบออก เพื่อให้ใช้ padding จาก popup-overlay จัดการช่องว่างซ้าย-ขวาแทน */
+    margin: 0 auto; /* <<< เพิ่มตรงนี้: จัดกึ่งกลางอัตโนมัติ */
 }
 
 .result-container-popup {
@@ -258,9 +258,9 @@ box-sizing: border-box;
         width: 90%;
     }
     .popup-content {
-        /* margin: 0; <<< ลบออก */
-        width: 100%; /* <<< ให้เต็มพื้นที่ของ popup-overlay ที่มี padding แล้ว */
-        padding: 10px;
+        width: calc(100% - 10px); /* <<< ยืนยันค่าเดิม หรือปรับให้เหมาะสมกับหน้าจอเล็ก */
+        /* margin: 0 auto; <<< ไม่ต้องประกาศซ้ำ เพราะประกาศในส่วนหลักแล้ว */
+        padding: 10px; /* สามารถปรับ padding ภายใน content ได้ */
     }
     .result-container-popup {
         margin: 5px auto;
