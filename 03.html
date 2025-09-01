@@ -3,23 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ฟอร์มแปลตัวเลข 4 ตัว</title>
-<!-- PWA-related additions for 4-digit app -->
-<link rel="manifest" href="manifest-4digit.json">
+<title>ฟอร์มแปลตัวเลข 3 ตัว</title>
+<!-- PWA-related additions -->
+<link rel="manifest" href="manifest-unified.json">
 <meta name="theme-color" content="#f97316"/>
 <link rel="apple-touch-icon" href="192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="แปลเลข 4 ตัว">
+<meta name="apple-mobile-web-app-title" content="แปลเลขครบวงจร">
 <!-- End of PWA-related additions -->
-
-<!-- ===== START: เพิ่มไลบรารี html2canvas ===== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<!-- ===== END: เพิ่มไลบรารี html2canvas ===== -->
 <style>
 /* Base Styles */
 body { font-family: Arial, sans-serif; background-color: #fffde7; margin: 0; padding: 0; line-height: 1.2; }
 h1 { text-align: center; font-size: 22px; color: blue; margin-top: 10px; margin-bottom: 10px; }
+label { font-size: 18px; color: #2c3e50; display: block; text-align: center; margin-bottom: -5px; }
 footer { text-align: center; padding: 20px; font-size: 14px; color: #95a5a6; }
 /* Form Elements */
 input, select, button { font-size: 18px; padding: 10px; width: 80%; margin: 10px auto; border-radius: 6px; border: 1.5px solid #ddd; display: block; text-align: center; box-sizing: border-box; }
@@ -28,173 +26,316 @@ button#convertButton:hover { background-color: #45a049; }
 /* Home Button */
 .homeButton { display: block; width: 90%; max-width: 600px; margin: 20px auto 10px; padding: 10px 20px; background-color: orange; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
 .homeButton:hover { background-color: darkorange; }
-/* Container Styles */
-.form-container { border: 1.5px solid orange; background-color: #FEFEF0; margin: 30px auto; padding: 15px; border-radius: 10px; width: 90%; max-width: 600px; box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); box-sizing: border-box; }
 
-.custom-input-container {
-display: flex;
-width: 80%;
-margin: 10px auto;
-gap: 10px;
-}
-#customTopicName {
-flex: 3;
-min-width: 0;
-margin: 0;
-width: auto;
-}
-#customTopicTime {
-flex: 1;
-min-width: 0;
-margin: 0;
-width: auto;
+.form-container {
+border: 1.5px solid orange;
+background-color: #FEFEF0;
+margin: 30px auto;
+padding: 15px 5px;
+border-radius: 10px;
+width: 90%;
+max-width: 600px;
+box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+box-sizing: border-box;
 }
 
 /* CSS สำหรับช่องวันที่ */
-.date-input-wrapper {
-display: flex;
-align-items: center;
-width: 80%;
-margin: 10px auto;
-gap: 8px;
-}
-#dateInput {
-flex-grow: 1;
-margin: 0;
-width: auto;
-}
-#calendarButton {
-flex-shrink: 0;
-width: auto;
-margin: 0;
-padding: 8px 12px;
-font-size: 20px;
-background-color: #f0f0f0;
-border: 1.5px solid #ccc;
-cursor: pointer;
-}
-#calendarButton:hover {
-background-color: #e0e0e0;
-}
+.date-input-wrapper { display: flex; align-items: center; width: 80%; margin: 10px auto; gap: 8px; }
+#dateInput { flex-grow: 1; margin: 0; width: auto; }
+#calendarButton { flex-shrink: 0; width: auto; margin: 0; padding: 8px 12px; font-size: 20px; background-color: #f0f0f0; border: 1.5px solid #ccc; cursor: pointer; }
+#calendarButton:hover { background-color: #e0e0e0; }
 
-/* --- START: CSS สำหรับ POPUP (ปรับปรุงใหม่) --- */
+/* Inline Management Buttons */
+.select-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; width: 80%; margin: 10px auto; }
+.select-wrapper select { flex-grow: 1; width: auto; margin: 0; }
+.manage-btn-inline { flex-shrink: 0; width: 44px; height: 44px; padding: 0; font-size: 24px; border-radius: 8px; background-color: #6c757d; color: white; border: none; cursor: pointer; transition: all 0.2s ease; line-height: 44px; }
+.manage-btn-inline:hover { background-color: #5a6268; transform: rotate(45deg); }
+.management-actions { display: none; justify-content: center; gap: 10px; margin: 5px auto 15px; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.management-actions button { width: auto; padding: 6px 12px; font-size: 14px; margin: 0; border: none; color: white; transition: background-color 0.2s ease; }
+.add-btn { background-color: #28a745; }
+.add-btn:hover { background-color: #218838; }
+.edit-btn { background-color: #ffc107; color: #212529 !important; }
+.edit-btn:hover { background-color: #e0a800; }
+.delete-btn { background-color: #dc3545; }
+.delete-btn:hover { background-color: #c82333; }
+.reset-btn { background-color: #17a2b8; }
+.reset-btn:hover { background-color: #138496; }
+
+/* ===== START: POPUP Styles Matching 03.html ===== */
 .popup-overlay {
-display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
-background-color: rgba(0, 0, 0, 0.7); z-index: 1000; justify-content: center;
-padding: 20px 0; align-items: center;
-}
-.popup-content {
-background-color: #FFFFD1; /* เปลี่ยนสีพื้นหลังให้เหมือนไฟล์อื่น */
-border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.3);
-width: 100%; max-width: 600px; padding: 25px 5px; position: relative; box-sizing: border-box;
-}
-.result-container-popup {
-border: 1.5px solid #4CAF50; background-color: #FFFFD1; margin: 0; padding: 15px 5px;
-border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
-position: relative; min-height: 300px; box-sizing: border-box;
-overflow: hidden;
-}
-
-/* ===== START: เพิ่ม CSS สำหรับ Header และ Logo แบบใหม่ ===== */
-.result-header {
-    display: flex;
-    align-items: center;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 5px;
+    align-items: flex-start; /* ให้เนื้อหาเริ่มต้นจากด้านบน */
+    padding: 40px 0 20px 0; /* ลบ padding ซ้ายขวาที่นี่ออก ให้ popup-content จัดการเอง */
+    box-sizing: border-box;
+    overflow-y: auto; /* เพื่อให้เลื่อนได้ในแนวตั้ง */
 }
-.header-logo {
-    width: 60px;
-    height: auto;
-}
-.topic-box {
-    background-color: #FF75FF;
-    border: 3px solid #0070C0;
-    color: white;
-    border-radius: 15px;
-    padding: 8px 15px;
-    font-size: 22px;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    text-align: center;
-}
-.topic-time {
-    font-size: 18px;
-    color: blue;
-    font-weight: bold;
-    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-/* ===== END: เพิ่ม CSS ===== */
 
-/* Wrapper สำหรับเนื้อหา */
+.popup-content {
+    background-color: #FFFFD1;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    width: calc(100% - 10px); /* <<< ปรับตรงนี้: กำหนดความกว้างให้มีช่องว่าง 10px ซ้ายและ 10px ขวา */
+    max-width: 600px;
+    padding: 10px 5px; /* padding ภายใน content */
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 auto; /* <<< เพิ่มตรงนี้: จัดกึ่งกลางอัตโนมัติ */
+}
+
+.result-container-popup {
+    border: 2px solid #4CAF50; /* Matching 03.html's .result-container */
+    background-color: #FAFAD2; /* Matching 03.html's .result-container */
+    margin: 0; /* Added margins to match 03.html */
+    padding: 2px 2px; /* Matching 03.html's .result-container */
+    border-radius: 10px;
+    width: auto; /* Allow content to define width, with max-width from parent */
+    max-width: calc(100% - 10px); /* Adjust based on padding/margin */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+    position: relative;
+    min-height: 300px;
+    overflow: hidden;
+    background: #FAFAD2; 
+}
+
+/* เปลี่ยนจากการใช้ pseudo-element มาใช้ element จริง */
+.background-logo-real {
+  content: "";
+  background-image: url('logo.png');
+  background-size: 90% auto;
+  background-repeat: no-repeat;
+  background-position: center top 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.5; /* ใช้ opacity แทน filter เพื่อความเข้ากันได้กับ html2canvas */
+  pointer-events: none; /* เพื่อไม่ให้รบกวนการคลิก */
+}
+
+/* Result Content & Controls - Adjusting to 03.html styles */
 #resultContentWrapper {
-position: relative;
-z-index: 1;
-color: blue;
-line-height: 1.3;
+    position: relative;
+    z-index: 1; /* Ensure text is above pseudo-element background */
+    color: blue;
+    line-height: 1.0; /* Default line height from 03.html */
+    font-size: 20px; /* Default font size from 03.html */
+    white-space: nowrap;       /* บังคับไม่ให้ตัดบรรทัด */
+    overflow-x: auto;          /* เลื่อนซ้ายขวาได้ถ้าข้อความยาวเกิน */
+    text-align: center;        /* จัดกึ่งกลาง */
+    margin-top: 15px;
 }
-#resultContentWrapper p, #resultContentWrapper h2, #resultContentWrapper h3 {
+
+#resultContentWrapper p,
+#resultContentWrapper h2,
+#resultContentWrapper h3 {
+    margin: 5px 0; /* Matching 03.html's h2, h3 margins */
+    line-height: inherit; /* Inherit from wrapper or set individually */
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white; /* White outline */
+    color: blue; /* Default text color */
+}
+
+#resultContentWrapper h2 {
+    font-size: 22px; /* Base for h2 */
+    font-weight: normal;
+}
+
+#resultContentWrapper h3 {
+    font-size: 20px; /* Base for h3 */
+    font-weight: normal;
+}
+
+#resultContentWrapper p {
+    font-size: 16px; /* Base for p, will be overridden */
+}
+
+#resultContentWrapper .topic-main { /* For the main topic text */
+    font-size: calc(32px * var(--font-scale, 1));
+    font-weight: normal;
     margin: 0 0 10px 0;
-    line-height: inherit;
 }
-/* --- END: CSS สำหรับ POPUP (ปรับปรุงใหม่) --- */
+
+#resultContentWrapper .date-text { /* For the main date text */
+    font-size: 18px;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .lunar-text { /* For lunar date text */
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 0 10px 0;
+}
+#resultContentWrapper .lunar-text.day-holy {
+    color: red; /* Red for วันพระ */
+}
+#resultContentWrapper .lunar-text.day-normal {
+    color: #002060; /* Dark blue for normal days */
+}
+
+
+#resultContentWrapper .number-by-person {
+    font-size: 22px;
+    font-weight: normal;
+    margin: 0 0 10px 0;
+}
+#resultContentWrapper .number-by-person .number-red {
+    color: red;
+}
+#resultContentWrapper .number-by-person .person-green {
+    color: green;
+}
+
+
+#resultContentWrapper .set-heading { /* For "จัดชุดเด่น 2 ตัว", "จัดชุดรอง 2 ตัว" etc. */
+    font-size: 22px;
+    font-weight: normal;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .number-list { /* For the actual number lists */
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    white-space: nowrap; /* Prevent wrapping if too long, will scroll */
+    overflow-x: auto; /* Enable horizontal scroll if nowrap content overflows */
+    -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+    display: block; /* Important for overflow to work */
+}
+#resultContentWrapper .number-list-3digit { /* For 3-digit number lists, slightly smaller */
+    font-size: 18px;
+}
+
+
+#resultContentWrapper .red-text { /* For "แนวทางเท่านั้น" and "แปลเพิ่ม" */
+    color: red;
+}
+#resultContentWrapper .green-text { /* For green text within results */
+    color: green;
+}
+
+#resultContentWrapper .disclose-text { /* For "Disclose" line */
+    font-size: 14px;
+    margin: 0 0 10px 0;
+}
+
+#resultContentWrapper .note-text { /* For "หมายเหตุ" line */
+    font-size: 20px;
+    margin: 0 0 10px 0;
+}
+
+
+/* Hide result-header, topic-box, header-logo from 01.html when using 03.html style */
+.result-header, .topic-box, .header-logo {
+    display: none !important;
+}
 
 .controls { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px; }
 .control-group { display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 15px; }
 .control-group label, .control-group span { font-size: 16px; color: blue; margin-bottom: 5px; }
 .control-group input[type="range"] { width: 80%; max-width: 300px; margin: 0; }
-.close-popup-btn {
-padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px;
-cursor: pointer; font-size: 16px; margin-top: 10px; width: 90%; max-width: 200px; text-align: center;
-}
+.close-popup-btn { padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; width: 90%; max-width: 200px; text-align: center; }
 .close-popup-btn:hover { background-color: #d32f2f; }
+.modal-button-group { display: flex; justify-content: space-around; margin-top: 20px; }
+.modal-button-group button { width: 45%; margin: 0; }
 
 /* Responsive Styles */
 @media only screen and (max-width: 600px) {
-.form-container { margin: 20px auto !important; width: calc(100% - 40px); }
-input, select, button, .custom-input-container, .date-input-wrapper { width: 90%; }
-.custom-input-container { flex-direction: column; }
+    .form-container {
+        margin: 2px;
+        width: calc(100% - 6px);
+    }
+    input, select, button, .select-wrapper, .date-input-wrapper {
+        width: 100%;
+    }
+    .popup-content {
+        width: 100%; /* เปลี่ยนจาก calc(100% - 10px) เป็น 100% */
+        padding: 2px 0; /* ปรับ padding ให้เป็น 10px บนล่าง, 0 ซ้ายขวา */
+        /* margin: 0 auto; ยังคงอยู่ */
+    }
+    .result-container-popup {
+        margin: 2px 2px; /* เปลี่ยนจาก margin: 5px auto; เป็น 5px 10px */
+        width: auto; /* เปลี่ยนจาก width: calc(100% - 10px) เป็น auto */
+        max-width: 100%; /* เปลี่ยนจาก max-width: 100% เป็น 100% */
+    }
+    #resultContentWrapper .number-list,
+    #resultContentWrapper .number-list-3digit {
+        font-size: calc(1.8vw + 10px);
+    }
 }
+
 </style>
 </head>
 <body>
-<h1>ฟอร์มแปลตัวเลข 4 ตัว</h1>
+<h1>ฟอร์มแปลตัวเลข 3 ตัว</h1>
 <div class="form-container">
-<input type="text" id="numberInput" placeholder="กรุณากรอกตัวเลข 4 หลัก" pattern="\d{4}" maxlength="4" inputmode="numeric" />
-<select id="topicSelect">
-        <option value="ลาวประตูชัย เวลา 05.45 น.">ลาวประตูชัย เวลา 05.45 น.</option>
-        <option value="ลาวสันติภาพ เวลา 06.45 น.">ลาวสันติภาพ เวลา 06.45 น.</option>
-        <option value="ประชาชนลาว เวลา 07.45 น.">ประชาชนลาว เวลา 07.45 น.</option>
-        <option value="ลาว Extra เวลา 08.30 น.">ลาว Extra เวลา 08.30 น.</option>
-        <option value="ลาว TV เวลา 10.30 น.">ลาว TV เวลา 10.30 น.</option>
-        <option value="ลาว HD เวลา 13.45 น.">ลาว HD เวลา 13.45 น.</option>
-        <option value="ลาวสตาร์ เวลา 15.45 น.">ลาวสตาร์ เวลา 15.45 น.</option>
-        <option value="รัฐบาล เวลา 15.45 น.">รัฐบาล เวลา 15.45 น.</option>
-        <option value="ฮานอย VIP เวลา 19.30 น.">ฮานอย VIP เวลา 19.30 น.</option>
-        <option value="ลาวสามัคคี เวลา 20.30 น.">ลาวสามัคคี เวลา 20.30 น.</option>
-        <option value="ลาวพัฒนา เวลา 20.30 น.">ลาวพัฒนา เวลา 20.30 น.</option>
-        <option value="custom">อื่นๆ (พิมพ์เอง)</option>
-    </select>
+    <input type="text" id="numberInput" placeholder="กรอกตัวเลข 3 หลัก" pattern="\d*" maxlength="3" inputmode="numeric" />
 
-    <div id="customTopicRow" style="display: none;">
-        <div class="custom-input-container">
-            <input type="text" id="customTopicName" placeholder="ชื่อหัวข้อ" />
-            <input type="text" id="customTopicTime" placeholder="เวลา" />
+    <!-- Unified Topic Section -->
+    <div class="select-wrapper">
+        <select id="topicSelect" onchange="checkCustomTopicOption(this)">
+            <option value="ลาวประตูชัย เวลา 05.45 น." data-default="true">ลาวประตูชัย เวลา 05.45 น.</option>
+            <option value="ลาวสันติภาพ เวลา 06.45 น." data-default="true">ลาวสันติภาพ เวลา 06.45 น.</option>
+            <option value="ประชาชนลาว เวลา 07.45 น." data-default="true">ประชาชนลาว เวลา 07.45 น.</option>
+            <option value="ลาว Extra เวลา 08.30 น." data-default="true">ลาว Extra เวลา 08.30 น.</option>
+            <option value="ลาว TV เวลา 10.30 น." data-default="true">ลาว TV เวลา 10.30 น.</option>
+            <option value="ลาว HD เวลา 13.45 น." data-default="true">ลาว HD เวลา 13.45 น.</option>
+            <option value="ลาวสตาร์ เวลา 15.45 น." data-default="true">ลาวสตาร์ เวลา 15.45 น.</option>
+            <option value="รัฐบาล เวลา 15.45 น." data-default="true">รัฐบาล เวลา 15.45 น.</option>
+            <option value="ฮานอยกาชาด เวลา 16.30 น." data-default="true">ฮานอยกาชาด เวลา 16.30 น.</option>
+            <option value="อานอยพิเศษ เวลา 17.30 น." data-default="true">อานอยพิเศษ เวลา 17.30 น.</option>
+            <option value="ฮานอย เวลา 18.30 น." data-default="true">ฮานอย เวลา 18.30 น.</option>
+            <option value="ฮานอย VIP เวลา 19.30 น." data-default="true">ฮานอย VIP เวลา 19.30 น.</option>
+            <option value="ลาวสามัคคี เวลา 20.30 น." data-default="true">ลาวสามัคคี เวลา 20.30 น.</option>
+            <option value="ลาวพัฒนา เวลา 20.30 น." data-default="true">ลาวพัฒนา เวลา 20.30 น.</option>
+            <option value="ลาวอาเซียน เวลา 21.00 น." data-default="true">ลาวอาเซียน เวลา 21.00 น.</option>
+            <option value="ลาว VIP เวลา 21.30 น." data-default="true">ลาว VIP เวลา 21.30 น.</option>
+            <option value="ลาวสามัคคี VIP เวลา 21.30 น." data-default="true">ลาวสามัคคี VIP เวลา 21.30 น.</option>
+            <option value="ลาวสตาร์ VIP เวลา 22.00 น." data-default="true">ลาวสตาร์ VIP เวลา 22.00 น.</option>
+            <option value="ลาวกาชาด เวลา 23.30 น." data-default="true">ลาวกาชาด เวลา 23.30 น.</option>
+            <option value="custom">อื่นๆ (พิมพ์เอง)</option>
+        </select>
+        <button class="manage-btn-inline" id="toggleTopicControls" title="จัดการหัวข้อ">⚙️</button>
+    </div>
+    <div class="management-actions" id="topicActions">
+        <button id="addTopicBtn" class="add-btn">เพิ่ม</button>
+        <button id="editTopicBtn" class="edit-btn">แก้ไข</button>
+        <button id="deleteTopicBtn" class="delete-btn">ลบ</button>
+        <button id="resetTopicBtn" class="reset-btn">คืนค่า</button>
+    </div>
+    <div id="customTopicInputs" style="display: none;">
+         <div class="custom-topic-row" style="display: flex; justify-content: center; gap: 10px; width: 80%; margin: 0 auto;">
+            <input type="text" id="customTopicName" placeholder="กรุณากรอกหัวข้อเอง" style="width: 60%; margin: 0;" />
+            <input type="text" id="customTopicTime" placeholder="เวลา (เช่น 08.30)" style="width: 40%; margin: 0;" />
         </div>
     </div>
 
-    <select id="personSelect">
-        <option value="Team">Team</option>        
-        <option value="@">@</option> 
-        <option value="Udon Don">Udon Don</option>
-        <option value="custom">อื่นๆ (พิมพ์เอง)</option>
-    </select>
-
-    <div id="customPersonRow" style="display: none;">
-         <input type="text" id="customPersonName" placeholder="ชื่อผู้บอก" />
+    <!-- Unified Person Section -->
+    <div class="select-wrapper">
+        <select id="personSelect" onchange="checkCustomOption(this)">
+           <option value="Team" data-default="true">Team</option>
+           <option value="@" data-default="true">@</option>
+            <option value="Udon Don" data-default="true">Udon Don</option>
+            <option value="custom">อื่นๆ (พิมพ์เอง)</option>
+        </select>
+        <button class="manage-btn-inline" id="togglePersonControls" title="จัดการผู้บอก">⚙️</button>
     </div>
+    <div class="management-actions" id="personActions">
+        <button id="addPersonBtn" class="add-btn">เพิ่ม</button>
+        <button id="editPersonBtn" class="edit-btn">แก้ไข</button>
+        <button id="deletePersonBtn" class="delete-btn">ลบ</button>
+        <button id="resetPersonBtn" class="reset-btn">คืนค่า</button>
+    </div>
+    <input type="text" id="customPersonInput" placeholder="กรุณากรอกชื่อผู้บอกเอง" style="display: none; width: 80%; margin: 10px auto;" />
 
     <div class="date-input-wrapper">
         <input type="text" id="dateInput" placeholder="วว/ดด/ปปปป (พ.ศ.)" />
@@ -207,40 +348,60 @@ input, select, button, .custom-input-container, .date-input-wrapper { width: 90%
 </div>
 
 <button id="homeButton" class="homeButton" onclick="window.location.href='https://juckmanphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
-
-<!-- ---------- Popup Container (ปรับปรุงใหม่) ---------- -->
+<!-- Result Popup -->
 <div id="resultPopupOverlay" class="popup-overlay">
-    <div class="popup-content">
-        <div id="resultContainerDiv" class="result-container-popup">
-            <!-- <img src="logo.png" class="result-bg-logo" alt=""> --> <!-- นำโลโก้พื้นหลังออก -->
-            <div id="resultContentWrapper">
-                <!-- เนื้อหาผลลัพธ์จะถูกใส่ที่นี่โดย JavaScript -->
-            </div>
-        </div>
-        <div class="controls">
-            <button id="saveResultAsImageBtn" class="close-popup-btn" style="background-color: #007bff; margin-bottom: 15px;">บันทึกเป็นรูปภาพ</button>
-            <div class="control-group">
-                <label for="popupFontSizeSlider">ปรับขนาดตัวอักษร:</label>
-                <input type="range" id="popupFontSizeSlider" min="0.7" max="1.5" step="0.05" value="1.0">
-                <span id="popupFontSizeValue">ขนาด: 100%</span>
-            </div>
-            <div class="control-group">
-                <label for="popupLineHeightSlider">ปรับขนาดของบรรทัด:</label>
-                <input type="range" id="popupLineHeightSlider" min="0.5" max="2.5" step="0.1" value="1.3">
-                <span id="popupLineHeightValue">ความสูงบรรทัด: 1.3</span>
-            </div>
-            <button class="close-popup-btn" onclick="closeResultPopup()">ปิดหน้าต่างนี้</button>
-        </div>
-    </div>
+<div class="popup-content">
+<div id="resultContainerDiv" class="result-container-popup">
+  <div class="background-logo-real"></div> <!-- เปลี่ยนมาใช้ element จริงแทน pseudo-element -->
+  <div id="resultContentWrapper"></div>
 </div>
-
+<div class="controls">
+<button id="saveResultAsImageBtn" class="close-popup-btn" style="background-color: #007bff; margin-bottom: 15px;">บันทึกเป็นรูปภาพ</button>
+<div class="control-group">
+<label for="popupFontSizeSlider">ปรับขนาดตัวอักษร:</label>
+<input type="range" id="popupFontSizeSlider" min="0.7" max="2.0" step="0.05" value="1.0">
+<span id="popupFontSizeValue">ขนาด: 100%</span>
+</div>
+<div class="control-group">
+<label for="popupLineHeightSlider">ปรับขนาดของบรรทัด:</label>
+<input type="range" id="popupLineHeightSlider" step="0.1">
+<span id="popupLineHeightValue">ความสูงบรรทัด: 1.3</span>
+</div>
+<button class="close-popup-btn" onclick="closeResultPopup()">ปิดหน้าต่างนี้</button>
+</div>
+</div>
+</div>
+<!-- Management Modals -->
+<div id="topicModal" class="popup-overlay">
+<div class="popup-content" style="max-width: 400px; background-color: #f0f8ff;">
+<h2 id="topicModalTitle" style="color: #0056b3; text-align: center;"></h2>
+<input type="hidden" id="topicEditIndex">
+<input type="text" id="modalTopicName" placeholder="ชื่อหัวข้อ (เช่น ลาวมิตรภาพ)">
+<input type="text" id="modalTopicTime" placeholder="เวลา (เช่น 20.30)">
+<div class="modal-button-group">
+<button id="saveTopicBtn" style="background-color: #28a745;">บันทึก</button>
+<button id="cancelTopicBtn" class="close-popup-btn">ยกเลิก</button>
+</div>
+</div>
+</div>
+<div id="personModal" class="popup-overlay">
+<div class="popup-content" style="max-width: 400px; background-color: #f0f8ff;">
+<h2 id="personModalTitle" style="color: #0056b3; text-align: center;"></h2>
+<input type="hidden" id="personEditValue">
+<input type="text" id="modalPersonName" placeholder="ชื่อผู้บอก">
+<div class="modal-button-group">
+<button id="savePersonBtn" style="background-color: #28a745;">บันทึก</button>
+<button id="cancelPersonBtn" class="close-popup-btn">ยกเลิก</button>
+</div>
+</div>
+</div>
 <footer>
-    <div style="text-align: center; margin-bottom: 20px;">
-        &copy; 2025 Juckmanphai. All Rights Reserved.
-    </div>
+<div style="text-align: center; margin-bottom: 20px;">
+&copy; 2025 Juckmanphai. All Rights Reserved.
+</div>
 </footer>
 <script>
-// === DATA (ข้อมูลจันทรคติ) ===
+// === MERGED LUNAR DATA ===
 const lunarData = {
   "01/01/2568": "วันพุธ ขึ้น 3 ค่ำ เดือนยี่ (2) ปีมะโรง",
   "02/01/2568": "วันพฤหัสบดี ขึ้น 4 ค่ำ เดือนยี่ (2) ปีมะโรง",
@@ -973,97 +1134,253 @@ const lunarData = {
   "30/12/2569": "วันพุธ แรม 6 ค่ำ เดือนอ้าย (1) ปีมะเมีย",
   "31/12/2569": "วันพฤหัสบดี แรม 7 ค่ำ เดือนอ้าย (1) ปีมะเมีย"
 };
-
-// === POPUP FUNCTIONS ===
+// === SHARED UTILITY FUNCTIONS ===
+document.addEventListener('contextmenu', e => e.preventDefault());
 function showResultPopup() { document.getElementById("resultPopupOverlay").style.display = "flex"; }
 function closeResultPopup() { document.getElementById("resultPopupOverlay").style.display = "none"; }
+function checkCustomOption(select) { document.getElementById('customPersonInput').style.display = select.value === 'custom' ? 'block' : 'none'; }
+function checkCustomTopicOption(select) { document.getElementById('customTopicInputs').style.display = select.value === 'custom' ? 'block' : 'none'; }
+function getSelectedPerson() { const select = document.getElementById('personSelect'); return select.value === 'custom' ? (document.getElementById('customPersonInput').value.trim() || '@') : select.value; }
+function getTopicName() { const select = document.getElementById('topicSelect'); if (select.value === 'custom') { return document.getElementById('customTopicName').value.trim() || 'ไม่ระบุหัวข้อ'; } return select.options[select.selectedIndex].text.split(' เวลา ')[0]; }
+function getTopicTime() {
+  const select = document.getElementById('topicSelect');
+  if (select.value === 'custom') {
+    const time = document.getElementById('customTopicTime').value.trim();
+    return time ? time : ''; // Return only time string
+  }
+  const parts = select.options[select.selectedIndex].text.split(' เวลา ');
+  return parts.length > 1 ? parts[1].replace(' น.', '') : ''; // Return only time string
+}
+function getThaiDate(date) {
+  const months = [
+    "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+    "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+  ];
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear() + 543;
 
-// === UTILITY FUNCTIONS ===
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-function getTwoDigitPairs(num) {
-const pairs = new Set();
-for (let i = 0; i < num.length; i++) {
-for (let j = i + 1; j < num.length; j++) {
-pairs.add([num[i], num[j]].sort().join(''));
+  return `วันที่ ${day} ${month} พ.ศ. ${year}`;
 }
-}
-return Array.from(pairs).sort();
-}
-
-function getThreeDigitCombinations(num) {
-const combinations = new Set();
-if (num.length < 3) return [];
-for (let i = 0; i < num.length; i++) {
-for (let j = i + 1; j < num.length; j++) {
-for (let k = j + 1; k < num.length; k++) {
-combinations.add([num[i], num[j], num[k]].sort().join(''));
-}
-}
-}
-return Array.from(combinations).sort();
-}
-
-function getThaiDate(date = new Date()) {
-const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-return `วัน${days[date.getDay()]}ที่ ${String(date.getDate()).padStart(2, '0')} ${months[date.getMonth()]} พ.ศ. ${date.getFullYear() + 543}`;
-}
-
-function getLunarDate(date = new Date()) {
-const key = `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()+543}`;
-return lunarData[key] || "";
+function getLunarDate(date = new Date()) { const key = `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()+543}`; return lunarData[key] || ""; }
+function getThaiTime() { const now = new Date(); return `เวลา ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')} น.`; }
+function parseThaiDate(dateStr) { if (!dateStr || dateStr.trim() === '') return new Date(); const parts = dateStr.match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/); if (parts) { const day = parseInt(parts[1], 10); const month = parseInt(parts[2], 10); let year = parseInt(parts[3], 10); if (year > 2500) year -= 543; const d = new Date(year, month - 1, day); if (d && d.getMonth() === month - 1) return d; } return null; }
+function getFormattedDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear() + 543;
+  return `${day}/${month}/${year}`;
 }
 
-function getThaiTime() {
-const now = new Date();
-return `เวลา ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')} น.`;
+// === LOGIC FOR 3-DIGIT NUMBERS (REVISED) ===
+function generate3DigitHTML(num, commonData) {
+const transformRules = {'0':'1','1':'7','2':'5','3':'8','4':'9','5':'2','6':'9','7':'1','8':'3','9':'6'};
+const transformed = num.split('').map(d => transformRules[d]).join('');
+const sortPair = pair => (pair[0] > pair[1] ? pair[1] + pair[0] : pair);
+
+const generateAdditional = (inputSet, type) => {
+const patterns = { '2digit': {'00':'02','11':'12','33':'23','44':'24','55':'25','66':'26','77':'27','88':'28','99':'29'}, '3digit': {'000': '002', '011': '012', '022': '022', '033': '023', '044': '024', '055': '025', '066': '026', '077': '027', '088': '028', '099': '029', '111': '112', '122': '122', '133': '123', '144': '124', '155': '125', '166': '126', '177': '127', '188': '128', '199': '129', '222': '222', '233': '223', '244': '224', '255': '225', '266': '226', '277': '227', '288': '228', '299': '229', '333': '233', '344': '234', '355': '235', '366': '236', '377': '237', '388': '238', '399': '239', '444': '244', '455': '245', '466': '246', '477': '247', '488': '248', '499': '249', '555': '255', '566': '256', '577': '257', '588': '258', '599': '259', '666': '266', '677': '267', '688': '268', '699': '269', '777': '277', '788': '278', '799': '279', '888': '288', '899': '289', '999': '299', '001': '012', '002': '022', '003': '023', '004': '024', '005': '025', '006': '026', '007': '027', '008': '028', '009': '029', '112': '122', '113': '123', '114': '124', '115': '125', '116': '126', '117': '127', '118': '128', '119': '129', '223': '223', '224': '224', '225': '225', '226': '226', '227': '227', '228': '228', '229': '229', '334': '234', '335': '235', '336': '236', '337': '237', '338': '238', '339': '239', '445': '245', '446': '246', '447': '247', '448': '248', '449': '249', '556': '256', '557': '257', '558': '258', '559': '259', '667': '267', '668': '268', '669': '269', '778': '278', '779': '279', '889': '289'} };
+const additional = Array.from(inputSet).map(item => (patterns[type] || {})[item]).filter(Boolean);
+return [...new Set(additional)];
+};
+
+const firstSet = [...new Set([sortPair(`${num[0]}${num[1]}`), sortPair(`${num[0]}${num[2]}`), sortPair(`${num[1]}${num[2]}`)])].sort();
+const secondSetSource = [sortPair(`${num[0]}${transformed[1]}`),sortPair(`${num[0]}${transformed[2]}`),sortPair(`${num[1]}${transformed[0]}`),sortPair(`${num[1]}${transformed[2]}`),sortPair(`${num[2]}${transformed[0]}`),sortPair(`${num[2]}${transformed[1]}`)];
+const additional2d = generateAdditional(new Set([...firstSet, ...secondSetSource]), '2digit');
+const secondSet = [...new Set([...secondSetSource, ...additional2d])].filter(p => !firstSet.includes(p)).sort();
+const transformedPairs = [...new Set([sortPair(`${transformed[0]}${transformed[1]}`), sortPair(`${transformed[0]}${transformed[2]}`), sortPair(`${transformed[1]}${transformed[2]}`)])].filter(p => !firstSet.includes(p) && !secondSet.includes(p)).sort();
+
+const thirdSetSource = [`${num[0]}${num[1]}${num[2]}`,`${num[0]}${num[1]}${transformed[2]}`,`${num[0]}${transformed[1]}${num[2]}`,`${num[0]}${transformed[1]}${transformed[2]}`,`${transformed[0]}${num[1]}${num[2]}`,`${transformed[0]}${num[1]}${transformed[2]}`,`${transformed[0]}${transformed[1]}${num[2]}`,`${transformed[0]}${transformed[1]}${transformed[2]}`];
+const thirdSet = [...new Set(thirdSetSource.map(t => t.split('').sort().join('')))].sort();
+const additional3d = generateAdditional(new Set(thirdSet), '3digit').filter(t => !thirdSet.includes(t)).sort();
+
+const redSpan = (text) => `<span style="color: red;">${text}</span>`;
+const greenSpan = (text) => `<span style="color: green;">${text}</span>`;
+const noDataSpan = '<span style="color: green; font-size: 18px;">ไม่มีชุดตัวเลขเพิ่ม</span>';
+
+return `
+<div style="position: relative; text-align: center; color: blue; --font-scale: 1.0;">
+  <!-- หัวข้อหลัก -->
+  <div class="result-header">
+    <div class="topic-box" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+      <span style="
+        font-size: calc(clamp(1.5rem, 6vw, 2.25rem) * var(--font-scale));
+        font-weight: normal;
+        text-shadow: 
+          -1px -1px 0 white,
+           1px -1px 0 white,
+          -1px  1px 0 white,
+           1px  1px 0 white,
+           ${commonData.textShadow};
+        background: linear-gradient(90deg, #0d47a1, #42a5f5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      ">
+        ${commonData.topicName}
+      </span>
+      <img src="logo.png" class="header-logo" alt="logo" style="height: 2rem;">
+    </div>
+  </div>
+
+  <!-- 2 แถวบนสุด -->
+  <div style="
+    font-size: calc(clamp(1.25rem, 4.5vw, 1.75rem) * var(--font-scale));
+    font-weight: normal;
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    ${commonData.topicNameHtml}
+  </div>
+  <div style="
+    font-size: calc(clamp(1rem, 3.5vw, 1.25rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    ${commonData.topicTimeHtml}
+  </div>
+
+  <!-- วันที่ -->
+  <p style="
+    font-size: calc(clamp(0.875rem, 3vw, 1.125rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    ${getThaiDate(commonData.date)}
+  </p>
+
+  ${commonData.lunarHtml}
+
+  <!-- หัวข้อหลัก 3 ตัว -->
+  <h2 style="
+    font-weight: bold;
+    font-size: calc(clamp(1.5rem, 5.5vw, 2rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    3 ตัว ${redSpan(num)} By : ${greenSpan(commonData.selectedPerson)}
+  </h2>
+
+  <!-- จัดชุด 3 ตัว (ปกติ) -->
+  <h3 style="
+    font-weight: bold;
+    font-size: calc(clamp(1.1rem, 4.5vw, 1.5rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    จัดชุด 3 ตัว (ปกติ)
+  </h3>
+  <p style="
+    font-weight: bold;
+    white-space: nowrap; 
+    font-size: calc(clamp(1rem, 4.8vw, 1.35rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    ${thirdSet.join(' - ')}
+  </p>
+
+  <!-- จัดชุด 3 ตัว (แปลเพิ่ม) -->
+  <h3 style="
+    font-weight: bold;
+    font-size: calc(clamp(1.1rem, 4.5vw, 1.5rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    จัดชุด 3 ตัว ${redSpan('(แปลเพิ่ม)')}
+  </h3>
+  <p style="
+    font-weight: bold;
+    white-space: nowrap; 
+    font-size: calc(clamp(1rem, 4.8vw, 1.35rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    ${additional3d.length > 0 ? additional3d.join(' - ') : noDataSpan}
+  </p>
+
+  <!-- คำเตือน -->
+  <h2 style="
+    font-weight: bold;
+    color: red; 
+    font-size: calc(clamp(1.25rem, 5vw, 1.75rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    แนวทางเท่านั้น
+  </h2>
+
+  <!-- Disclosure -->
+  <p style="
+    font-size: calc(clamp(0.875rem, 3vw, 1.125rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    Disclose : ${getFormattedDate(new Date())} ${getThaiTime()}
+  </p>
+
+  <!-- หมายเหตุ -->
+  <p style="
+    font-size: calc(clamp(1rem, 3.5vw, 1.25rem) * var(--font-scale));
+    text-shadow: 
+      -1px -1px 0 white,
+       1px -1px 0 white,
+      -1px  1px 0 white,
+       1px  1px 0 white,
+       ${commonData.textShadow};
+  ">
+    ${commonData.noteHtml.replace('No remarks', '<span style="color: red;">No remarks</span>')}
+  </p>
+</div>`;
 }
 
-function parseThaiDate(dateStr) {
-if (!dateStr || dateStr.trim() === '') return new Date();
-const parts = dateStr.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);
-if (parts) {
-const day = parseInt(parts[1], 10);
-const month = parseInt(parts[2], 10);
-let year = parseInt(parts[3], 10);
-if (year > 2500) year -= 543;
-const d = new Date(year, month - 1, day);
-if (d && d.getMonth() === month - 1) return d;
-}
-return null;
-}
-
-// === MAIN LOGIC ===
+// === MAIN DISPATCHER FUNCTION ===
 function generateResultHTML() {
 const num = document.getElementById("numberInput").value;
-if (num.length !== 4 || isNaN(num)) {
-alert("กรุณากรอกตัวเลข 4 หลัก");
+if (isNaN(num) || num.length !== 3) {
+alert("กรุณากรอกตัวเลข 3 หลักให้ถูกต้อง");
 return null;
 }
-
-// ===== START: ปรับปรุงการดึงข้อมูล Topic ให้แยกชื่อและเวลา =====
-const topicSelect = document.getElementById("topicSelect");
-let topicName = '';
-let topicTime = '';
-
-if (topicSelect.value === "custom") {
-    topicName = document.getElementById("customTopicName").value.trim() || "ไม่ระบุหัวข้อ";
-    const timeInput = document.getElementById("customTopicTime").value.trim();
-    topicTime = timeInput ? `เวลา ${timeInput}` : '';
-} else {
-    const selectedText = topicSelect.options[topicSelect.selectedIndex].text;
-    const parts = selectedText.split(' เวลา ');
-    topicName = parts[0];
-    topicTime = parts.length > 1 ? `เวลา ${parts[1]}` : '';
-}
-const topicTimeHtml = topicTime ? `<p class="topic-time">${topicTime}</p>` : '';
-// ===== END: ปรับปรุงการดึงข้อมูล Topic =====
-
-const personSelect = document.getElementById("personSelect");
-let selectedPerson = personSelect.value === "custom"
-? document.getElementById("customPersonName").value.trim() || '@'
-: personSelect.value;
 
 const dateInputStr = document.getElementById("dateInput").value;
 const date = parseThaiDate(dateInputStr);
@@ -1072,168 +1389,314 @@ alert("รูปแบบวันที่ไม่ถูกต้อง กร
 return null;
 }
 
-const lunarDate = getLunarDate(date);
-const lunarHtml = lunarDate ? `<p style="font-size: 14px; color: ${lunarDate.includes('วันพระ') ? 'red' : '#002060'}; font-weight: bold; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">( ${lunarDate} )</p>` : '';
-let noteValue = document.getElementById("noteInput").value.trim();
-const noteHtml = `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`;
+  const lunarDate = getLunarDate(date);
+  let noteValue = document.getElementById("noteInput").value.trim();
+  const engravedShadowStyle = "text-shadow: 1px 1px 1px rgba(0,0,0,0.3), -1px -1px 1px rgba(255,255,255,0.9);";
 
-const twoDigitPairs = getTwoDigitPairs(num);
-const threeDigitCombinations = getThreeDigitCombinations(num);
-const textShadow = "text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;";
+  // เปลี่ยนสีข้อความ lunarDate เป็นสีเขียวที่มีขอบสีขาว
+  const lunarStyle = "color: green; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;";
+  const color = lunarDate.includes('วันพระ') ? 'red' : 'green';
+const commonData = {
+    date: date,
+    topicName: getTopicName(),
+topicNameHtml: (() => { // New property for just the topic name
+      const name = getTopicName();
+      return name === 'ไม่ระบุหัวข้อ' ? '' : `<h2 class="topic-main" style="${engravedShadowStyle}">${name}</h2>`;
+    })(),
+    topicTimeHtml: (() => { // New property for just the time
+      const time = getTopicTime();
+      return time ? `<h3 class="date-text" style="${engravedShadowStyle}">เวลา ${time} น.</h3>` : '';
+    })(),
+    selectedPerson: getSelectedPerson(),
+    lunarHtml: lunarDate ? `<p style="font-size: 14px; color: ${color}; font-weight: normal; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;">( ${lunarDate} )</p>` : '',
+    noteHtml: `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`,
+    textShadow: engravedShadowStyle
+  };
 
-// ===== START: แก้ไขโครงสร้าง HTML ที่ return ให้มี Header แบบใหม่ =====
-return `
-<div style="position: relative; text-align: center; color: blue;">
-    <div class="result-header">
-        <img src="logo.png" class="header-logo" alt="logo">
-        <div class="topic-box">${topicName}</div>
-        <img src="logo.png" class="header-logo" alt="logo">
-    </div>
-    ${topicTimeHtml}
-    <p style="font-size: 18px; ${textShadow}">${getThaiDate(date)}</p>
-    ${lunarHtml}
-    <h2 style="font-size: 24px; font-weight: bold; ${textShadow}">4 ตัว <span style="color: red;">${num}</span> By : <span style="color: green;">${selectedPerson}</span></h2>
-    <h3 style="font-size: 24px; font-weight: bold; ${textShadow}">จัดชุด 2 ตัว</h3>
-    <p style="font-size: 26px; font-weight: bold; ${textShadow}">${twoDigitPairs.join(' - ')}</p>
-    <h3 style="font-size: 24px; font-weight: bold; ${textShadow}">จัดชุด 3 ตัว</h3>
-    <p style="font-size: 26px; font-weight: bold; ${textShadow}">${threeDigitCombinations.join(' - ')}</p>
-    <h2 style="font-size: 24px; font-weight: bold; color: red; ${textShadow}">แนวทางเท่านั้น</h2>
-    <p style="font-size: 13px; ${textShadow}">แปล: ${getThaiDate(new Date())} ${getThaiTime()}</p>
-    <p style="font-size: 20px; ${textShadow}">${noteHtml}</p>
-</div>`;
-// ===== END: แก้ไขโครงสร้าง HTML =====
-}
-
-function setupPopupControls() {
-    const resultContentWrapper = document.getElementById("resultContentWrapper");
-    if (!resultContentWrapper) return;
-
-    const textElements = resultContentWrapper.querySelectorAll('p, h2, h3, .topic-box'); // เพิ่ม .topic-box
-    textElements.forEach(el => {
-        if (!el.dataset.originalSize) {
-            el.dataset.originalSize = parseFloat(window.getComputedStyle(el).fontSize);
-        }
-    });
-
-    const fsSlider = document.getElementById("popupFontSizeSlider");
-    const fsValueSpan = document.getElementById("popupFontSizeValue");
-    function updateFontSize() {
-        const scale = fsSlider.value;
-        textElements.forEach(el => {
-            const originalSize = parseFloat(el.dataset.originalSize);
-            if (originalSize) el.style.fontSize = (originalSize * scale) + 'px';
-        });
-        fsValueSpan.textContent = `ขนาด: ${Math.round(scale * 100)}%`;
-    }
-    fsSlider.addEventListener("input", updateFontSize);
-
-    const lhSlider = document.getElementById("popupLineHeightSlider");
-    const lhValueSpan = document.getElementById("popupLineHeightValue");
-    function updateLineHeight() {
-        const lineHeight = lhSlider.value;
-        resultContentWrapper.style.lineHeight = lineHeight;
-        lhValueSpan.textContent = `ความสูงบรรทัด: ${lineHeight}`;
-    }
-    lhSlider.addEventListener("input", updateLineHeight);
-
-    const saveBtn = document.getElementById("saveResultAsImageBtn");
-    const newSaveBtn = saveBtn.cloneNode(true);
-    saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
-
-    newSaveBtn.addEventListener("click", function() {
-        const captureElement = document.querySelector(".popup-content");
-        const controlsElement = captureElement.querySelector('.controls');
-
-        controlsElement.style.display = 'none';
-        
-        const originalPadding = captureElement.style.padding;
-        captureElement.style.padding = '7px'; 
-
-        html2canvas(captureElement, {
-            useCORS: true,
-            scale: 2,
-            backgroundColor: '#FFFFD1' // เปลี่ยนสีพื้นหลังรูปที่บันทึก
-        }).then(canvas => {
-            const link = document.createElement('a');
-            const num = document.getElementById("numberInput").value || "XXXX";
-            link.download = `Result-4D-${num}-${Date.now()}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        }).catch(err => {
-            console.error("เกิดข้อผิดพลาดในการสร้างรูปภาพ:", err);
-            alert("ขออภัย, ไม่สามารถบันทึกเป็นรูปภาพได้");
-        }).finally(() => {
-            controlsElement.style.display = '';
-            captureElement.style.padding = originalPadding;
-        });
-    });
-
-    updateFontSize();
-    updateLineHeight();
+  return generate3DigitHTML(num, commonData);
 }
 
 function displayResultInPopup() {
-    const resultHtml = generateResultHTML();
-    if (resultHtml) {
-        document.getElementById("resultContentWrapper").innerHTML = resultHtml;
-        setupPopupControls();
-        showResultPopup();
-    }
+const resultHtml = generateResultHTML();
+if (resultHtml) {
+const wrapper = document.getElementById("resultContentWrapper");
+wrapper.innerHTML = resultHtml;
+
+// Reset the slider and the CSS variable
+document.getElementById("popupFontSizeSlider").value = 1.0;
+const resultDiv = wrapper.querySelector('div');
+if (resultDiv) {
+resultDiv.style.setProperty('--font-scale', '1');
 }
 
-// === PAGE INITIALIZATION ===
+initializePopupControls();
+showResultPopup();
+}
+}
+
+// Called when the popup is generated to set initial states
+function initializePopupControls() {
+  const lhSlider = document.getElementById("popupLineHeightSlider");
+  const fsSlider = document.getElementById("popupFontSizeSlider");
+  const fsValueSpan = document.getElementById("popupFontSizeValue");
+  const resultDiv = document.querySelector("#resultContentWrapper > div");
+
+  // ตั้งค่าเริ่มต้นของ font scale สำหรับ 3 ตัว
+  let defaultFontScale = 1.0;   // 100% สำหรับ 3 ตัว
+  lhSlider.min = "0.5"; lhSlider.max = "2.5"; lhSlider.value = "1.0";
+
+  // ตั้งค่า slider และค่าเริ่มต้น
+  fsSlider.value = defaultFontScale;
+  if (resultDiv) {
+    resultDiv.style.setProperty('--font-scale', defaultFontScale);
+  }
+  fsValueSpan.textContent = `ขนาด: ${Math.round(defaultFontScale * 100)}%`;
+
+  // ตั้งค่า line height
+  updateLineHeight();
+}
+
+// Global scope functions for slider controls
+function updateFontSize() {
+const fsSlider = document.getElementById("popupFontSizeSlider");
+const fsValueSpan = document.getElementById("popupFontSizeValue");
+const resultDiv = document.querySelector("#resultContentWrapper > div");
+
+if (!fsSlider || !resultDiv) return;
+
+const scale = fsSlider.value;
+resultDiv.style.setProperty('--font-scale', scale);
+fsValueSpan.textContent = `ขนาด: ${Math.round(scale * 100)}%`;
+}
+
+function updateLineHeight() {
+const lhSlider = document.getElementById("popupLineHeightSlider");
+const lhValueSpan = document.getElementById("popupLineHeightValue");
+const resultContentWrapper = document.getElementById("resultContentWrapper");
+if (!lhSlider || !resultContentWrapper) return;
+
+const lineHeight = lhSlider.value;
+resultContentWrapper.style.lineHeight = lineHeight;
+lhValueSpan.textContent = `ความสูงบรรทัด: ${lineHeight}`;
+}
+
+// === PAGE INITIALIZATION & MANAGEMENT LOGIC ===
 document.addEventListener("DOMContentLoaded", function() {
-    const dateInput = document.getElementById('dateInput');
-    const calendarButton = document.getElementById('calendarButton');
-    const hiddenDateInput = document.getElementById('hiddenDateInput');
+// Attach event listeners ONCE
+document.getElementById("popupFontSizeSlider").addEventListener("input", updateFontSize);
+document.getElementById("popupLineHeightSlider").addEventListener("input", updateLineHeight);
+document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
 
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear() + 543;
-    dateInput.value = `${day}/${month}/${year}`;
+document.getElementById("saveResultAsImageBtn").addEventListener("click", function() {
+  const captureElement = document.querySelector("#resultPopupOverlay .popup-content");
+  const controlsElement = captureElement.querySelector('.controls');
+  const num = document.getElementById("numberInput").value; // ดึงค่าตัวเลขจาก input
 
-    calendarButton.addEventListener('click', () => {
-        try {
-            hiddenDateInput.showPicker();
-        } catch (error) {
-            hiddenDateInput.click();
-        }
-    });
+  controlsElement.style.display = 'none';
+  const originalPadding = captureElement.style.padding;
+  captureElement.style.padding = '2px';
 
-    hiddenDateInput.addEventListener('change', (e) => {
-        const selectedDate = e.target.value;
-        if (selectedDate) {
-            const parts = selectedDate.split('-');
-            const christianYear = parseInt(parts[0], 10);
-            const month = parts[1];
-            const day = parts[2];
-            const buddhistYear = christianYear + 543;
-            dateInput.value = `${day}/${month}/${buddhistYear}`;
-        }
-    });
-
-    document.getElementById("topicSelect").addEventListener("change", function() {
-        document.getElementById("customTopicRow").style.display = this.value === "custom" ? "block" : "none";
-        if (this.value === "custom") document.getElementById("customTopicName").focus();
-    });
-
-    document.getElementById("personSelect").addEventListener("change", function() {
-        document.getElementById("customPersonRow").style.display = this.value === "custom" ? "block" : "none";
-        if (this.value === "custom") document.getElementById("customPersonName").focus();
-    });
-
-    document.getElementById("convertButton").addEventListener("click", displayResultInPopup);
+  html2canvas(captureElement, {
+    useCORS: true,
+    scale: 4,
+    backgroundColor: '#FFFFD1',
+    allowTaint: true,
+    onclone: function(clonedDoc) {
+      const clonedBackground = clonedDoc.querySelector('.background-logo-real');
+      if (clonedBackground) {
+        clonedBackground.style.opacity = '0.5';
+      }
+    }
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `Result-Gen-${num}-${Date.now()}.png`; // ใช้รูปแบบชื่อไฟล์ใหม่
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).finally(() => {
+    controlsElement.style.display = '';
+    captureElement.style.padding = originalPadding;
+  });
 });
-</script>
-<script>
+// Management Logic
+const TOPIC_STORAGE_KEY = 'customTopics_unified';
+const PERSON_STORAGE_KEY = 'customPersons_unified';
+const HIDDEN_TOPICS_KEY = 'hiddenDefaultTopics_unified';
+const HIDDEN_PERSONS_KEY = 'hiddenDefaultPersons_unified';
+
+const getStored = (key) => JSON.parse(localStorage.getItem(key)) || [];
+const setStored = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+function applyHiddenDefaults(selectId, storageKey) {
+const hiddenValues = getStored(storageKey);
+if (hiddenValues.length > 0) {
+document.querySelectorAll(`#${selectId} option[data-default="true"]`).forEach(opt => {
+if (hiddenValues.includes(opt.value)) { opt.hidden = true; }
+});
+}
+}
+
+function loadOptions(selectId, storageKey) {
+const select = document.getElementById(selectId);
+select.querySelectorAll('option:not([data-default])').forEach(opt => opt.value !== 'custom' && opt.remove());
+const otherOption = select.querySelector('option[value="custom"]');
+const stored = getStored(storageKey);
+stored.forEach(item => {
+const opt = document.createElement('option');
+opt.value = item.value;
+opt.textContent = item.text;
+select.insertBefore(opt, otherOption);
+});
+}
+
+applyHiddenDefaults('topicSelect', HIDDEN_TOPICS_KEY);
+applyHiddenDefaults('personSelect', HIDDEN_PERSONS_KEY);
+loadOptions('topicSelect', TOPIC_STORAGE_KEY);
+loadOptions('personSelect', PERSON_STORAGE_KEY);
+
+document.getElementById('toggleTopicControls').addEventListener('click', () => {
+document.getElementById('topicActions').style.display = document.getElementById('topicActions').style.display === 'flex' ? 'none' : 'flex';
+});
+document.getElementById('togglePersonControls').addEventListener('click', () => {
+document.getElementById('personActions').style.display = document.getElementById('personActions').style.display === 'flex' ? 'none' : 'flex';
+});
+
+const setupManagement = (type) => {
+const SELECT_ID = `${type}Select`;
+const STORAGE_KEY = `custom${type.charAt(0).toUpperCase() + type.slice(1)}s_unified`;
+const HIDDEN_STORAGE_KEY = `hiddenDefault${type.charAt(0).toUpperCase() + type.slice(1)}s_unified`;
+const MODAL_ID = `${type}Modal`;
+
+document.getElementById(`add${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+document.getElementById(`${type}ModalTitle`).textContent = `เพิ่ม${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ใหม่`;
+if(type === 'topic') {
+document.getElementById('modalTopicName').value = ''; document.getElementById('modalTopicTime').value = ''; document.getElementById('topicEditIndex').value = '';
+} else {
+document.getElementById('modalPersonName').value = ''; document.getElementById('personEditValue').value = '';
+}
+document.getElementById(MODAL_ID).style.display = 'flex';
+});
+
+document.getElementById(`edit${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+const select = document.getElementById(SELECT_ID);
+const selectedOption = select.options[select.selectedIndex];
+if (selectedOption.value === 'custom' || selectedOption.hidden) return alert('ไม่สามารถแก้ไขรายการนี้ได้');
+
+document.getElementById(`${type}ModalTitle`).textContent = `แก้ไข${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}`;
+if (type === 'topic') {
+const [name, timePart] = selectedOption.value.split(' เวลา ');
+document.getElementById('modalTopicName').value = name;
+document.getElementById('modalTopicTime').value = timePart ? timePart.replace(' น.', '') : '';
+document.getElementById('topicEditIndex').value = selectedOption.value;
+} else {
+document.getElementById('modalPersonName').value = selectedOption.value;
+document.getElementById('personEditValue').value = selectedOption.value;
+}
+document.getElementById(MODAL_ID).style.display = 'flex';
+});
+
+document.getElementById(`delete${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+const select = document.getElementById(SELECT_ID);
+const selectedOption = select.options[select.selectedIndex];
+if (selectedOption.value === 'custom' || selectedOption.hidden) return alert('ไม่สามารถลบรายการนี้ได้');
+if (confirm(`คุณต้องการลบ "${selectedOption.textContent}" ใช่หรือไม่?`)) {
+if (selectedOption.hasAttribute('data-default')) {
+let hidden = getStored(HIDDEN_STORAGE_KEY);
+if (!hidden.includes(selectedOption.value)) { hidden.push(selectedOption.value); setStored(HIDDEN_STORAGE_KEY, hidden); }
+selectedOption.hidden = true;
+select.selectedIndex = [...select.options].findIndex(o => !o.hidden);
+} else {
+let options = getStored(STORAGE_KEY);
+options = options.filter(opt => opt.value !== selectedOption.value);
+setStored(STORAGE_KEY, options);
+loadOptions(SELECT_ID, STORAGE_KEY);
+}
+}
+});
+
+document.getElementById(`save${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+let name, time, oldValue, newValue;
+if (type === 'topic') {
+name = document.getElementById('modalTopicName').value.trim();
+time = document.getElementById('modalTopicTime').value.trim();
+oldValue = document.getElementById('topicEditIndex').value;
+if (!name) return alert('กรุณากรอกชื่อหัวข้อ');
+newValue = time ? `${name} เวลา ${time} น.` : name;
+} else {
+name = document.getElementById('modalPersonName').value.trim();
+oldValue = document.getElementById('personEditValue').value;
+if (!name) return alert('กรุณากรอกชื่อผู้บอก');
+newValue = name;
+}
+
+let options = getStored(STORAGE_KEY);
+const select = document.getElementById(SELECT_ID);
+
+if (oldValue) { // Edit Mode
+const oldOptionEl = select.querySelector(`option[value="${oldValue}"]`);
+if (oldOptionEl && oldOptionEl.hasAttribute('data-default')) {
+let hidden = getStored(HIDDEN_STORAGE_KEY);
+if (!hidden.includes(oldValue)) { hidden.push(oldValue); setStored(HIDDEN_STORAGE_KEY, hidden); }
+oldOptionEl.hidden = true;
+if (!options.some(opt => opt.value === newValue)) { options.push({ value: newValue, text: newValue }); }
+} else {
+const index = options.findIndex(opt => opt.value === oldValue);
+if (index > -1) options[index] = { value: newValue, text: newValue };
+else options.push({ value: newValue, text: newValue });
+}
+} else { // Add Mode
+if (options.some(opt => opt.value === newValue) || [...select.options].some(o => o.value === newValue && !o.hidden)) { return alert('มีรายการนี้อยู่แล้ว'); }
+options.push({ value: newValue, text: newValue });
+}
+setStored(STORAGE_KEY, options);
+loadOptions(SELECT_ID, STORAGE_KEY);
+select.value = newValue;
+document.getElementById(MODAL_ID).style.display = 'none';
+});
+
+document.getElementById(`reset${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+if (confirm(`คุณต้องการคืนค่ารายการ${type === 'topic' ? 'หัวข้อ' : 'ผู้บอก'}ทั้งหมดใช่หรือไม่?\n(รายการที่สร้างเองและซ่อนไว้จะถูกลบทั้งหมด)`)) {
+localStorage.removeItem(STORAGE_KEY);
+localStorage.removeItem(HIDDEN_STORAGE_KEY);
+location.release();
+}
+});
+
+document.getElementById(`cancel${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).addEventListener('click', () => {
+document.getElementById(MODAL_ID).style.display = 'none';
+});
+};
+
+setupManagement('topic');
+setupManagement('person');
+
+const dateInput = document.getElementById('dateInput');
+const calendarButton = document.getElementById('calendarButton');
+const hiddenDateInput = document.getElementById('hiddenDateInput');
+const today = new Date();
+dateInput.value = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear() + 543}`;
+calendarButton.addEventListener('click', () => {
+try { hiddenDateInput.showPicker(); } catch (error) { hiddenDateInput.click(); }
+});
+hiddenDateInput.addEventListener('change', (e) => {
+    const selectedDate = e.target.value;
+    if (selectedDate) {
+        const parts = selectedDate.split('-');
+        dateInput.value = `${parts[2]}/${parts[1]}/${parseInt(parts[0], 10) + 543}`;
+    } else {
+        // เมื่อผู้ใช้ล้างค่า ให้ตั้งเป็นวันปัจจุบัน
+        const today = new Date();
+        dateInput.value = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear() + 543}`;
+    }
+});
+});
+
 // --- PWA Service Worker Registration ---
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw-4digit.js')
-        .then(reg => console.log('Service Worker for 4-digit registered successfully:', reg))
-        .catch(err => console.log('Service Worker registration failed:', err));
-    });
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('./sw-unified.js')
+.then(reg => console.log('Unified Service Worker registered successfully:', reg))
+.catch(err => console.log('Service Worker registration failed:', err));
+});
 }
 </script>
 </body>
