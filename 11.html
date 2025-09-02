@@ -19,7 +19,7 @@
 <style>
 /* ---------- พื้นหลังและฟอนต์ของหน้า ---------- */
 body { font-family: Arial, sans-serif; background-color: #fffde7; margin: 0 auto; padding: 0 20px; max-width: 600px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-/* --------- ฮิดหัวเรื่อง ---------- */
+/* ---------- หัวเรื่อง ---------- */
 h1 { text-align: center; color: #e65100; margin: 10px 0 15px; font-size: 24px; }
 .blue { color: blue; }
 .red { color: red; }
@@ -66,23 +66,6 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     text-align: center;
 }
 
-/* เพิ่มโลโก้พื้นหลังให้กับ Popup ลาว */
-.popup-main-content::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('logo.png');
-    background-size: 300px auto;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 0;
-}
-
 /* Popup Header and Date */
 #popupDateDisplay {
     margin: 3px 0;
@@ -106,15 +89,17 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 }
 /* Result Header & Logo */
 .result-header { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.header-logo { width: 40px; height: auto; }
 .topic-box {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     background-color: #FF75FF;
     border: 2px solid #0070C0;
     color: white;
     border-radius: 50px;
-    padding: 8px 25px;
+    padding: 2px 2px;
     font-size: 24px;
     font-weight: bold;
     text-shadow: -1px -1px 1px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
@@ -178,10 +163,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     min-width: 150px;
 }
 /* Responsive */
-@media (max-width: 480px) { 
-    #numberInput { font-size: 18px; padding: 8px; } 
-    .topic-box { font-size: 26px; padding: 6px 25px; }
-}
+@media (max-width: 480px) { #numberInput { font-size: 18px; padding: 8px; } }
 footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 
 
@@ -377,6 +359,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
 #thaiLotteryPopupContent .close-popup { display: block; margin: 0 auto; border: none; border-radius: 5px; font-weight: bold; color: white; cursor: pointer; transition: background-color: 0.3s; padding: 10px 20px; background-color: #f44336; width: 90%; max-width: 200px; font-size: 16px; }
 #thaiLotteryPopupContent .close-popup:hover { background-color: #d32f2f; }
 #thaiLotteryPopupContent #first-prize-display { margin-top: 15px; }
+
 </style>
 </head>
 <body>
@@ -670,7 +653,11 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
             
             const popupNameDisplay = document.getElementById("popupNameDisplay");
             popupNameDisplay.className = 'topic-box';
-            popupNameDisplay.innerHTML = `<span>ผล${config.name}</span>`;
+            popupNameDisplay.innerHTML = `
+                <img src="logo.png" alt="Logo" class="header-logo">
+                <span>ผล${config.name}</span>
+                <img src="logo.png" alt="Logo" class="header-logo">
+            `;
 
             const popupTimeDisplay = document.getElementById("popupTimeDisplay");
             popupTimeDisplay.className = 'topic-time';
@@ -816,7 +803,7 @@ footer { text-align: center; margin: 15px 0; color: #666; padding: 10px 0; }
                 return `งวดวันที่ ${dateString}`;
             }
             const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคм", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคм", "มิถุนายन", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const dayOfWeek = days[date.getDay()];
             const monthName = months[date.getMonth()];
             return `งวดวัน${dayOfWeek}ที่ ${day} ${monthName} พ.ศ. ${thaiYear}`;
