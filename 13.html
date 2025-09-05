@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรแกรมสุ่มตัวเลข (กดหยุด/ตั้งเวลา)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            transition: padding 0.3s;
+        }
+
+        h1 {
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+        
+        #inputContainer {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px;
+            margin-bottom: 25px;
+            transition: opacity 0.3s, max-height 0.3s, margin 0.3s;
+            overflow: hidden;
+            max-height: 300px; 
+            opacity: 1;
+        }
+
+        #inputContainer.hidden {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+        }
+
+        .input-group {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        label.optional::after {
+            content: ' (ถ้ามี)';
+            font-weight: normal;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            font-family: 'Sarabun', sans-serif;
+        }
+        
+        select {
+            text-align-last: center;
+        }
+
+        input:focus, select:focus {
+            border-color: #3f51b5;
+            outline: none;
+        }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        .display {
+            background-color: #E8E8E8;
+            padding: 20px 10px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 3px solid #444;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .pingpong-ball {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white; 
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 2px;
+            background: radial-gradient(circle at 30% 30%, #FFB3B3, #FF00FF);
+  box-shadow:
+    inset 0 4px 6px rgba(0, 0, 0, 0.6),
+    inset 0 -4px 8px rgba(255, 255, 255, 0.2),
+    inset -4px -4px 6px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 6px rgba(255, 255, 255, 0.3);
+            text-shadow: 
+                -1px -1px 1px rgba(0, 0, 0, 0.6), /* เงาดำเข้มขึ้นเล็กน้อยเพื่อตัดกับสีขาว */
+                1px 1px 1px rgba(255, 255, 255, 0.1); /* แสงสะท้อนลดลงเล็กน้อย */
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            flex-grow: 1;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .run-button { background-color: #4CAF50; color: white; }
+        .run-button:hover { background-color: #45a049; }
+        .stop-button { background-color: #f44336; color: white; }
+        .stop-button:hover { background-color: #e53935; }
+        button:disabled { background-color: #cccccc; color: #666666; cursor: not-allowed; }
+        
+        /* สไตล์สำหรับปุ่มกลับหน้าหลัก */
+        .homeButton {
+            background-color: #607d8b;
+            color: white;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .homeButton:hover {
+            background-color: #546e7a;
+        }
+        
+        /* สไตล์สำหรับ footer */
+        footer {
+            margin-top: 25px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>โปรแกรมสุ่มตัวเลข (กดหยุด/ตั้งเวลา)</h1>
+
+        <div id="inputContainer">
+            <div class="input-group">
+                <label for="digitSelector">จำนวนหลัก</label>
+                <select id="digitSelector">
+                    <option value="2">2 หลัก</option>
+                    <option value="3">3 หลัก</option>
+                    <option value="4">4 หลัก</option>
+                    <option value="5" selected>5 หลัก</option>
+                    <option value="6">6 หลัก</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="startNumber">เลขเริ่มต้น</label>
+                <input type="text" id="startNumber">
+            </div>
+            <div class="input-group">
+                <label for="stopNumber" class="optional">เลขที่จะหยุด</label>
+                <input type="text" id="stopNumber" placeholder="เว้นว่างได้">
+            </div>
+            <div class="input-group">
+                <label for="timerInput" class="optional">เวลาหยุดอัตโนมัติ (วินาที)</label>
+                <input type="number" id="timerInput" min="1" placeholder="ปล่อยว่างได้">
+            </div>
+            <div class="input-group" style="grid-column: 1 / -1;">
+                <label for="delayInput" class="optional">หน่วงเวลาหยุดทีละหลัก (วินาที)</label>
+                <input type="number" id="delayInput" min="0.1" step="0.1" placeholder="เช่น 3 (ว่าง=หยุดทันที)">
+            </div>
+        </div>
+
+        <div id="displayArea" class="display"></div>
+
+        <div class="button-group">
+            <button id="runButton" class="run-button">รันตัวเลข</button>
+            <button id="stopButton" class="stop-button" disabled>หยุด</button>
+        </div>
+        
+        <!-- เพิ่มปุ่มกลับสู่หน้าหลัก -->
+        <button id="homeButton" class="homeButton" onclick="window.location.href='https://juckmanphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
+        
+        <!-- เพิ่ม footer -->
+        <footer>
+            <div style="text-align: center; margin-bottom: 20px;">
+                &copy; 2025 Juckmanphai. All Rights Reserved.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const displayArea = document.getElementById('displayArea');
+        const inputContainer = document.getElementById('inputContainer');
+        const digitSelector = document.getElementById('digitSelector');
+        const startNumberInput = document.getElementById('startNumber');
+        const stopNumberInput = document.getElementById('stopNumber');
+        const timerInput = document.getElementById('timerInput');
+        const delayInput = document.getElementById('delayInput');
+        const runButton = document.getElementById('runButton');
+        const stopButton = document.getElementById('stopButton');
+
+        let intervalId = null; 
+        let timeoutId = null;
+        let numDigits = 5;
+        let lastRunningNumber = '';
+
+        function renderPingPongBalls(numberString) {
+            displayArea.innerHTML = '';
+            for (const digit of numberString) {
+                const ball = document.createElement('div');
+                ball.className = 'pingpong-ball';
+                ball.textContent = digit;
+                displayArea.appendChild(ball);
+            }
+            if (intervalId) {
+                lastRunningNumber = numberString;
+            }
+        }
+
+        function generateRandomNumber(digits) {
+            const min = Math.pow(10, digits - 1);
+            const max = Math.pow(10, digits) - 1;
+            return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
+        }
+        
+        function updateDigitSettings() {
+            numDigits = parseInt(digitSelector.value, 10);
+            const placeholderText = '0'.repeat(numDigits);
+
+            startNumberInput.placeholder = placeholderText;
+            startNumberInput.maxLength = numDigits;
+            stopNumberInput.maxLength = numDigits;
+
+            if (!intervalId) {
+                const initialValue = startNumberInput.value.padStart(numDigits, '0') || placeholderText;
+                renderPingPongBalls(initialValue);
+            }
+        }
+        
+        // --- START: โค้ดที่แก้ไข ---
+        function stopRunning() {
+            if (!intervalId) return;
+
+            // 1. หยุดการสุ่มหลักและ timer ทั้งหมด
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            intervalId = null;
+            timeoutId = null;
+
+            // 2. กำหนดเลขสุดท้าย
+            const userDefinedStopNumber = stopNumberInput.value;
+            const finalNumber = (userDefinedStopNumber && userDefinedStopNumber.length === numDigits)
+                ? userDefinedStopNumber
+                : lastRunningNumber;
+
+            // 3. ปิดการใช้งานปุ่มทั้งหมดชั่วคราว
+            runButton.disabled = true;
+            stopButton.disabled = true;
+            
+            // 4. อ่านค่าหน่วงเวลาจาก input field
+            const delayInSeconds = parseFloat(delayInput.value) || 0;
+            
+            // 5. ตรวจสอบว่าต้องการหยุดแบบหน่วงเวลาหรือไม่
+            if (delayInSeconds > 0) {
+                // --- โหมดที่ 1: หยุดแบบหน่วงเวลา (มีอนิเมชัน) ---
+                let stoppedDigitIndex = 0;
+                const stoppingAnimation = setInterval(() => {
+                    const stoppedPart = finalNumber.substring(0, stoppedDigitIndex);
+                    let spinningPart = "";
+                    const remainingDigits = numDigits - stoppedDigitIndex;
+                    for (let i = 0; i < remainingDigits; i++) {
+                        spinningPart += Math.floor(Math.random() * 10);
+                    }
+                    renderPingPongBalls(stoppedPart + spinningPart);
+                }, 60);
+
+                const sequenceController = () => {
+                    stoppedDigitIndex++;
+                    if (stoppedDigitIndex >= numDigits) {
+                        clearInterval(stoppingAnimation);
+                        renderPingPongBalls(finalNumber);
+                        runButton.disabled = false;
+                        inputContainer.classList.remove('hidden');
+                    } else {
+                        setTimeout(sequenceController, delayInSeconds * 1000);
+                    }
+                };
+                sequenceController();
+
+            } else {
+                // --- โหมดที่ 2: หยุดทันที (ไม่มีอนิเมชัน) ---
+                // แสดงผลเลขสุดท้ายทันที
+                renderPingPongBalls(finalNumber);
+                
+                // คืนค่า UI ให้พร้อมทำงานครั้งต่อไป
+                runButton.disabled = false;
+                inputContainer.classList.remove('hidden');
+            }
+        }
+        // --- END: โค้ดที่แก้ไข ---
+
+        digitSelector.addEventListener('change', () => {
+             startNumberInput.value = '';
+             stopNumberInput.value = '';
+             updateDigitSettings();
+        });
+
+        startNumberInput.addEventListener('input', () => {
+            if (!intervalId) {
+                const currentValue = startNumberInput.value.padStart(numDigits, '0');
+                renderPingPongBalls(currentValue);
+            }
+        });
+
+        runButton.addEventListener('click', () => {
+            if (intervalId) return;
+            
+            if (stopNumberInput.value.length > 0 && stopNumberInput.value.length !== numDigits) {
+                alert(`ถ้าต้องการกำหนด "เลขที่จะหยุด" กรุณากรอกให้ครบ ${numDigits} หลัก`);
+                stopNumberInput.focus();
+                return;
+            }
+            if (timerInput.value && timerInput.value <= 0) {
+                alert('กรุณากรอก "เวลาหยุดอัตโนมัติ" เป็นตัวเลขที่มากกว่า 0');
+                timerInput.focus();
+                return;
+            }
+            if (delayInput.value && delayInput.value <= 0) {
+                alert('กรุณากรอก "หน่วงเวลาหยุด" เป็นตัวเลขที่มากกว่า 0');
+                delayInput.focus();
+                return;
+            }
+
+            inputContainer.classList.add('hidden');
+
+            intervalId = setInterval(() => {
+                const newNumber = generateRandomNumber(numDigits);
+                renderPingPongBalls(newNumber);
+            }, 60);
+
+            const timeInSeconds = parseInt(timerInput.value, 10);
+            if (timeInSeconds > 0) {
+                timeoutId = setTimeout(stopRunning, timeInSeconds * 1000);
+            }
+
+            runButton.disabled = true;
+            stopButton.disabled = false;
+        });
+
+        stopButton.addEventListener('click', stopRunning);
+
+        document.addEventListener('DOMContentLoaded', updateDigitSettings);
+    </script>
+
+</body>
+</html>
