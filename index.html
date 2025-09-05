@@ -109,7 +109,8 @@
         /* --- สีที่แตกต่างกันสำหรับแต่ละ Header --- */
         .container .card:nth-of-type(1) .section-header { background-color: #2563eb; } /* Blue */
         .container .card:nth-of-type(2) .section-header { background-color: #16a34a; } /* Green */
-        .container .card:nth-of-type(3) .section-header { background-color: #9333ea; } /* Purple */
+        .container .card:nth-of-type(3) .section-header { background-color: #d97706; } /* Amber - เปลี่ยนสีใหม่ */
+        .container .card:nth-of-type(4) .section-header { background-color: #9333ea; } /* Purple - เปลี่ยนตำแหน่ง */
 
         .section-subtitle {
             font-size: 1rem;
@@ -165,6 +166,9 @@
         .button-grid .btn.color-7 { background-image: linear-gradient(45deg, #84cc16, #a3e635); } /* Lime */
         .button-grid .btn.color-8 { background-image: linear-gradient(45deg, #d946ef, #e879f9); } /* Fuchsia */
         .button-grid .btn.color-9 { background-image: linear-gradient(45deg, #f59e0b, #facc15); } /* Amber */
+        .button-grid .btn.color-10 { background-image: linear-gradient(45deg, #06b6d4, #22d3ee); } /* Cyan - 新增 */
+        .button-grid .btn.color-11 { background-image: linear-gradient(45deg, #8b5cf6, #a78bfa); } /* Violet - 新增 */
+        .button-grid .btn.color-12 { background-image: linear-gradient(45deg, #ec4899, #f472b6); } /* Pink - 新增 */
         
         /* --- Footer --- */
         footer {
@@ -318,9 +322,22 @@
                 <div class="button-grid">
                     <button class="btn color-6" onclick="navigateTo('https://juckmanphai.github.io/4/05.html')">กลุ่มลาว+รัฐบาล</button>
                     <button class="btn color-2" onclick="navigateTo('https://juckmanphai.github.io/4/06.html')">กลุ่มลาว+รัฐบาล V 2</button>
-                    <button class="btn color-3" onclick="navigateTo('https://juckmanphai.github.io/4/12.html')">แปลงวันพระจากเว็บ</button>
-                    <button class="btn color-4" onclick="navigateTo('https://juckmanphai.github.io/4/11.html')">Test</button>
-                    <button class="btn color-8" onclick="navigateTo('https://juckmanphai.github.io/4/13.html')">สุ่มตัวเลข</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: แถบเมนูเครื่องมือ (ใหม่) -->
+        <div class="card">
+            <div class="section-header">
+                <span class="header-title">แถบเมนูเครื่องมือ</span>
+                <span class="arrow">▶</span>
+            </div>
+            <div id="tools-section" class="section-content">
+                <p class="section-subtitle">เครื่องมือที่มีประโยชน์สำหรับคุณ</p>
+                <div class="button-grid">
+                    <button class="btn color-10" onclick="navigateTo('https://juckmanphai.github.io/4/12.html')">แปลงวันพระจากเว็บ</button>
+                    <button class="btn color-11" onclick="navigateTo('https://juckmanphai.github.io/4/11.html')">Test</button>
+                    <button class="btn color-12" onclick="navigateTo('https://juckmanphai.github.io/4/13.html')">สุ่มตัวเลข</button>
                 </div>
             </div>
         </div>
