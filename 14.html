@@ -189,6 +189,13 @@
         .calc-button:hover { 
             background: linear-gradient(to right, #1E88E5, #1565C0); 
         }
+        .reset-button { 
+            background: linear-gradient(to right, #FF9800, #EF6C00); 
+            color: white; 
+        }
+        .reset-button:hover { 
+            background: linear-gradient(to right, #F57C00, #E65100); 
+        }
         button:disabled { 
             background: #cccccc; 
             color: #666666; 
@@ -286,6 +293,10 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
+        .repeat-button {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -294,7 +305,12 @@
         <h1>โปรแกรมสุ่มตัวเลข (คำนวณเวลาและย้อนกลับ) - แก้ไขแล้ว</h1>
 
         <div class="info-box">
-            <strong>การแก้ไข:</strong> แก้ไขฟังก์ชันการสุ่มตัวเลขให้ครอบคลุมช่วงที่ถูกต้องสำหรับทุกจำนวนหลัก
+            <strong>การแก้ไข:</strong> 
+            <ul>
+                <li>ปรับปรุงการส่งผ่านค่า Initial Seed และสถานะของ PRNG เพื่อให้การคำนวณย้อนกลับแม่นยำและสอดคล้องกัน</li>
+                <li>แก้ไขปัญหาไม่สามารถใช้งานซ้ำได้หลังจากคำนวณเวลาเสร็จ</li>
+                <li>เปิดใช้งานช่องกรอกเลขเริ่มต้นในส่วนคำนวณย้อนกลับ</li>
+            </ul>
         </div>
 
         <div class="section">
@@ -336,6 +352,7 @@
             <div class="button-group">
                 <button id="runButton" class="run-button">เริ่มสุ่ม</button>
                 <button id="stopButton" class="stop-button" disabled>หยุด</button>
+                <button id="resetButton" class="reset-button">รีเซ็ต</button>
             </div>
             
             <div id="timeResult" class="time-result" style="display: none;">
@@ -344,7 +361,11 @@
                 <p>เลขเป้าหมาย: <span id="stopNumberResult" class="highlight">000</span></p>
                 <p>เวลาใช้ทั้งหมด: <span id="timeUsed" class="highlight">0 วินาที</span></p>
                 <p>จำนวนครั้งที่สุ่ม: <span id="attemptCount" class="highlight">0</span></p>
-                <p>Initial Seed: <span id="initialSeedResult" class="highlight">N/A</span></p>
+                <p>Initial Seed State: <span id="initialSeedResult" class="highlight">N/A</span></p>
+                
+                <div class="repeat-button">
+                    <button id="repeatButton" class="run-button">ทำการทดสอบอีกครั้ง</button>
+                </div>
             </div>
         </div>
         
@@ -363,12 +384,12 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for="reverseStartNumber">เลขเริ่มต้น</label>
+                    <label for="reverseStartNumber">เลขเริ่มต้น (สำหรับอ้างอิง)</label>
                     <input type="text" id="reverseStartNumber" placeholder="เช่น 100" value="422">
                 </div>
                 <div class="input-group">
-                    <label for="reverseInitialSeedInput">Initial Seed</label>
-                    <input type="text" id="reverseInitialSeedInput" placeholder="ค่า Seed จากผลลัพธ์">
+                    <label for="reverseInitialSeedInput">Initial Seed State (a,b,c,d)</label>
+                    <input type="text" id="reverseInitialSeedInput" placeholder="ค่า Seed State จากผลลัพธ์">
                 </div>
                 <div class="input-group">
                     <label for="reverseAttemptsInput">จำนวนครั้งที่สุ่ม</label>
@@ -380,8 +401,7 @@
             
             <div id="reverseResult" class="time-result" style="margin-top: 25px; display: none;">
                 <h3>ผลลัพธ์การคำนวณย้อนกลับ</h3>
-                <p>เลขเริ่มต้น: <span id="reverseStartNumberResult" class="highlight">0</span></p>
-                <p>Initial Seed: <span id="reverseSeedResult" class="highlight">0</span></p>
+                <p>Initial Seed State: <span id="reverseSeedResult" class="highlight">0</span></p>
                 <p>จำนวนครั้ง: <span id="reverseAttemptsResult" class="highlight">0</span></p>
                 <p>ตัวเลขผลลัพธ์: <span id="reverseNumberResult" class="highlight">000</span></p>
             </div>
@@ -395,38 +415,46 @@
     </div>
 
     <script>
-        // --- Improved Deterministic PRNG (sfc32) ---
+        // --- Deterministic PRNG (sfc32) with state export/import ---
+        // Modified to return the current state (a, b, c, d)
         function sfc32(a, b, c, d) {
-            return function() {
-                a |= 0; b |= 0; c |= 0; d |= 0;
-                let t = (a + b | 0) + d | 0;
-                d = d + 1 | 0;
-                a = b ^ b >>> 9;
-                b = c + (c << 3) | 0;
-                c = (c << 21 | c >>> 11);
-                c = c + t | 0;
+            let state = { a: a | 0, b: b | 0, c: c | 0, d: d | 0 };
+
+            const next = function() {
+                let t = (state.a + state.b | 0) + state.d | 0;
+                state.d = state.d + 1 | 0;
+                state.a = state.b ^ state.b >>> 9;
+                state.b = state.c + (state.c << 3) | 0;
+                state.c = (state.c << 21 | state.c >>> 11);
+                state.c = state.c + t | 0;
                 return (t >>> 0) / 4294967296;
-            }
+            };
+
+            next.getState = () => [state.a, state.b, state.c, state.d];
+            next.setState = (newState) => {
+                state.a = newState[0] | 0;
+                state.b = newState[1] | 0;
+                state.c = newState[2] | 0;
+                state.d = newState[3] | 0;
+            };
+            
+            return next;
         }
 
         // Improved seed generation function for large numbers
-        function generateSeedFromString(str) {
-            // Use a more robust method to generate seeds from strings
-            const seeds = [0x9E3779B9, 0x243F6A88, 0xB7E15162, 0xDEADBEEF];
+        // This now generates the initial a, b, c, d array
+        function generateInitialSeedState(startNumStr, stopNumStr, timestampStr) {
+            const seedString = `${startNumStr}|${stopNumStr}|${timestampStr}`;
+            let a = 0x9E3779B9, b = 0x243F6A88, c = 0xB7E15162, d = 0xDEADBEEF;
             
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                seeds[i % 4] = ((seeds[i % 4] << 5) - seeds[i % 4]) + char;
-                seeds[i % 4] |= 0; // Convert to 32bit integer
+            for (let i = 0; i < seedString.length; i++) {
+                const char = seedString.charCodeAt(i);
+                a = (a + char) | 0;
+                b = (b ^ char) | 0;
+                c = (c + (char << 3)) | 0;
+                d = (d ^ (char >>> 5)) | 0;
             }
-            
-            return seeds;
-        }
-
-        // Function to generate a consistent initial seed
-        function generateInitialSeed(startNum, stopNum, timestamp) {
-            // Combine values with a separator to ensure uniqueness
-            return `${startNum}|${stopNum}|${timestamp}`;
+            return [a, b, c, d];
         }
 
         // Elements for random number section
@@ -436,6 +464,8 @@
         const stopNumberInput = document.getElementById('stopNumber');
         const runButton = document.getElementById('runButton');
         const stopButton = document.getElementById('stopButton');
+        const resetButton = document.getElementById('resetButton');
+        const repeatButton = document.getElementById('repeatButton');
         const timeResult = document.getElementById('timeResult');
         const startNumberResult = document.getElementById('startNumberResult');
         const stopNumberResult = document.getElementById('stopNumberResult');
@@ -451,20 +481,19 @@
         const reverseAttemptsInput = document.getElementById('reverseAttemptsInput');
         const reverseCalculateButton = document.getElementById('reverseCalculateButton');
         const reverseResult = document.getElementById('reverseResult');
-        const reverseStartNumberResult = document.getElementById('reverseStartNumberResult');
         const reverseSeedResult = document.getElementById('reverseSeedResult');
         const reverseAttemptsResult = document.getElementById('reverseAttemptsResult');
         const reverseNumberResult = document.getElementById('reverseNumberResult');
 
         let intervalId = null; 
-        let numDigits = 3; // เปลี่ยนค่าเริ่มต้นเป็น 3 หลัก
+        let numDigits = 3; 
         let startTime = null;
         let attempts = 0;
         let currentNumber = '';
         let lastTimeUsed = 0;
         let lastAttempts = 0;
-        let currentInitialSeed = '';
-        let randomFunc = null;
+        let currentInitialSeedState = []; // Store the initial seed state array
+        let randomFunc = null; // The sfc32 function instance
 
         // ฟังก์ชันสำหรับการเรนเดอร์ลูกปิงปอง
         function renderPingPongBalls(numberString) {
@@ -475,7 +504,6 @@
                 ball.textContent = digit;
                 displayArea.appendChild(ball);
                 
-                // ลบ animation class หลังจาก animation เสร็จสิ้น
                 setTimeout(() => {
                     ball.classList.remove('animated');
                 }, 500);
@@ -484,14 +512,8 @@
 
         // ฟังก์ชันสำหรับการสุ่มตัวเลข (ใช้ deterministic PRNG)
         function generateRandomNumber(digits, randFn) {
-            // สำหรับ digits หลัก จะมีค่าตั้งแต่ 0 ถึง 10^digits - 1
             const max = Math.pow(10, digits) - 1;
-            const randomValue = Math.floor(randFn() * (max + 1)); // 0 ถึง max
-            
-            // ตรวจสอบให้แน่ใจว่าค่าที่ได้ไม่เกินขีดจำกัด
-            if (randomValue > max) {
-                return max.toString().padStart(digits, '0');
-            }
+            const randomValue = Math.floor(randFn() * (max + 1)); 
             
             return randomValue.toString().padStart(digits, '0');
         }
@@ -508,7 +530,6 @@
             stopNumberInput.placeholder = placeholderText;
             stopNumberInput.maxLength = numDigits;
 
-            // อัพเดทข้อมูลจำนวนตัวเลข
             digitInfo.textContent = `สำหรับตัวเลข ${numDigits} หลัก มีทั้งหมด ${formattedTotal} ตัว (${placeholderText} ถึง ${'9'.repeat(numDigits)})`;
 
             if (!intervalId) {
@@ -530,51 +551,63 @@
         function stopRunning() {
             if (!intervalId) return;
 
-            // หยุดการสุ่ม
             clearInterval(intervalId);
             intervalId = null;
 
-            // คำนวณเวลาใช้
             const endTime = Date.now();
             const timeElapsed = endTime - startTime;
             lastTimeUsed = timeElapsed;
             lastAttempts = attempts;
             
-            // แสดงผลเวลา
             startNumberResult.textContent = startNumberInput.value.padStart(numDigits, '0') || '0'.repeat(numDigits);
             stopNumberResult.textContent = stopNumberInput.value.padStart(numDigits, '0');
             timeUsed.textContent = formatTime(timeElapsed);
             attemptCount.textContent = attempts.toLocaleString();
-            initialSeedResult.textContent = currentInitialSeed; // Display the seed
+            // Display the initial seed state as a string for copy-pasting
+            initialSeedResult.textContent = JSON.stringify(currentInitialSeedState); 
             timeResult.style.display = 'block';
 
-            // คืนค่า UI ให้พร้อมทำงานครั้งต่อไป
             runButton.disabled = false;
             stopButton.disabled = true;
+        }
+
+        // ฟังก์ชันรีเซ็ตการตั้งค่า
+        function resetSettings() {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            
+            const placeholderText = '0'.repeat(numDigits);
+            renderPingPongBalls(placeholderText);
+            
+            runButton.disabled = false;
+            stopButton.disabled = true;
+            timeResult.style.display = 'none';
+            
+            // ไม่รีเซ็ตค่าที่ผู้ใช้กรอก เพื่อให้สามารถใช้งานซ้ำได้
         }
 
         // ฟังก์ชันคำนวณย้อนกลับ
         function calculateReverse() {
             const reverseDigits = parseInt(reverseDigitSelector.value, 10);
-            const startNumber = reverseStartNumberInput.value;
-            const seedToUse = reverseInitialSeedInput.value;
+            const seedStateString = reverseInitialSeedInput.value;
             const attemptsValue = parseInt(reverseAttemptsInput.value);
             
-            // ตรวจสอบข้อมูลที่กรอก
-            if (!startNumber) {
-                alert('กรุณากรอกเลขเริ่มต้น');
-                reverseStartNumberInput.focus();
+            if (!seedStateString) {
+                alert('กรุณากรอก Initial Seed State ที่ใช้ในการสุ่มครั้งนั้นๆ (ในรูปแบบ [a,b,c,d])');
+                reverseInitialSeedInput.focus();
                 return;
             }
-            
-            if (startNumber.length !== reverseDigits) {
-                alert(`เลขเริ่มต้นต้องมี ${reverseDigits} หลัก`);
-                reverseStartNumberInput.focus();
-                return;
-            }
-            
-            if (!seedToUse) {
-                alert('กรุณากรอก Initial Seed ที่ใช้ในการสุ่มครั้งนั้นๆ');
+
+            let parsedSeedState;
+            try {
+                parsedSeedState = JSON.parse(seedStateString);
+                if (!Array.isArray(parsedSeedState) || parsedSeedState.length !== 4) {
+                    throw new Error('Seed State ต้องเป็น Array ที่มี 4 ตัวเลข');
+                }
+            } catch (e) {
+                alert('รูปแบบ Initial Seed State ไม่ถูกต้อง. กรุณากรอกเป็น Array ของตัวเลข 4 ตัว เช่น [123,456,789,101]');
                 reverseInitialSeedInput.focus();
                 return;
             }
@@ -585,18 +618,15 @@
                 return;
             }
             
-            // สร้าง PRNG ด้วย seed ที่ให้มา
-            const seeds = generateSeedFromString(seedToUse);
-            const reverseRandomGenerator = sfc32(seeds[0], seeds[1], seeds[2], seeds[3]); 
+            // สร้าง PRNG ด้วย seed state ที่ให้มา
+            const reverseRandomGenerator = sfc32(...parsedSeedState); 
             
-            let calculatedNumber = startNumber;
+            let calculatedNumber = '';
             for (let i = 0; i < attemptsValue; i++) {
                 calculatedNumber = generateRandomNumber(reverseDigits, reverseRandomGenerator);
             }
             
-            // แสดงผลลัพธ์
-            reverseStartNumberResult.textContent = startNumber;
-            reverseSeedResult.textContent = seedToUse;
+            reverseSeedResult.textContent = seedStateString;
             reverseAttemptsResult.textContent = attemptsValue;
             reverseNumberResult.textContent = calculatedNumber;
             reverseResult.style.display = 'block';
@@ -604,8 +634,6 @@
         
         // อีเวนต์เมื่อเปลี่ยนจำนวนหลัก
         digitSelector.addEventListener('change', () => {
-            startNumberInput.value = '';
-            stopNumberInput.value = '';
             updateDigitSettings();
             timeResult.style.display = 'none';
         });
@@ -623,7 +651,6 @@
         runButton.addEventListener('click', () => {
             if (intervalId) return;
             
-            // ตรวจสอบความถูกต้องของข้อมูล
             if (!startNumberInput.value) {
                 alert('กรุณากรอกเลขเริ่มต้น');
                 startNumberInput.focus();
@@ -653,49 +680,43 @@
                 return;
             }
 
-            // ตรวจสอบว่าเป็นตัวเลขที่ถูกต้อง
             if (isNaN(parseInt(startNumberInput.value)) || isNaN(parseInt(stopNumberInput.value))) {
                 alert('เลขเริ่มต้นและเลขเป้าหมายต้องเป็นตัวเลข');
                 return;
             }
 
-            // รีเซ็ตค่า
             attempts = 0;
             startTime = Date.now();
             
-            // Generate seed based on startNumber, stopNumber, and startTime
-            currentInitialSeed = generateInitialSeed(
+            // Generate initial seed state (a, b, c, d array)
+            currentInitialSeedState = generateInitialSeedState(
                 startNumberInput.value, 
                 stopNumberInput.value, 
                 startTime.toString()
             );
             
-            // Initialize deterministic PRNG with the generated seed
-            const seeds = generateSeedFromString(currentInitialSeed);
-            randomFunc = sfc32(seeds[0], seeds[1], seeds[2], seeds[3]);
+            // Initialize deterministic PRNG with the generated seed state
+            randomFunc = sfc32(...currentInitialSeedState);
             
             timeResult.style.display = 'none';
             
-            // เริ่มการสุ่ม
             intervalId = setInterval(() => {
                 attempts++;
                 currentNumber = generateRandomNumber(numDigits, randomFunc);
                 renderPingPongBalls(currentNumber);
                 
-                // ตรวจสอบว่าตรงกับเลขเป้าหมายหรือไม่
                 const paddedStopNumber = stopNumberInput.value.padStart(numDigits, '0');
                 if (currentNumber === paddedStopNumber) {
                     stopRunning();
                     alert(`พบตัวเลขเป้าหมาย ${paddedStopNumber} หลังจากสุ่ม ${attempts} ครั้ง`);
                 }
                 
-                // เผื่อไว้กรณีสุ่มเกิน 10,000 ครั้งแล้วยังไม่เจอ ให้หยุดอัตโนมัติ
                 const maxAttempts = Math.pow(10, numDigits) * 10;
                 if (attempts > maxAttempts) {
                     stopRunning();
                     alert(`สุ่มเกิน ${maxAttempts.toLocaleString()} ครั้งแล้วยังไม่พบตัวเลขเป้าหมาย กรุณาตรวจสอบการตั้งค่า`);
                 }
-            }, 10); // สุ่มเร็วมากๆ เพื่อให้เห็นการเปลี่ยนแปลง
+            }, 10); 
 
             runButton.disabled = true;
             stopButton.disabled = false;
@@ -704,16 +725,20 @@
         // อีเวนต์เมื่อกดปุ่มหยุด
         stopButton.addEventListener('click', stopRunning);
         
+        // อีเวนต์เมื่อกดปุ่มรีเซ็ต
+        resetButton.addEventListener('click', resetSettings);
+        
+        // อีเวนต์เมื่อกดปุ่มทำการทดสอบอีกครั้ง
+        repeatButton.addEventListener('click', () => {
+            timeResult.style.display = 'none';
+            const placeholderText = '0'.repeat(numDigits);
+            renderPingPongBalls(placeholderText);
+        });
+        
         // อีเวนต์เมื่อกดปุ่มคำนวณย้อนกลับ
         reverseCalculateButton.addEventListener('click', calculateReverse);
         
         // อีเวนต์เมื่อกด Enter ในช่องกรอกต่างๆ
-        reverseStartNumberInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                calculateReverse();
-            }
-        });
-        
         reverseInitialSeedInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 calculateReverse();
@@ -728,13 +753,11 @@
 
         // อัพเดทการตั้งค่าเมื่อโหลดหน้า
         document.addEventListener('DOMContentLoaded', () => {
-            // ตั้งค่าเริ่มต้นเป็น 3 หลัก
             digitSelector.value = "3";
             reverseDigitSelector.value = "3";
             
             updateDigitSettings();
             
-            // ตั้งค่าเริ่มต้นสำหรับส่วนคำนวณย้อนกลับ
             const reverseDigits = parseInt(reverseDigitSelector.value, 10);
             const placeholderText = '0'.repeat(reverseDigits);
             reverseStartNumberInput.placeholder = placeholderText;
