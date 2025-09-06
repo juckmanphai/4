@@ -351,6 +351,35 @@
                 width: 100%;
             }
         }
+        
+        .timestamp-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .number-cell {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        
+        .excel-guide {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .excel-guide h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .excel-steps {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -397,6 +426,20 @@
                 
                 <p><strong>ตัวเลข 4 ตัว</strong> ได้มาจากการตัดเอา 4 ตัวหลังของเลข 6 ตัว</p>
                 <p><strong>ตัวเลข 3 ตัว</strong> ได้มาจากการตัดเอา 3 ตัวหลังของเลข 6 ตัว</p>
+                <p class="timestamp-info">ชื่อไฟล์ CSV จะมีวันที่และเวลาเพื่อป้องกันการซ้ำกัน</p>
+            </div>
+            
+            <div class="excel-guide">
+                <h3>คำแนะนำสำหรับการเปิดไฟล์ CSV ใน Excel</h3>
+                <p>เพื่อให้ Excel แสดงตัวเลข 0 นำหน้าได้ถูกต้อง:</p>
+                <ol class="excel-steps">
+                    <li>เปิดโปรแกรม Excel</li>
+                    <li>ไปที่เมนู "ข้อมูล" (Data)</li>
+                    <li>เลือก "จากข้อความ/CSV" (From Text/CSV)</li>
+                    <li>เลือกไฟล์ CSV ที่ดาวน์โหลด</li>
+                    <li>ในขั้นตอนนำเข้า ให้กำหนดรูปแบบคอลัมน์ตัวเลขเป็น "ข้อความ" (Text)</li>
+                    <li>กดปุ่ม "โหลด" (Load)</li>
+                </ol>
             </div>
         </div>
     </div>
@@ -477,12 +520,13 @@
             
             let csvContent = "วันที่,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
             filteredData.forEach(item => {
-                csvContent += `"${item.date}","${item.number6}","${item.number4}","${item.number3}"\n`;
+                // ใช้รูปแบบ CSV มาตรฐานโดยไม่มีเครื่องหมายพิเศษ
+                csvContent += `${item.date},${item.number6},${item.number4},${item.number3}\n`;
             });
             
             navigator.clipboard.writeText(csvContent)
                 .then(() => {
-                    document.getElementById('status').textContent = 'คัดลอกไปยังคลิปบอร์ดแล้ว! สามารถวางใน Excel ได้';
+                    document.getElementById('status').textContent = 'คัดลอกไปยังคลิปบอร์ดแล้ว!';
                     document.getElementById('status').className = 'success';
                 })
                 .catch(err => {
@@ -503,7 +547,8 @@
             let csvContent = BOM + "วันที่,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
             
             filteredData.forEach(item => {
-                csvContent += `"${item.date}","${item.number6}","${item.number4}","${item.number3}"\n`;
+                // ใช้รูปแบบ CSV มาตรฐานโดยไม่มีเครื่องหมายพิเศษ
+                csvContent += `${item.date},${item.number6},${item.number4},${item.number3}\n`;
             });
             
             // สร้าง Blob object
@@ -513,11 +558,18 @@
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
             
-            // ตั้งชื่อไฟล์ด้วยวันที่ปัจจุบัน
+            // ตั้งชื่อไฟล์ด้วยวันที่และเวลาปัจจุบัน (ป้องกันชื่อซ้ำ)
             const now = new Date();
-            const dateString = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const dateTimeString = `${year}${month}${day}_${hours}${minutes}${seconds}`;
             link.setAttribute("href", url);
-            link.setAttribute("download", `หวยลาว_${dateString}.csv`);
+            link.setAttribute("download", `หวยลาว_${dateTimeString}.csv`);
             link.style.visibility = 'hidden';
             
             // เพิ่มลิงก์ไปยัง DOM และคลิกเพื่อดาวน์โหลด
@@ -527,7 +579,7 @@
             // ลบลิงก์หลังจากดาวน์โหลด
             document.body.removeChild(link);
             
-            document.getElementById('status').textContent = 'ดาวน์โหลดไฟล์ CSV สำเร็จ';
+            document.getElementById('status').textContent = 'ดาวน์โหลดไฟล์ CSV สำเร็จ: ' + `หวยลาว_${dateTimeString}.csv`;
             document.getElementById('status').className = 'success';
         });
         
@@ -576,7 +628,7 @@
                 'กุมภาพันธ์': '02',
                 'มีนาคม': '03',
                 'เมษายน': '04',
-                'พฤษภาคм': '05',
+                'พฤษภาคม': '05',
                 'มิถุนายน': '06',
                 'กรกฎาคม': '07',
                 'สิงหาคม': '08',
@@ -614,9 +666,9 @@
                 tableHTML += `
                     <tr>
                         <td>${item.date}</td>
-                        <td><strong>${item.number6}</strong></td>
-                        <td>${item.number4}</td>
-                        <td>${item.number3}</td>
+                        <td class="number-cell"><strong>${item.number6}</strong></td>
+                        <td class="number-cell">${item.number4}</td>
+                        <td class="number-cell">${item.number3}</td>
                     </tr>
                 `;
             });
