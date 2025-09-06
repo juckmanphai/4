@@ -285,7 +285,7 @@
             font-family: 'Sarabun', 'Arial', sans-serif;
         }
         
-        /* สไตล์สำหรับปุ่มดาวน์โหลด CSV */
+        /* สไตล์สำหรับปุ่มดาวน์โหลด XLSX */
         #downloadBtn {
             background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
             box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
@@ -380,7 +380,24 @@
         .excel-steps {
             margin-left: 20px;
         }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
+    <!-- เพิ่มไลบรารี SheetJS สำหรับการสร้างไฟล์ XLSX -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <h1>กรองข้อมูลหวยลาวจากไฟล์ข้อความ</h1>
@@ -410,11 +427,11 @@
             <div id="outputResult"></div>
             <div class="output-buttons">
                 <button id="copyBtn">คัดลอกไปยังคลิปบอร์ด</button>
-                <button id="downloadBtn">ดาวน์โหลดไฟล์ CSV</button>
+                <button id="downloadBtn">ดาวน์โหลดไฟล์ Excel (XLSX)</button>
             </div>
             
             <div class="info-box">
-                <p><strong>คำแนะนำ:</strong> ไฟล์ CSV ที่ดาวน์โหลดจะแสดงผลภาษาไทยได้ถูกต้องใน Excel</p>
+                <p><strong>คำแนะนำ:</strong> ไฟล์ Excel (.xlsx) ที่ดาวน์โหลดจะแสดงผลภาษาไทยและตัวเลข 0 นำหน้าได้ถูกต้อง</p>
                 
                 <div class="number-example">
                     <span class="number-part">เลข 6 ตัว: 078775</span>
@@ -426,20 +443,17 @@
                 
                 <p><strong>ตัวเลข 4 ตัว</strong> ได้มาจากการตัดเอา 4 ตัวหลังของเลข 6 ตัว</p>
                 <p><strong>ตัวเลข 3 ตัว</strong> ได้มาจากการตัดเอา 3 ตัวหลังของเลข 6 ตัว</p>
-                <p class="timestamp-info">ชื่อไฟล์ CSV จะมีวันที่และเวลาเพื่อป้องกันการซ้ำกัน</p>
+                <p class="timestamp-info">ชื่อไฟล์จะมีวันที่และเวลาเพื่อป้องกันการซ้ำกัน</p>
             </div>
             
             <div class="excel-guide">
-                <h3>คำแนะนำสำหรับการเปิดไฟล์ CSV ใน Excel</h3>
-                <p>เพื่อให้ Excel แสดงตัวเลข 0 นำหน้าได้ถูกต้อง:</p>
-                <ol class="excel-steps">
-                    <li>เปิดโปรแกรม Excel</li>
-                    <li>ไปที่เมนู "ข้อมูล" (Data)</li>
-                    <li>เลือก "จากข้อความ/CSV" (From Text/CSV)</li>
-                    <li>เลือกไฟล์ CSV ที่ดาวน์โหลด</li>
-                    <li>ในขั้นตอนนำเข้า ให้กำหนดรูปแบบคอลัมน์ตัวเลขเป็น "ข้อความ" (Text)</li>
-                    <li>กดปุ่ม "โหลด" (Load)</li>
-                </ol>
+                <h3>ข้อดีของไฟล์ Excel (XLSX)</h3>
+                <ul class="excel-steps">
+                    <li>แสดงผลภาษาไทยได้ถูกต้อง</li>
+                    <li>รักษารูปแบบตัวเลข 0 นำหน้าได้ครบถ้วน</li>
+                    <li>เปิดได้ทันทีโดยไม่ต้องตั้งค่าเพิ่มเติม</li>
+                    <li>รองรับการทำงานกับโปรแกรมสเปรดชีตทุกโปรแกรม</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -542,45 +556,62 @@
                 return;
             }
             
-            // เพิ่ม BOM สำหรับ UTF-8 เพื่อให้ Excel อ่านภาษาไทยได้ถูกต้อง
-            const BOM = "\uFEFF";
-            let csvContent = BOM + "วันที่,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
+            // แสดงสถานะกำลังสร้างไฟล์
+            document.getElementById('status').innerHTML = '<span class="loading"></span>กำลังสร้างไฟล์ Excel...';
+            document.getElementById('status').className = '';
             
-            filteredData.forEach(item => {
-                // ใช้รูปแบบ CSV มาตรฐานโดยไม่มีเครื่องหมายพิเศษ
-                csvContent += `${item.date},${item.number6},${item.number4},${item.number3}\n`;
-            });
-            
-            // สร้าง Blob object
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            
-            // สร้างลิงก์สำหรับดาวน์โหลด
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            // ตั้งชื่อไฟล์ด้วยวันที่และเวลาปัจจุบัน (ป้องกันชื่อซ้ำ)
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            const dateTimeString = `${year}${month}${day}_${hours}${minutes}${seconds}`;
-            link.setAttribute("href", url);
-            link.setAttribute("download", `หวยลาว_${dateTimeString}.csv`);
-            link.style.visibility = 'hidden';
-            
-            // เพิ่มลิงก์ไปยัง DOM และคลิกเพื่อดาวน์โหลด
-            document.body.appendChild(link);
-            link.click();
-            
-            // ลบลิงก์หลังจากดาวน์โหลด
-            document.body.removeChild(link);
-            
-            document.getElementById('status').textContent = 'ดาวน์โหลดไฟล์ CSV สำเร็จ: ' + `หวยลาว_${dateTimeString}.csv`;
-            document.getElementById('status').className = 'success';
+            // ใช้ setTimeout เพื่อให้ UI อัปเดตสถานะก่อนเริ่มการประมวลผล
+            setTimeout(function() {
+                try {
+                    // สร้าง workbook ใหม่
+                    const wb = XLSX.utils.book_new();
+                    
+                    // แปลงข้อมูลเป็น worksheet
+                    const wsData = [
+                        ["วันที่", "รางวัล 6 ตัว", "รางวัล 4 ตัว", "รางวัล 3 ตัว"]
+                    ];
+                    
+                    filteredData.forEach(item => {
+                        wsData.push([item.date, item.number6, item.number4, item.number3]);
+                    });
+                    
+                    const ws = XLSX.utils.aoa_to_sheet(wsData);
+                    
+                    // ตั้งค่าความกว้างของคอลัมน์
+                    const colWidths = [
+                        { wch: 15 }, // วันที่
+                        { wch: 12 }, // รางวัล 6 ตัว
+                        { wch: 12 }, // รางวัล 4 ตัว
+                        { wch: 12 }  // รางวัล 3 ตัว
+                    ];
+                    ws['!cols'] = colWidths;
+                    
+                    // ตั้งชื่อ worksheet
+                    XLSX.utils.book_append_sheet(wb, ws, "หวยลาว");
+                    
+                    // สร้างชื่อไฟล์ด้วยวันที่และเวลาปัจจุบัน
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    
+                    const dateTimeString = `${year}${month}${day}_${hours}${minutes}${seconds}`;
+                    const fileName = `หวยลาว_${dateTimeString}.xlsx`;
+                    
+                    // สร้างไฟล์ XLSX และดาวน์โหลด
+                    XLSX.writeFile(wb, fileName);
+                    
+                    document.getElementById('status').textContent = 'ดาวน์โหลดไฟล์ Excel สำเร็จ: ' + fileName;
+                    document.getElementById('status').className = 'success';
+                } catch (error) {
+                    document.getElementById('status').textContent = 'เกิดข้อผิดพลาดในการสร้างไฟล์: ' + error.message;
+                    document.getElementById('status').className = 'error';
+                    console.error(error);
+                }
+            }, 100);
         });
         
         function filterLaoLotteryData(input) {
@@ -676,7 +707,7 @@
             tableHTML += `
                     </tbody>
                 </table>
-                <p style="margin-top: 15px;">สามารถคัดลอกข้อมูลไปยัง Excel ได้โดยคลิกปุ่ม "คัดลอกไปยังคลิปบอร์ด" หรือดาวน์โหลดเป็นไฟล์ CSV</p>
+                <p style="margin-top: 15px;">สามารถคัดลอกข้อมูลไปยัง Excel ได้โดยคลิกปุ่ม "คัดลอกไปยังคลิปบอร์ด" หรือดาวน์โหลดเป็นไฟล์ Excel</p>
             `;
             
             outputDiv.innerHTML = tableHTML;
