@@ -285,7 +285,7 @@
             font-family: 'Sarabun', 'Arial', sans-serif;
         }
         
-        /* สไตล์สำหรับปุ่มดาวน์โหลด XLSX */
+        /* สไตล์สำหรับปุ่มดาวน์โหล드 XLSX */
         #downloadBtn {
             background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
             box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
@@ -405,7 +405,12 @@
     <div class="container">
         <div class="instructions">
             <p>วางเนื้อหาจากไฟล์ .txt ที่มีข้อมูลหวยลาวในช่องด้านล่าง หรืออัปโหลดไฟล์ แล้วกดปุ่ม "กรองข้อมูล" เพื่อจัดเรียงข้อมูล</p>
-            <p>ข้อมูลตัวอย่าง: <span class="highlight">หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775 เลข 5 ตัว 78775</span></p>
+            <p>รองรับรูปแบบข้อมูล: 
+                <span class="highlight">หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775</span>, 
+                <span class="highlight">contentID=25680905" title="ตรวจหวย หวยลาวงวดวันที่ 5 กันยายน 2568">05/09/2568</a></td><td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">078775</td></span>,
+                และรูปแบบใหม่:
+                <span class="highlight">`<td>... title=" ...">05/09/2568</a></td><td ...>078775</td>`</span>
+            </p>
         </div>
         
         <div class="input-section">
@@ -615,39 +620,47 @@
         });
         
         function filterLaoLotteryData(input) {
-            const lines = input.split('\n');
             const results = [];
             
+            // 1. ค้นหารูปแบบ HTML (รวมรูปแบบเก่าและใหม่)
+            // รูปแบบที่ 1: title="ตรวจหวย หวยลาวงวดวันที่ ...">05/09/2568</a></td><td ...>078775</td>
+            // รูปแบบที่ 2 (ใหม่): <td ... title=" ...">05/09/2568</a></td><td ...>078775</td>
+            const htmlPattern = /<td[^>]*>(?:<a[^>]*title="[^>]*>)?(\d{2}\/\d{2}\/\d{4})(?:<\/a>)?<\/td>\s*<td[^>]*>(\d{6})<\/td>/g;
+            let htmlMatch;
+            while ((htmlMatch = htmlPattern.exec(input)) !== null) {
+                const date = htmlMatch[1];
+                const number6 = htmlMatch[2];
+                const number4 = number6.slice(2);
+                const number3 = number6.slice(3);
+                
+                results.push({ date, number6, number4, number3 });
+            }
+            
+            // 2. ค้นหารูปแบบข้อความ (เดิม)
+            const lines = input.split('\n');
             for (const line of lines) {
                 if (!line.trim()) continue;
                 
-                // ตรวจสอบว่าเป็นข้อมูลหวยลาวหรือไม่
-                if (!line.includes('หวยลาว')) continue;
-                
-                // แยกข้อมูลวันที่
-                const dateMatch = line.match(/งวดวัน\S+\s+(\d+)\s+(\S+)\s+(\d+)/);
-                if (!dateMatch) continue;
-                
-                const day = dateMatch[1].padStart(2, '0');
-                const month = convertMonthToNumber(dateMatch[2]);
-                const year = dateMatch[3];
-                
-                // แยกข้อมูลเลข 6 ตัว
-                const numberMatch = line.match(/เลข 6 ตัว\s+(\d{6})/);
-                if (!numberMatch) continue;
-                
-                const number6 = numberMatch[1];
-                // ตัดเอา 4 ตัวหลังจากเลข 6 ตัว
-                const number4 = number6.slice(2);
-                // ตัดเอา 3 ตัวหลังจากเลข 6 ตัว
-                const number3 = number6.slice(3);
-                
-                results.push({
-                    date: `${day}/${month}/${year}`,
-                    number6: number6,
-                    number4: number4,
-                    number3: number3
-                });
+                if (line.includes('หวยลาว')) {
+                    // แยกข้อมูลวันที่
+                    const dateMatch = line.match(/งวดวัน\S+\s+(\d+)\s+(\S+)\s+(\d+)/);
+                    if (!dateMatch) continue;
+                    
+                    const day = dateMatch[1].padStart(2, '0');
+                    const month = convertMonthToNumber(dateMatch[2]);
+                    const year = dateMatch[3];
+                    const date = `${day}/${month}/${year}`;
+                    
+                    // แยกข้อมูลเลข 6 ตัว
+                    const numberMatch = line.match(/เลข 6 ตัว\s+(\d{6})/);
+                    if (!numberMatch) continue;
+                    
+                    const number6 = numberMatch[1];
+                    const number4 = number6.slice(2);
+                    const number3 = number6.slice(3);
+                    
+                    results.push({ date, number6, number4, number3 });
+                }
             }
             
             return results;
@@ -713,13 +726,19 @@
             outputDiv.innerHTML = tableHTML;
         }
         
-        // Load sample data on page load for demonstration
+      // Load sample data on page load for demonstration
         window.addEventListener('load', function() {
-            const sampleData = `หวยลาว หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775 เลข 5 ตัว 78775 เลข…
-หวยลาว หวยลาว งวดวันจันทร์ 1 กันยายน 2568 เลข 6 ตัว 204088 เลข 5 ตัว 04088 เลข…
-หวยลาว งวดวันอังคาร 2 กันยายน 2568 เลข 6 ตัว 123456 เลข 5 ตัว 23456
-ข้อมูลอื่นที่ไม่เกี่ยวข้อง
-หวยลาว งวดวันพุธ 3 กันยายน 2568 เลข 6 ตัว 987654 เลข 5 ตัว 87654`;
+            const sampleData = `contentID=25680905" title="ตรวจหวย หวยลาวงวดวันที่ 5 กันยายน 2568">05/09/2568</a></td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">078775</td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center">775</td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">75</td>
+
+หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775 เลข 5 ตัว 78775
+หวยลาว งวดวันจันทร์ 1 กันยายน 2568 เลข 6 ตัว 204088 เลข 5 ตัว 04088
+contentID=25680901" title="ตรวจหวย หวยลาวงวดวันที่ 1 กันยายน 2568">01/09/2568</a></td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">204088</td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center">088</td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">88</td>`;
             
             document.getElementById('inputData').value = sampleData;
         });
