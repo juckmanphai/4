@@ -16,23 +16,26 @@
             min-height: 100vh;
             margin: 0;
             color: #333;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
             background-color: white;
-            padding: 30px 40px;
+            padding: 25px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
-            width: 90%;
+            width: 100%;
             max-width: 650px;
             transition: padding 0.3s;
+            box-sizing: border-box;
         }
 
         h1 {
             color: #1a237e;
             margin-bottom: 20px;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
         
         .section {
@@ -41,6 +44,7 @@
             border-radius: 10px;
             background-color: #f9f9f9;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
         }
         
         .section-title {
@@ -55,7 +59,7 @@
         .input-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; 
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 20px;
         }
 
@@ -68,12 +72,13 @@
             margin-bottom: 8px;
             font-weight: bold;
             color: #555;
+            font-size: 0.95rem;
         }
 
         input[type="text"], select {
             width: 100%;
             padding: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
             border: 2px solid #ccc;
             border-radius: 8px;
@@ -100,26 +105,27 @@
         
         .display {
             background: linear-gradient(to bottom, #2c3e50, #4ca1af);
-            padding: 25px 15px;
+            padding: 20px 15px;
             border-radius: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border: 3px solid #1a237e;
-            min-height: 110px;
+            min-height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
         
         .pingpong-ball {
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             color: white; 
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             margin: 0 3px;
             background: radial-gradient(circle at 30% 30%, #ff9a9e, #fad0c4);
@@ -141,14 +147,15 @@
 
         .button-group {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         button {
             flex-grow: 1;
-            padding: 15px 20px;
-            font-size: 1.1rem;
+            padding: 14px 16px;
+            font-size: 1rem;
             font-family: 'Sarabun', sans-serif;
             font-weight: bold;
             border: none;
@@ -156,6 +163,7 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            min-width: 120px;
         }
 
         button:hover {
@@ -196,6 +204,13 @@
         .reset-button:hover { 
             background: linear-gradient(to right, #F57C00, #E65100); 
         }
+        .home-button {
+            background: linear-gradient(to right, #9C27B0, #6A1B9A);
+            color: white;
+        }
+        .home-button:hover {
+            background: linear-gradient(to right, #8E24AA, #4A148C);
+        }
         button:disabled { 
             background: #cccccc; 
             color: #666666; 
@@ -217,21 +232,26 @@
         .time-result h3 {
             margin-top: 0;
             color: #1a237e;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 15px;
         }
         
         .time-result p {
             margin: 10px 0;
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
         
         .time-result .highlight {
             font-weight: bold;
             color: #d81b60;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            word-break: break-all;
+            text-align: right;
+            flex: 1;
+            margin-left: 10px;
         }
         
         .reverse-input {
@@ -243,7 +263,7 @@
         
         .reverse-input input {
             padding: 12px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
             border: 2px solid #ccc;
             border-radius: 8px;
@@ -261,6 +281,11 @@
             margin-top: 25px;
             color: #666;
             font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         /* Animation for numbers */
@@ -285,17 +310,134 @@
             margin: 15px 0;
             border-radius: 5px;
             text-align: left;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         
         .warning {
             color: #d32f2f;
             font-weight: bold;
             margin-top: 10px;
+            font-size: 0.9rem;
         }
 
         .repeat-button {
             margin-top: 15px;
+        }
+        
+        .copy-button {
+            background: linear-gradient(to right, #607D8B, #455A64);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s;
+        }
+        
+        .copy-button:hover {
+            background: linear-gradient(to right, #546E7A, #37474F);
+        }
+        
+        .seed-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .input-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .input-group {
+                margin-bottom: 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .pingpong-ball {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+            
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .time-result p {
+                flex-direction: column;
+                text-align: left;
+            }
+            
+            .time-result .highlight {
+                text-align: left;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
+            .reverse-input {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .pingpong-ball {
+                width: 35px;
+                height: 35px;
+                font-size: 1.3rem;
+                margin: 2px;
+            }
+            
+            .display {
+                padding: 15px 10px;
+                min-height: 80px;
+            }
+            
+            button {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            input[type="text"], select {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -310,6 +452,9 @@
                 <li>ปรับปรุงการส่งผ่านค่า Initial Seed และสถานะของ PRNG เพื่อให้การคำนวณย้อนกลับแม่นยำและสอดคล้องกัน</li>
                 <li>แก้ไขปัญหาไม่สามารถใช้งานซ้ำได้หลังจากคำนวณเวลาเสร็จ</li>
                 <li>เปิดใช้งานช่องกรอกเลขเริ่มต้นในส่วนคำนวณย้อนกลับ</li>
+                <li>เพิ่มฟังก์ชันคัดลอก Initial Seed State</li>
+                <li>เพิ่มปุ่มกลับสู่หน้าหลัก</li>
+                <li>ปรับปรุงการแสดงผลบนมือถือ</li>
             </ul>
         </div>
 
@@ -331,7 +476,7 @@
                     <label for="startNumber">เลขเริ่มต้น</label>
                     <input type="text" id="startNumber" placeholder="เช่น 100" value="422">
                 </div>
-                <div class="input-group" style="grid-column: 1 / -1;">
+                <div class="input-group">
                     <label for="stopNumber">เลขเป้าหมาย</label>
                     <input type="text" id="stopNumber" placeholder="เช่น 999" value="075">
                 </div>
@@ -353,6 +498,7 @@
                 <button id="runButton" class="run-button">เริ่มสุ่ม</button>
                 <button id="stopButton" class="stop-button" disabled>หยุด</button>
                 <button id="resetButton" class="reset-button">รีเซ็ต</button>
+                <button id="homeButton" class="home-button">กลับสู่หน้าหลัก</button>
             </div>
             
             <div id="timeResult" class="time-result" style="display: none;">
@@ -361,7 +507,12 @@
                 <p>เลขเป้าหมาย: <span id="stopNumberResult" class="highlight">000</span></p>
                 <p>เวลาใช้ทั้งหมด: <span id="timeUsed" class="highlight">0 วินาที</span></p>
                 <p>จำนวนครั้งที่สุ่ม: <span id="attemptCount" class="highlight">0</span></p>
-                <p>Initial Seed State: <span id="initialSeedResult" class="highlight">N/A</span></p>
+                <p>Initial Seed State: 
+                    <span class="seed-container">
+                        <span id="initialSeedResult" class="highlight">N/A</span>
+                        <button id="copySeedButton" class="copy-button">คัดลอก</button>
+                    </span>
+                </p>
                 
                 <div class="repeat-button">
                     <button id="repeatButton" class="run-button">ทำการทดสอบอีกครั้ง</button>
@@ -387,7 +538,7 @@
                     <label for="reverseStartNumber">เลขเริ่มต้น (สำหรับอ้างอิง)</label>
                     <input type="text" id="reverseStartNumber" placeholder="เช่น 100" value="422">
                 </div>
-                <div class="input-group">
+                <div class="input-group" style="grid-column: 1 / -1;">
                     <label for="reverseInitialSeedInput">Initial Seed State (a,b,c,d)</label>
                     <input type="text" id="reverseInitialSeedInput" placeholder="ค่า Seed State จากผลลัพธ์">
                 </div>
@@ -408,9 +559,10 @@
         </div>
         
         <footer>
-            <div style="text-align: center;">
+            <div>
                 &copy; 2025 Juckmanphai. All Rights Reserved.
             </div>
+            <button id="footerHomeButton" class="home-button">กลับสู่หน้าหลัก</button>
         </footer>
     </div>
 
@@ -465,6 +617,8 @@
         const runButton = document.getElementById('runButton');
         const stopButton = document.getElementById('stopButton');
         const resetButton = document.getElementById('resetButton');
+        const homeButton = document.getElementById('homeButton');
+        const footerHomeButton = document.getElementById('footerHomeButton');
         const repeatButton = document.getElementById('repeatButton');
         const timeResult = document.getElementById('timeResult');
         const startNumberResult = document.getElementById('startNumberResult');
@@ -472,6 +626,7 @@
         const timeUsed = document.getElementById('timeUsed');
         const attemptCount = document.getElementById('attemptCount');
         const initialSeedResult = document.getElementById('initialSeedResult');
+        const copySeedButton = document.getElementById('copySeedButton');
         const digitInfo = document.getElementById('digitInfo');
         
         // Elements for reverse calculation section
@@ -631,6 +786,27 @@
             reverseNumberResult.textContent = calculatedNumber;
             reverseResult.style.display = 'block';
         }
+
+        // ฟังก์ชันคัดลอก Seed State
+        function copySeedToClipboard() {
+            const seedText = initialSeedResult.textContent;
+            if (seedText === 'N/A') return;
+            
+            navigator.clipboard.writeText(seedText)
+                .then(() => {
+                    // แสดงการยืนยันว่าคัดลอกแล้ว
+                    const originalText = copySeedButton.textContent;
+                    copySeedButton.textContent = 'คัดลอกแล้ว!';
+                    
+                    setTimeout(() => {
+                        copySeedButton.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('ไม่สามารถคัดลอกได้ กรุณาลองอีกครั้ง');
+                });
+        }
         
         // อีเวนต์เมื่อเปลี่ยนจำนวนหลัก
         digitSelector.addEventListener('change', () => {
@@ -737,6 +913,18 @@
         
         // อีเวนต์เมื่อกดปุ่มคำนวณย้อนกลับ
         reverseCalculateButton.addEventListener('click', calculateReverse);
+        
+        // อีเวนต์เมื่อกดปุ่มคัดลอก Seed
+        copySeedButton.addEventListener('click', copySeedToClipboard);
+        
+        // อีเวนต์เมื่อกดปุ่มกลับสู่หน้าหลัก
+        homeButton.addEventListener('click', () => {
+            window.location.href = 'https://juckmanphai.github.io/4/index.html';
+        });
+        
+        footerHomeButton.addEventListener('click', () => {
+            window.location.href = 'https://juckmanphai.github.io/4/index.html';
+        });
         
         // อีเวนต์เมื่อกด Enter ในช่องกรอกต่างๆ
         reverseInitialSeedInput.addEventListener('keypress', (e) => {
