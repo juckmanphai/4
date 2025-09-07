@@ -1,747 +1,744 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>กรองข้อมูลหวยลาวจากไฟล์ข้อความ</title>
-    <style>
-        body {
-            font-family: 'Sarabun', 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-            position: relative;
-            padding-bottom: 60px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กรองข้อมูลหวยลาวจากไฟล์ข้อความ</title>
+<style>
+body {
+font-family: 'Sarabun', 'Arial', sans-serif;
+line-height: 1.6;
+color: #333;
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+background-color: #f5f5f5;
+position: relative;
+padding-bottom: 60px;
+}
+h1 {
+color: #2c3e50;
+text-align: center;
+margin-bottom: 30px;
+}
+.container {
+display: flex;
+flex-direction: column;
+gap: 20px;
+}
+.input-section, .output-section {
+background: white;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+textarea {
+width: 100%;
+height: 200px;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 4px;
+resize: vertical;
+font-family: monospace;
+}
+button {
+background-color: #3498db;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 4px;
+cursor: pointer;
+font-size: 16px;
+margin-top: 10px;
+transition: background-color 0.3s;
+}
+button:hover {
+background-color: #2980b9;
+}
+pre {
+background-color: #f8f9fa;
+padding: 15px;
+border-radius: 4px;
+overflow-x: auto;
+white-space: pre-wrap;
+word-wrap: break-word;
+}
+.instructions {
+background-color: #e7f5ff;
+padding: 15px;
+border-left: 4px solid #3498db;
+margin-bottom: 20px;
+border-radius: 6px;
+}
+.file-upload {
+margin-bottom: 15px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.file-name {
+font-style: italic;
+color: #666;
+}
+.button-group {
+display: flex;
+gap: 10px;
+margin-top: 15px;
+}
+#clearBtn {
+background-color: #e74c3c;
+}
+#clearBtn:hover {
+background-color: #c0392b;
+}
+.success {
+color: #27ae60;
+font-weight: bold;
+}
+.error {
+color: #e74c3c;
+font-weight: bold;
+}
+code
+Code
+.input-section {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-left: 5px solid #3498db;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .input-section::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+    }
+    
+    .input-section h2 {
+        color: #2c3e50;
+        margin-top: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .input-section h2::before {
+        content: "📥";
+        font-size: 1.5em;
+    }
+    
+    .file-upload {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px dashed #3498db;
+    }
+    
+    #fileInput {
+        padding: 8px;
+        background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    #fileInput:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    textarea {
+        border: 2px solid #3498db;
+        background-color: #eef5ff;
+        transition: all 0.3s;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    textarea:focus {
+        outline: none;
+        border-color: #2c3e50;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 15px;
+    }
+    
+    #convertBtn {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #convertBtn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+    
+    #convertBtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    #convertBtn:active::after {
+        animation: ripple 1s ease-out;
+    }
+    
+    #clearBtn {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    #clearBtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 1;
         }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
+        20% {
+            transform: scale(25, 25);
+            opacity: 1;
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .input-section, .output-section {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: vertical;
-            font-family: monospace;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        pre {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        .instructions {
-            background-color: #e7f5ff;
-            padding: 15px;
-            border-left: 4px solid #3498db;
-            margin-bottom: 20px;
-            border-radius: 6px;
-        }
-        .file-upload {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .file-name {
-            font-style: italic;
-            color: #666;
-        }
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        #clearBtn {
-            background-color: #e74c3c;
-        }
-        #clearBtn:hover {
-            background-color: #c0392b;
-        }
-        .success {
-            color: #27ae60;
-            font-weight: bold;
-        }
-        .error {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-        
-        .input-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-left: 5px solid #3498db;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .input-section::before {
-            content: "";
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-        }
-        
-        .input-section h2 {
-            color: #2c3e50;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .input-section h2::before {
-            content: "📥";
-            font-size: 1.5em;
-        }
-        
-        .file-upload {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px 15px;
-            border-radius: 6px;
-            border: 1px dashed #3498db;
-        }
-        
-        #fileInput {
-            padding: 8px;
-            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        #fileInput:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        textarea {
-            border: 2px solid #3498db;
-            background-color: #eef5ff;
-            transition: all 0.3s;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #2c3e50;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-        }
-        
-        #convertBtn {
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        #convertBtn::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
+        100% {
             opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
+            transform: scale(40, 40);
         }
-        
-        #convertBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        #convertBtn:active::after {
-            animation: ripple 1s ease-out;
-        }
-        
-        #clearBtn {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        #clearBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 1;
-            }
-            20% {
-                transform: scale(25, 25);
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(40, 40);
-            }
-        }
-        
-        /* สไตล์สำหรับตารางผลลัพธ์ */
+    }
+    
+    /* สไตล์สำหรับตารางผลลัพธ์ */
+    .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+    
+    .result-table th, .result-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    
+    .result-table th {
+        background-color: #3498db;
+        color: white;
+    }
+    
+    .result-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    
+    .result-table tr:hover {
+        background-color: #e6f3ff;
+    }
+    
+    /* สไตล์สำหรับปุ่มกลับหน้าหลัก */
+    .homeButton {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transition: all 0.3s;
+        font-family: 'Sarabun', 'Arial', sans-serif;
+    }
+
+    .homeButton:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* สไตล์สำหรับ footer */
+    footer {
+        text-align: center;
+        margin-top: 40px;
+        padding: 15px;
+        color: #666;
+        border-top: 1px solid #ddd;
+        font-family: 'Sarabun', 'Arial', sans-serif;
+    }
+    
+    /* สไตล์สำหรับปุ่มดาวน์โหล드 XLSX */
+    #downloadBtn {
+        background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    #downloadBtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .output-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .info-box {
+        background-color: #e7f5ff;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 20px;
+        border-left: 4px solid #3498db;
+    }
+    
+    .highlight {
+        background-color: #fffacd;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+    
+    .number-example {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin: 10px 0;
+        flex-wrap: wrap;
+    }
+    
+    .number-part {
+        padding: 5px 10px;
+        border-radius: 4px;
+        background: #f0f8ff;
+        border: 1px solid #3498db;
+    }
+    
+    .arrow {
+        font-size: 18px;
+        color: #3498db;
+    }
+    
+    @media (max-width: 768px) {
         .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        
-        .result-table th, .result-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        
-        .result-table th {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .result-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        .result-table tr:hover {
-            background-color: #e6f3ff;
-        }
-        
-        /* สไตล์สำหรับปุ่มกลับหน้าหลัก */
-        .homeButton {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            transition: all 0.3s;
-            font-family: 'Sarabun', 'Arial', sans-serif;
-        }
-
-        .homeButton:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /* สไตล์สำหรับ footer */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 15px;
-            color: #666;
-            border-top: 1px solid #ddd;
-            font-family: 'Sarabun', 'Arial', sans-serif;
-        }
-        
-        /* สไตล์สำหรับปุ่มดาวน์โหล드 XLSX */
-        #downloadBtn {
-            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        #downloadBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            font-size: 12px;
         }
         
         .output-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
         
-        .info-box {
-            background-color: #e7f5ff;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-            border-left: 4px solid #3498db;
+        button {
+            width: 100%;
         }
-        
-        .highlight {
-            background-color: #fffacd;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        
-        .number-example {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin: 10px 0;
-            flex-wrap: wrap;
-        }
-        
-        .number-part {
-            padding: 5px 10px;
-            border-radius: 4px;
-            background: #f0f8ff;
-            border: 1px solid #3498db;
-        }
-        
-        .arrow {
-            font-size: 18px;
-            color: #3498db;
-        }
-        
-        @media (max-width: 768px) {
-            .result-table {
-                font-size: 12px;
-            }
-            
-            .output-buttons {
-                flex-direction: column;
-            }
-            
-            button {
-                width: 100%;
-            }
-        }
-        
-        .timestamp-info {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #666;
-            font-style: italic;
-        }
+    }
+    
+    .timestamp-info {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+        font-style: italic;
+    }
 
-        .number-cell {
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-        
-        .excel-guide {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 6px;
-            border-left: 4px solid #27ae60;
-        }
-        
-        .excel-guide h3 {
-            margin-top: 0;
-            color: #2c3e50;
-        }
-        
-        .excel-steps {
-            margin-left: 20px;
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-    <!-- เพิ่มไลบรารี SheetJS สำหรับการสร้างไฟล์ XLSX -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    .number-cell {
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+    
+    .excel-guide {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 6px;
+        border-left: 4px solid #27ae60;
+    }
+    
+    .excel-guide h3 {
+        margin-top: 0;
+        color: #2c3e50;
+    }
+    
+    .excel-steps {
+        margin-left: 20px;
+    }
+    
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+<!-- เพิ่มไลบรารี SheetJS สำหรับการสร้างไฟล์ XLSX -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <h1>กรองข้อมูลหวยลาวจากไฟล์ข้อความ</h1>
+<h1>กรองข้อมูลหวยลาวจากไฟล์ข้อความ</h1>
+code
+Code
+<div class="container">
+    <div class="instructions">
+        <p>วางเนื้อหาจากไฟล์ .txt ที่มีข้อมูลหวยลาวในช่องด้านล่าง หรืออัปโหลดไฟล์ แล้วกดปุ่ม "กรองข้อมูล" เพื่อจัดเรียงข้อมูล</p>
+        <p>รองรับรูปแบบข้อมูล: 
+            <span class="highlight">หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775</span>, 
+            และรูปแบบ HTML:
+            <span class="highlight">`<td>... title=" ...">05/09/2568</a></td><td ...>078775</td>`</span>
+        </p>
+    </div>
     
-    <div class="container">
-        <div class="instructions">
-            <p>วางเนื้อหาจากไฟล์ .txt ที่มีข้อมูลหวยลาวในช่องด้านล่าง หรืออัปโหลดไฟล์ แล้วกดปุ่ม "กรองข้อมูล" เพื่อจัดเรียงข้อมูล</p>
-            <p>รองรับรูปแบบข้อมูล: 
-                <span class="highlight">หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775</span>, 
-                <span class="highlight">contentID=25680905" title="ตรวจหวย หวยลาวงวดวันที่ 5 กันยายน 2568">05/09/2568</a></td><td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">078775</td></span>,
-                และรูปแบบใหม่:
-                <span class="highlight">`<td>... title=" ...">05/09/2568</a></td><td ...>078775</td>`</span>
-            </p>
+    <div class="input-section">
+        <h2>ข้อมูลนำเข้า</h2>
+        <div class="file-upload">
+            <input type="file" id="fileInput" accept=".txt">
+            <span id="fileName" class="file-name">ยังไม่ได้เลือกไฟล์</span>
         </div>
-        
-        <div class="input-section">
-            <h2>ข้อมูลนำเข้า</h2>
-            <div class="file-upload">
-                <input type="file" id="fileInput" accept=".txt">
-                <span id="fileName" class="file-name">ยังไม่ได้เลือกไฟล์</span>
-            </div>
-            <textarea id="inputData" placeholder="วางข้อมูลหวยลาวที่นี่..."></textarea>
-            <div class="button-group">
-                <button id="convertBtn">กรองข้อมูล</button>
-                <button id="clearBtn">ล้างข้อมูล</button>
-            </div>
-        </div>
-        
-        <div class="output-section">
-            <h2>ผลลัพธ์</h2>
-            <div id="status"></div>
-            <div id="outputResult"></div>
-            <div class="output-buttons">
-                <button id="copyBtn">คัดลอกไปยังคลิปบอร์ด</button>
-                <button id="downloadBtn">ดาวน์โหลดไฟล์ Excel (XLSX)</button>
-            </div>
-            
-            <div class="info-box">
-                <p><strong>คำแนะนำ:</strong> ไฟล์ Excel (.xlsx) ที่ดาวน์โหลดจะแสดงผลภาษาไทยและตัวเลข 0 นำหน้าได้ถูกต้อง</p>
-                
-                <div class="number-example">
-                    <span class="number-part">เลข 6 ตัว: 078775</span>
-                    <span class="arrow">→</span>
-                    <span class="number-part">เลข 4 ตัว: 7877</span>
-                    <span class="arrow">→</span>
-                    <span class="number-part">เลข 3 ตัว: 775</span>
-                </div>
-                
-                <p><strong>ตัวเลข 4 ตัว</strong> ได้มาจากการตัดเอา 4 ตัวหลังของเลข 6 ตัว</p>
-                <p><strong>ตัวเลข 3 ตัว</strong> ได้มาจากการตัดเอา 3 ตัวหลังของเลข 6 ตัว</p>
-                <p class="timestamp-info">ชื่อไฟล์จะมีวันที่และเวลาเพื่อป้องกันการซ้ำกัน</p>
-            </div>
-            
-            <div class="excel-guide">
-                <h3>ข้อดีของไฟล์ Excel (XLSX)</h3>
-                <ul class="excel-steps">
-                    <li>แสดงผลภาษาไทยได้ถูกต้อง</li>
-                    <li>รักษารูปแบบตัวเลข 0 นำหน้าได้ครบถ้วน</li>
-                    <li>เปิดได้ทันทีโดยไม่ต้องตั้งค่าเพิ่มเติม</li>
-                    <li>รองรับการทำงานกับโปรแกรมสเปรดชีตทุกโปรแกรม</li>
-                </ul>
-            </div>
+        <textarea id="inputData" placeholder="วางข้อมูลหวยลาวที่นี่..."></textarea>
+        <div class="button-group">
+            <button id="convertBtn">กรองข้อมูล</button>
+            <button id="clearBtn">ล้างข้อมูล</button>
         </div>
     </div>
-
-    <!-- ปุ่มกลับสู่หน้าหลัก -->
-    <button id="homeButton" class="homeButton" onclick="window.location.href='https://juckmanphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
     
-    <!-- Footer -->
-    <footer>
-        <div>
-            &copy; 2025 Juckmanphai. All Rights Reserved.
+    <div class="output-section">
+        <h2>ผลลัพธ์</h2>
+        <div id="status"></div>
+        <div id="outputResult"></div>
+        <div class="output-buttons">
+            <button id="copyBtn">คัดลอกไปยังคลิปบอร์ด</button>
+            <button id="downloadBtn">ดาวน์โหลดไฟล์ Excel (XLSX)</button>
         </div>
-    </footer>
-
-    <script>
-        // ตัวแปรเก็บข้อมูลที่กรองได้
-        let filteredData = [];
         
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        <div class="info-box">
+            <div class="number-example">
+                <span class="number-part">เลข 6 ตัว: 078775</span>
+                <span class="arrow">→</span>
+                <span class="number-part">เลข 4 ตัว: 7877</span>
+                <span class="arrow">→</span>
+                <span class="number-part">เลข 3 ตัว: 775</span>
+            </div>
             
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('status').textContent = 'กำลังโหลดไฟล์...';
-            document.getElementById('status').className = '';
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('inputData').value = e.target.result;
-                document.getElementById('status').textContent = 'โหลดไฟล์สำเร็จ';
-                document.getElementById('status').className = 'success';
-            };
-            reader.onerror = function() {
-                document.getElementById('status').textContent = 'เกิดข้อผิดพลาดในการอ่านไฟล์';
-                document.getElementById('status').className = 'error';
-            };
-            reader.readAsText(file);
+            <p><strong>ตัวเลข 4 ตัว</strong> ได้มาจากการตัดเอา 4 ตัวหลังของเลข 6 ตัว</p>
+            <p><strong>ตัวเลข 3 ตัว</strong> ได้มาจากการตัดเอา 3 ตัวหลังของเลข 6 ตัว</p>
+            <p class="timestamp-info">ชื่อไฟล์จะมีวันที่และเวลาเพื่อป้องกันการซ้ำกัน</p>
+        </div>
+    </div>
+</div>
+
+<!-- ปุ่มกลับสู่หน้าหลัก -->
+<button id="homeButton" class="homeButton" onclick="window.location.href='https://juckmanphai.github.io/4/index.html'">กลับสู่หน้าหลัก</button>
+
+<!-- Footer -->
+<footer>
+    <div>
+        &copy; 2025 Juckmanphai. All Rights Reserved.
+    </div>
+</footer>
+
+<script>
+    // ตัวแปรเก็บข้อมูลที่กรองได้
+    let filteredData = [];
+    
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('status').textContent = 'กำลังโหลดไฟล์...';
+        document.getElementById('status').className = '';
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('inputData').value = e.target.result;
+            document.getElementById('status').textContent = 'โหลดไฟล์สำเร็จ';
+            document.getElementById('status').className = 'success';
+        };
+        reader.onerror = function() {
+            document.getElementById('status').textContent = 'เกิดข้อผิดพลาดในการอ่านไฟล์';
+            document.getElementById('status').className = 'error';
+        };
+        reader.readAsText(file);
+    });
+    
+    document.getElementById('convertBtn').addEventListener('click', function() {
+        const inputData = document.getElementById('inputData').value;
+        if (!inputData.trim()) {
+            document.getElementById('status').textContent = 'กรุณาใส่ข้อมูลก่อน';
+            document.getElementById('status').className = 'error';
+            return;
+        }
+        
+        document.getElementById('status').textContent = 'กำลังกรองข้อมูล...';
+        document.getElementById('status').className = '';
+        
+        try {
+            let rawData = filterLaoLotteryData(inputData);
+            // Sort the data by date from oldest to newest
+            filteredData = sortDataByDate(rawData);
+            displayResults(filteredData);
+            document.getElementById('status').textContent = 'กรองข้อมูลสำเร็จ: พบ ' + filteredData.length + ' รายการ';
+            document.getElementById('status').className = 'success';
+        } catch (error) {
+            document.getElementById('status').textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+            document.getElementById('status').className = 'error';
+            console.error(error);
+        }
+    });
+    
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        document.getElementById('inputData').value = '';
+        document.getElementById('outputResult').innerHTML = '';
+        document.getElementById('status').textContent = '';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('fileName').textContent = 'ยังไม่ได้เลือกไฟล์';
+        filteredData = [];
+    });
+    
+    document.getElementById('copyBtn').addEventListener('click', function() {
+        if (filteredData.length === 0) {
+            document.getElementById('status').textContent = 'ไม่มีข้อมูลที่จะคัดลอก';
+            document.getElementById('status').className = 'error';
+            return;
+        }
+        
+        let csvContent = "วันที่,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
+        filteredData.forEach(item => {
+            // ใช้รูปแบบ CSV มาตรฐานโดยไม่มีเครื่องหมายพิเศษ
+            csvContent += `${item.date},${item.number6},${item.number4},${item.number3}\n`;
         });
         
-        document.getElementById('convertBtn').addEventListener('click', function() {
-            const inputData = document.getElementById('inputData').value;
-            if (!inputData.trim()) {
-                document.getElementById('status').textContent = 'กรุณาใส่ข้อมูลก่อน';
+        navigator.clipboard.writeText(csvContent)
+            .then(() => {
+                document.getElementById('status').textContent = 'คัดลอกไปยังคลิปบอร์ดแล้ว!';
+                document.getElementById('status').className = 'success';
+            })
+            .catch(err => {
+                document.getElementById('status').textContent = 'คัดลอกไม่สำเร็จ: ' + err;
                 document.getElementById('status').className = 'error';
-                return;
-            }
-            
-            document.getElementById('status').textContent = 'กำลังกรองข้อมูล...';
-            document.getElementById('status').className = '';
-            
+            });
+    });
+    
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        if (filteredData.length === 0) {
+            document.getElementById('status').textContent = 'ไม่มีข้อมูลที่จะดาวน์โหลด';
+            document.getElementById('status').className = 'error';
+            return;
+        }
+        
+        // แสดงสถานะกำลังสร้างไฟล์
+        document.getElementById('status').innerHTML = '<span class="loading"></span>กำลังสร้างไฟล์ Excel...';
+        document.getElementById('status').className = '';
+        
+        // ใช้ setTimeout เพื่อให้ UI อัปเดตสถานะก่อนเริ่มการประมวลผล
+        setTimeout(function() {
             try {
-                filteredData = filterLaoLotteryData(inputData);
-                displayResults(filteredData);
-                document.getElementById('status').textContent = 'กรองข้อมูลสำเร็จ: พบ ' + filteredData.length + ' รายการ';
+                // สร้าง workbook ใหม่
+                const wb = XLSX.utils.book_new();
+                
+                // แปลงข้อมูลเป็น worksheet
+                const wsData = [
+                    ["วันที่", "รางวัล 6 ตัว", "รางวัล 4 ตัว", "รางวัล 3 ตัว"]
+                ];
+                
+                filteredData.forEach(item => {
+                    wsData.push([item.date, item.number6, item.number4, item.number3]);
+                });
+                
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                
+                // ตั้งค่าความกว้างของคอลัมน์
+                const colWidths = [
+                    { wch: 15 }, // วันที่
+                    { wch: 12 }, // รางวัล 6 ตัว
+                    { wch: 12 }, // รางวัล 4 ตัว
+                    { wch: 12 }  // รางวัล 3 ตัว
+                ];
+                ws['!cols'] = colWidths;
+                
+                // ตั้งชื่อ worksheet
+                XLSX.utils.book_append_sheet(wb, ws, "หวยลาว");
+                
+                // สร้างชื่อไฟล์ด้วยวันที่และเวลาปัจจุบัน
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                
+                const dateTimeString = `${year}${month}${day}_${hours}${minutes}${seconds}`;
+                const fileName = `หวยลาว_${dateTimeString}.xlsx`;
+                
+                // สร้างไฟล์ XLSX และดาวน์โหลด
+                XLSX.writeFile(wb, fileName);
+                
+                document.getElementById('status').textContent = 'ดาวน์โหลดไฟล์ Excel สำเร็จ: ' + fileName;
                 document.getElementById('status').className = 'success';
             } catch (error) {
-                document.getElementById('status').textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+                document.getElementById('status').textContent = 'เกิดข้อผิดพลาดในการสร้างไฟล์: ' + error.message;
                 document.getElementById('status').className = 'error';
                 console.error(error);
             }
-        });
+        }, 100);
+    });
+    
+    function filterLaoLotteryData(input) {
+        const results = [];
         
-        document.getElementById('clearBtn').addEventListener('click', function() {
-            document.getElementById('inputData').value = '';
-            document.getElementById('outputResult').innerHTML = '';
-            document.getElementById('status').textContent = '';
-            document.getElementById('fileInput').value = '';
-            document.getElementById('fileName').textContent = 'ยังไม่ได้เลือกไฟล์';
-            filteredData = [];
-        });
+        // 1. ค้นหารูปแบบ HTML (รวมรูปแบบเก่าและใหม่)
+        // รูปแบบ: <td ... title=" ...">05/09/2568</a></td><td ...>078775</td>
+        const htmlPattern = /<td[^>]*>(?:<a[^>]*title="[^>]*>)?(\d{2}\/\d{2}\/\d{4})(?:<\/a>)?<\/td>\s*<td[^>]*>(\d{6})<\/td>/g;
+        let htmlMatch;
+        while ((htmlMatch = htmlPattern.exec(input)) !== null) {
+            const date = htmlMatch[1];
+            const number6 = htmlMatch[2];
+            const number4 = number6.slice(2);
+            const number3 = number6.slice(3);
+            
+            results.push({ date, number6, number4, number3 });
+        }
         
-        document.getElementById('copyBtn').addEventListener('click', function() {
-            if (filteredData.length === 0) {
-                document.getElementById('status').textContent = 'ไม่มีข้อมูลที่จะคัดลอก';
-                document.getElementById('status').className = 'error';
-                return;
-            }
+        // 2. ค้นหารูปแบบข้อความ (เดิม)
+        const lines = input.split('\n');
+        for (const line of lines) {
+            if (!line.trim()) continue;
             
-            let csvContent = "วันที่,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
-            filteredData.forEach(item => {
-                // ใช้รูปแบบ CSV มาตรฐานโดยไม่มีเครื่องหมายพิเศษ
-                csvContent += `${item.date},${item.number6},${item.number4},${item.number3}\n`;
-            });
-            
-            navigator.clipboard.writeText(csvContent)
-                .then(() => {
-                    document.getElementById('status').textContent = 'คัดลอกไปยังคลิปบอร์ดแล้ว!';
-                    document.getElementById('status').className = 'success';
-                })
-                .catch(err => {
-                    document.getElementById('status').textContent = 'คัดลอกไม่สำเร็จ: ' + err;
-                    document.getElementById('status').className = 'error';
-                });
-        });
-        
-        document.getElementById('downloadBtn').addEventListener('click', function() {
-            if (filteredData.length === 0) {
-                document.getElementById('status').textContent = 'ไม่มีข้อมูลที่จะดาวน์โหลด';
-                document.getElementById('status').className = 'error';
-                return;
-            }
-            
-            // แสดงสถานะกำลังสร้างไฟล์
-            document.getElementById('status').innerHTML = '<span class="loading"></span>กำลังสร้างไฟล์ Excel...';
-            document.getElementById('status').className = '';
-            
-            // ใช้ setTimeout เพื่อให้ UI อัปเดตสถานะก่อนเริ่มการประมวลผล
-            setTimeout(function() {
-                try {
-                    // สร้าง workbook ใหม่
-                    const wb = XLSX.utils.book_new();
-                    
-                    // แปลงข้อมูลเป็น worksheet
-                    const wsData = [
-                        ["วันที่", "รางวัล 6 ตัว", "รางวัล 4 ตัว", "รางวัล 3 ตัว"]
-                    ];
-                    
-                    filteredData.forEach(item => {
-                        wsData.push([item.date, item.number6, item.number4, item.number3]);
-                    });
-                    
-                    const ws = XLSX.utils.aoa_to_sheet(wsData);
-                    
-                    // ตั้งค่าความกว้างของคอลัมน์
-                    const colWidths = [
-                        { wch: 15 }, // วันที่
-                        { wch: 12 }, // รางวัล 6 ตัว
-                        { wch: 12 }, // รางวัล 4 ตัว
-                        { wch: 12 }  // รางวัล 3 ตัว
-                    ];
-                    ws['!cols'] = colWidths;
-                    
-                    // ตั้งชื่อ worksheet
-                    XLSX.utils.book_append_sheet(wb, ws, "หวยลาว");
-                    
-                    // สร้างชื่อไฟล์ด้วยวันที่และเวลาปัจจุบัน
-                    const now = new Date();
-                    const year = now.getFullYear();
-                    const month = String(now.getMonth() + 1).padStart(2, '0');
-                    const day = String(now.getDate()).padStart(2, '0');
-                    const hours = String(now.getHours()).padStart(2, '0');
-                    const minutes = String(now.getMinutes()).padStart(2, '0');
-                    const seconds = String(now.getSeconds()).padStart(2, '0');
-                    
-                    const dateTimeString = `${year}${month}${day}_${hours}${minutes}${seconds}`;
-                    const fileName = `หวยลาว_${dateTimeString}.xlsx`;
-                    
-                    // สร้างไฟล์ XLSX และดาวน์โหลด
-                    XLSX.writeFile(wb, fileName);
-                    
-                    document.getElementById('status').textContent = 'ดาวน์โหลดไฟล์ Excel สำเร็จ: ' + fileName;
-                    document.getElementById('status').className = 'success';
-                } catch (error) {
-                    document.getElementById('status').textContent = 'เกิดข้อผิดพลาดในการสร้างไฟล์: ' + error.message;
-                    document.getElementById('status').className = 'error';
-                    console.error(error);
-                }
-            }, 100);
-        });
-        
-        function filterLaoLotteryData(input) {
-            const results = [];
-            
-            // 1. ค้นหารูปแบบ HTML (รวมรูปแบบเก่าและใหม่)
-            // รูปแบบที่ 1: title="ตรวจหวย หวยลาวงวดวันที่ ...">05/09/2568</a></td><td ...>078775</td>
-            // รูปแบบที่ 2 (ใหม่): <td ... title=" ...">05/09/2568</a></td><td ...>078775</td>
-            const htmlPattern = /<td[^>]*>(?:<a[^>]*title="[^>]*>)?(\d{2}\/\d{2}\/\d{4})(?:<\/a>)?<\/td>\s*<td[^>]*>(\d{6})<\/td>/g;
-            let htmlMatch;
-            while ((htmlMatch = htmlPattern.exec(input)) !== null) {
-                const date = htmlMatch[1];
-                const number6 = htmlMatch[2];
+            if (line.includes('หวยลาว')) {
+                // แยกข้อมูลวันที่
+                const dateMatch = line.match(/งวดวัน\S+\s+(\d+)\s+(\S+)\s+(\d+)/);
+                if (!dateMatch) continue;
+                
+                const day = dateMatch[1].padStart(2, '0');
+                const month = convertMonthToNumber(dateMatch[2]);
+                const year = dateMatch[3];
+                const date = `${day}/${month}/${year}`;
+                
+                // แยกข้อมูลเลข 6 ตัว
+                const numberMatch = line.match(/เลข 6 ตัว\s+(\d{6})/);
+                if (!numberMatch) continue;
+                
+                const number6 = numberMatch[1];
                 const number4 = number6.slice(2);
                 const number3 = number6.slice(3);
                 
                 results.push({ date, number6, number4, number3 });
             }
-            
-            // 2. ค้นหารูปแบบข้อความ (เดิม)
-            const lines = input.split('\n');
-            for (const line of lines) {
-                if (!line.trim()) continue;
-                
-                if (line.includes('หวยลาว')) {
-                    // แยกข้อมูลวันที่
-                    const dateMatch = line.match(/งวดวัน\S+\s+(\d+)\s+(\S+)\s+(\d+)/);
-                    if (!dateMatch) continue;
-                    
-                    const day = dateMatch[1].padStart(2, '0');
-                    const month = convertMonthToNumber(dateMatch[2]);
-                    const year = dateMatch[3];
-                    const date = `${day}/${month}/${year}`;
-                    
-                    // แยกข้อมูลเลข 6 ตัว
-                    const numberMatch = line.match(/เลข 6 ตัว\s+(\d{6})/);
-                    if (!numberMatch) continue;
-                    
-                    const number6 = numberMatch[1];
-                    const number4 = number6.slice(2);
-                    const number3 = number6.slice(3);
-                    
-                    results.push({ date, number6, number4, number3 });
-                }
-            }
-            
-            return results;
         }
         
-        function convertMonthToNumber(monthName) {
-            const months = {
-                'มกราคม': '01',
-                'กุมภาพันธ์': '02',
-                'มีนาคม': '03',
-                'เมษายน': '04',
-                'พฤษภาคม': '05',
-                'มิถุนายน': '06',
-                'กรกฎาคม': '07',
-                'สิงหาคม': '08',
-                'กันยายน': '09',
-                'ตุลาคม': '10',
-                'พฤศจิกายน': '11',
-                'ธันวาคม': '12'
-            };
-            
-            return months[monthName] || '00';
-        }
-        
-        function displayResults(data) {
-            const outputDiv = document.getElementById('outputResult');
-            
-            if (data.length === 0) {
-                outputDiv.innerHTML = '<p>ไม่พบข้อมูลหวยลาวในข้อความที่ป้อน</p>';
-                return;
-            }
-            
-            let tableHTML = `
-                <table class="result-table" id="outputTable">
-                    <thead>
-                        <tr>
-                            <th>วันที่</th>
-                            <th>รางวัล 6 ตัว</th>
-                            <th>รางวัล 4 ตัว</th>
-                            <th>รางวัล 3 ตัว</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            data.forEach(item => {
-                tableHTML += `
-                    <tr>
-                        <td>${item.date}</td>
-                        <td class="number-cell"><strong>${item.number6}</strong></td>
-                        <td class="number-cell">${item.number4}</td>
-                        <td class="number-cell">${item.number3}</td>
-                    </tr>
-                `;
-            });
-            
-            tableHTML += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px;">สามารถคัดลอกข้อมูลไปยัง Excel ได้โดยคลิกปุ่ม "คัดลอกไปยังคลิปบอร์ด" หรือดาวน์โหลดเป็นไฟล์ Excel</p>
-            `;
-            
-            outputDiv.innerHTML = tableHTML;
-        }
-        
-      // Load sample data on page load for demonstration
-        window.addEventListener('load', function() {
-            const sampleData = `contentID=25680905" title="ตรวจหวย หวยลาวงวดวันที่ 5 กันยายน 2568">05/09/2568</a></td>
-<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">078775</td>
-<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center">775</td>
-<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">75</td>
+        return results;
+    }
 
-หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775 เลข 5 ตัว 78775
-หวยลาว งวดวันจันทร์ 1 กันยายน 2568 เลข 6 ตัว 204088 เลข 5 ตัว 04088
-contentID=25680901" title="ตรวจหวย หวยลาวงวดวันที่ 1 กันยายน 2568">01/09/2568</a></td>
-<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">204088</td>
-<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center">088</td>
-<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">88</td>`;
+    function sortDataByDate(data) {
+        return data.sort((a, b) => {
+            // Convert DD/MM/YYYY to YYYY-MM-DD for correct date comparison
+            const [dayA, monthA, yearA] = a.date.split('/');
+            const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+
+            const [dayB, monthB, yearB] = b.date.split('/');
+            const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
             
-            document.getElementById('inputData').value = sampleData;
+            return dateA - dateB;
         });
-    </script>
+    }
+    
+    function convertMonthToNumber(monthName) {
+        const months = {
+            'มกราคม': '01',
+            'กุมภาพันธ์': '02',
+            'มีนาคม': '03',
+            'เมษายน': '04',
+            'พฤษภาคม': '05',
+            'มิถุนายน': '06',
+            'กรกฎาคม': '07',
+            'สิงหาคม': '08',
+            'กันยายน': '09',
+            'ตุลาคม': '10',
+            'พฤศจิกายน': '11',
+            'ธันวาคม': '12'
+        };
+        
+        return months[monthName] || '00';
+    }
+    
+    function displayResults(data) {
+        const outputDiv = document.getElementById('outputResult');
+        
+        if (data.length === 0) {
+            outputDiv.innerHTML = '<p>ไม่พบข้อมูลหวยลาวในข้อความที่ป้อน</p>';
+            return;
+        }
+        
+        let tableHTML = `
+            <table class="result-table" id="outputTable">
+                <thead>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>รางวัล 6 ตัว</th>
+                        <th>รางวัล 4 ตัว</th>
+                        <th>รางวัล 3 ตัว</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        data.forEach(item => {
+            tableHTML += `
+                <tr>
+                    <td>${item.date}</td>
+                    <td class="number-cell"><strong>${item.number6}</strong></td>
+                    <td class="number-cell">${item.number4}</td>
+                    <td class="number-cell">${item.number3}</td>
+                </tr>
+            `;
+        });
+        
+        tableHTML += `
+                </tbody>
+            </table>
+            <p style="margin-top: 15px;">สามารถคัดลอกข้อมูลไปยัง Excel ได้โดยคลิกปุ่ม "คัดลอกไปยังคลิปบอร์ด" หรือดาวน์โหลดเป็นไฟล์ Excel</p>
+        `;
+        
+        outputDiv.innerHTML = tableHTML;
+    }
+    
+  // Load sample data on page load for demonstration
+    window.addEventListener('load', function() {
+        const sampleData = `หวยลาว งวดวันศุกร์ 5 กันยายน 2568 เลข 6 ตัว 078775 เลข 5 ตัว 78775
+หวยลาว งวดวันจันทร์ 1 กันยายน 2568 เลข 6 ตัว 204088 เลข 5 ตัว 04088
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">01/09/2568</a></td>
+<td width="22%" class="bd-bgray bd-rgray pd-t8 pd-b10 stats-title" align="center" bgcolor="#f1f4f5">204088</td>`;
+code
+Code
+document.getElementById('inputData').value = sampleData;
+    });
+</script>
 </body>
 </html>
