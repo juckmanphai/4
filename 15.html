@@ -402,7 +402,8 @@ font-weight: bold;
 <h1>กรองข้อมูลหวยลาวจากไฟล์ข้อความ</h1>
 <div class="container">
     <div class="instructions">
-        <p>วางเนื้อหาจากไฟล์ .txt ที่มีข้อมูลหวยลาวในช่องด้านล่าง หรืออัปโหลดไฟล์ แล้วกดปุ่ม "กรองข้อมูล" เพื่อจัดเรียงข้อมูล</p>
+        <p>วางเนื้อหาจากไฟล์ .txt ที่มีข้อมูลหวยลาว (ปกติ หรือ ลาวสตาร์) ในช่องด้านล่าง หรืออัปโหลดไฟล์ แล้วกดปุ่ม "กรองข้อมูล" เพื่อจัดเรียงข้อมูล</p>
+    </div>
     
     <div class="input-section">
         <h2>ข้อมูลนำเข้า</h2>
@@ -505,10 +506,16 @@ font-weight: bold;
             return;
         }
         
-        let csvContent = "วันที่,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
+        // เพิ่มคอลัมน์ "ประเภทหวย"
+        let csvContent = "วันที่,ประเภทหวย,รางวัล 6 ตัว,รางวัล 4 ตัว,รางวัล 3 ตัว\n";
         filteredData.forEach(item => {
             // ใช้รูปแบบ CSV มาตรฐานโดยไม่มีเครื่องหมายพิเศษ
-            csvContent += `${item.date},${item.number6},${item.number4},${item.number3}\n`;
+            if (item.type === 'LaoLottery') {
+                csvContent += `${item.date},หวยลาว,${item.number6},${item.number4},${item.number3}\n`;
+            } else if (item.type === 'LaoStar') {
+                // สำหรับหวยลาวสตาร์ ใช้ number5 แทน number6, และเว้นว่าง 4, 3 ตัว
+                csvContent += `${item.date},หวยลาวสตาร์,${item.number5},,\n`;
+            }
         });
         
         navigator.clipboard.writeText(csvContent)
@@ -540,12 +547,18 @@ font-weight: bold;
                 const wb = XLSX.utils.book_new();
                 
                 // แปลงข้อมูลเป็น worksheet
+                // เพิ่ม "ประเภทหวย" ในหัวตาราง
                 const wsData = [
-                    ["วันที่", "รางวัล 6 ตัว", "รางวัล 4 ตัว", "รางวัล 3 ตัว"]
+                    ["วันที่", "ประเภทหวย", "รางวัล 6 ตัว", "รางวัล 4 ตัว", "รางวัล 3 ตัว"]
                 ];
                 
                 filteredData.forEach(item => {
-                    wsData.push([item.date, item.number6, item.number4, item.number3]);
+                    if (item.type === 'LaoLottery') {
+                        wsData.push([item.date, "หวยลาว", item.number6, item.number4, item.number3]);
+                    } else if (item.type === 'LaoStar') {
+                        // สำหรับหวยลาวสตาร์ ใช้ number5 แทน number6, และเว้นว่าง 4, 3 ตัว
+                        wsData.push([item.date, "หวยลาวสตาร์", item.number5, "", ""]);
+                    }
                 });
                 
                 const ws = XLSX.utils.aoa_to_sheet(wsData);
@@ -553,7 +566,8 @@ font-weight: bold;
                 // ตั้งค่าความกว้างของคอลัมน์
                 const colWidths = [
                     { wch: 15 }, // วันที่
-                    { wch: 12 }, // รางวัล 6 ตัว
+                    { wch: 15 }, // ประเภทหวย
+                    { wch: 15 }, // รางวัล 6 ตัว (หรือ 5 ตัวสำหรับลาวสตาร์)
                     { wch: 12 }, // รางวัล 4 ตัว
                     { wch: 12 }  // รางวัล 3 ตัว
                 ];
@@ -590,25 +604,51 @@ font-weight: bold;
     function filterLaoLotteryData(input) {
         const results = [];
         
-        // 1. ค้นหารูปแบบ HTML (รวมรูปแบบเก่าและใหม่)
+        // 1. ค้นหารูปแบบ HTML (หวยลาวปกติ - 6 ตัว)
         // รูปแบบ: <td ... title=" ...">05/09/2568</a></td><td ...>078775</td>
-        const htmlPattern = /<td[^>]*>(?:<a[^>]*title="[^>]*>)?(\d{2}\/\d{2}\/\d{4})(?:<\/a>)?<\/td>\s*<td[^>]*>(\d{6})<\/td>/g;
-        let htmlMatch;
-        while ((htmlMatch = htmlPattern.exec(input)) !== null) {
-            const date = htmlMatch[1];
-            const number6 = htmlMatch[2];
+        const htmlPatternLao = /<td[^>]*>(?:<a[^>]*title="[^>]*>)?(\d{2}\/\d{2}\/\d{4})(?:<\/a>)?<\/td>\s*<td[^>]*>(\d{6})<\/td>/g;
+        let htmlMatchLao;
+        while ((htmlMatchLao = htmlPatternLao.exec(input)) !== null) {
+            const date = htmlMatchLao[1];
+            const number6 = htmlMatchLao[2];
             const number4 = number6.slice(2);
             const number3 = number6.slice(3);
             
-            results.push({ date, number6, number4, number3 });
+            results.push({ type: 'LaoLottery', date, number6, number4, number3 });
         }
+
+        // 2. ค้นหารูปแบบ HTML (หวยลาวสตาร์ - 5 ตัว)
+        // รูปแบบ:
+        // <h3><a ...> ตรวจผล <span ...>หวยลาวสตาร์</span> ออก <span ...>พฤ. 4 ก.ย. 68</span> ... </a></h3>
+        // ...
+        // <span style="font-size:46px;">45848</span>
+const htmlPatternLaoStar = /<h3><a[^>]*หวยลาวสตาร์[^>]*>.*?ออก <span[^>]*>([ก-ฮ]{1,2}\.)?\s*(\d{1,2})\s+(\S+)\s+(\d{2,4})<\/span>.*?<\/a><\/h3>[^]*?<span style="font-size:46px;">(\d{5})<\/span>/g;
+        let htmlMatchLaoStar;
+while ((htmlMatchLaoStar = htmlPatternLaoStar.exec(input)) !== null) {
+    let day = htmlMatchLaoStar[2].padStart(2, '0');
+    let monthName = htmlMatchLaoStar[3];
+    let yearPart = htmlMatchLaoStar[4];
+    let number5 = htmlMatchLaoStar[5];
+
+    let year;
+    if (yearPart.length === 2) {
+        year = 2500 + parseInt(yearPart, 10);
+    } else {
+        year = parseInt(yearPart, 10);
+    }
+
+    const month = convertMonthToNumber(monthName);
+    const date = `${day}/${month}/${year}`;
+
+    results.push({ type: 'LaoStar', date, number5 });
+}
         
-        // 2. ค้นหารูปแบบข้อความ (เดิม)
+        // 3. ค้นหารูปแบบข้อความ (เดิม - หวยลาวปกติ - 6 ตัว)
         const lines = input.split('\n');
         for (const line of lines) {
             if (!line.trim()) continue;
             
-            if (line.includes('หวยลาว')) {
+            if (line.includes('หวยลาว') && !line.includes('หวยลาวสตาร์')) { // Exclude Lao Star
                 // แยกข้อมูลวันที่
                 const dateMatch = line.match(/งวดวัน\S+\s+(\d+)\s+(\S+)\s+(\d+)/);
                 if (!dateMatch) continue;
@@ -626,7 +666,7 @@ font-weight: bold;
                 const number4 = number6.slice(2);
                 const number3 = number6.slice(3);
                 
-                results.push({ date, number6, number4, number3 });
+                results.push({ type: 'LaoLottery', date, number6, number4, number3 });
             }
         }
         
@@ -636,33 +676,42 @@ font-weight: bold;
     function sortDataByDate(data) {
         return data.sort((a, b) => {
             // Convert DD/MM/YYYY to YYYY-MM-DD for correct date comparison
-            const [dayA, monthA, yearA] = a.date.split('/');
-            const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+            // Adjusted to handle Buddhist year conversion more robustly
+            const dateToISO = (dateStr) => {
+                const [day, month, year] = dateStr.split('/');
+                let fullYear = parseInt(year, 10);
+                if (fullYear > 2200) { // Assuming Buddhist calendar if year is > 2200 (e.g., 25xx)
+                    fullYear -= 543; // Convert to AD year
+                }
+                return `${fullYear}-${month}-${day}`;
+            };
 
-            const [dayB, monthB, yearB] = b.date.split('/');
-            const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
+            const dateA = new Date(dateToISO(a.date));
+            const dateB = new Date(dateToISO(b.date));
             
             return dateA - dateB;
         });
     }
     
     function convertMonthToNumber(monthName) {
-        const months = {
-            'มกราคม': '01',
-            'กุมภาพันธ์': '02',
-            'มีนาคม': '03',
-            'เมษายน': '04',
-            'พฤษภาคม': '05',
-            'มิถุนายน': '06',
-            'กรกฎาคม': '07',
-            'สิงหาคม': '08',
-            'กันยายน': '09',
-            'ตุลาคม': '10',
-            'พฤศจิกายน': '11',
-            'ธันวาคม': '12'
+    const months = {
+        'ม.ค.': '01', 'มกราคม': '01',
+        'ก.พ.': '02', 'กุมภาพันธ์': '02',
+        'มี.ค.': '03', 'มีนาคม': '03',
+        'เม.ย.': '04', 'เมษายน': '04',
+        'พ.ค.': '05', 'พฤษภาคม': '05',
+        'มิ.ย.': '06', 'มิถุนายน': '06',
+        'ก.ค.': '07', 'กรกฎาคม': '07',
+        'ส.ค.': '08', 'สิงหาคม': '08',  // แก้ไขตรงนี้
+        'ก.ย.': '09', 'กันยายน': '09',
+        'ต.ค.': '10', 'ตุลาคม': '10',
+        'พ.ย.': '11', 'พฤศจิกายน': '11',
+        'ธ.ค.': '12', 'ธันวาคม': '12'
         };
         
-        return months[monthName] || '00';
+        // Remove leading/trailing spaces and dots, then lookup
+    const cleanMonthName = monthName.trim().replace(/\s+/g, '');
+    return months[cleanMonthName] || '00';
     }
     
     function displayResults(data) {
@@ -678,7 +727,8 @@ font-weight: bold;
                 <thead>
                     <tr>
                         <th>วันที่</th>
-                        <th>รางวัล 6 ตัว</th>
+                        <th>ประเภทหวย</th>
+                        <th>รางวัล 6/5 ตัว</th> <!-- เปลี่ยนชื่อคอลัมน์ให้รองรับทั้ง 6 และ 5 ตัว -->
                         <th>รางวัล 4 ตัว</th>
                         <th>รางวัล 3 ตัว</th>
                     </tr>
@@ -690,9 +740,10 @@ font-weight: bold;
             tableHTML += `
                 <tr>
                     <td>${item.date}</td>
-                    <td class="number-cell"><strong>${item.number6}</strong></td>
-                    <td class="number-cell">${item.number4}</td>
-                    <td class="number-cell">${item.number3}</td>
+                    <td>${item.type === 'LaoLottery' ? 'หวยลาว' : 'หวยลาวสตาร์'}</td>
+                    <td class="number-cell"><strong>${item.type === 'LaoLottery' ? item.number6 : item.number5}</strong></td>
+                    <td class="number-cell">${item.type === 'LaoLottery' ? item.number4 : ''}</td>
+                    <td class="number-cell">${item.type === 'LaoLottery' ? item.number3 : ''}</td>
                 </tr>
             `;
         });
@@ -708,7 +759,40 @@ font-weight: bold;
     
   // Load sample data on page load for demonstration
     window.addEventListener('load', function() {
-        const sampleData = ``;
+        const sampleData = `
+        <td width="10%"> <a href="/ตรวจหวย/หวยลาว/17-08-2567/" title="ตรวจหวยลาว 17/08/2567">17/08/2567</a></td><td width="15%">078775</td>
+        <td width="10%"> <a href="/ตรวจหวย/หวยลาว/20-08-2567/" title="ตรวจหวยลาว 20/08/2567">20/08/2567</a></td><td width="15%">123456</td>
+        <td width="10%"> <a href="/ตรวจหวย/หวยลาว/23-08-2567/" title="ตรวจหวยลาว 23/08/2567">23/08/2567</a></td><td width="15%">987654</td>
+        งวดวันพุธ ที่ 25 ธันวาคม 2567 หวยลาว เลข 6 ตัว 112233
+        งวดวันศุกร์ ที่ 27 ธันวาคม 2567 หวยลาว เลข 6 ตัว 445566
+        
+        <th colspan="2" style="padding:3px 3px 3px 3px;background-color: #b29d31;">
+            <h3><a href="/ตรวจหวย-หุ้น/หวยลาวสตาร์/07-08-2568/" style="font-size:28px;color:black;text-decoration:none;"><img width="28" height="19" src="/รูปภาพ/ตรวจหวย-หุ้น/s/หวยลาวสตาร์.png" alt="หวยลาวสตาร์" title="หวยลาวสตาร์"> ตรวจผล <span style="color:blue;">หวยลาวสตาร์</span> ออก <span style="color:blue;">พฤ. 7 ส.ค. 68</span> เวลา <span style="color:blue;">15:45</span> น.</a></h3>
+        </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr align="center" style="background-color: #BFBF6E;">
+        <th style="padding:3px 3px 3px 3px;background-color: #b29d31;">
+        <span style="font-size: 28px;">หวยออก</span>
+        </th>
+        <th style="padding:3px 3px 3px 3px;">
+        <span style="font-size:46px;">03616</span>
+        </th>
+        <th colspan="2" style="padding:3px 3px 3px 3px;background-color: #b29d31;">
+            <h3><a href="/ตรวจหวย-หุ้น/หวยลาวสตาร์/08-08-2568/" style="font-size:28px;color:black;text-decoration:none;"><img width="28" height="19" src="/รูปภาพ/ตรวจหวย-หุ้น/s/หวยลาวสตาร์.png" alt="หวยลาวสตาร์" title="หวยลาวสตาร์"> ตรวจผล <span style="color:blue;">หวยลาวสตาร์</span> ออก <span style="color:blue;">ศ. 8 ส.ค. 68</span> เวลา <span style="color:blue;">15:45</span> น.</a></h3>
+        </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr align="center" style="background-color: #BFBF6E;">
+        <th style="padding:3px 3px 3px 3px;background-color: #b29d31;">
+        <span style="font-size: 28px;">หวยออก</span>
+        </th>
+        <th style="padding:3px 3px 3px 3px;">
+        <span style="font-size:46px;">12345</span>
+        </th>
+        `;
 document.getElementById('inputData').value = sampleData;
     });
 </script>
