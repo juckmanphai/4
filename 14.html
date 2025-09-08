@@ -27,7 +27,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
             width: 100%;
-            max-width: 650px;
+            max-width: 700px;
             transition: padding 0.3s;
             box-sizing: border-box;
         }
@@ -254,7 +254,6 @@
             margin-left: 10px;
         }
         
-        /* ปรับปรุงส่วนแสดงผล Initial Seed State */
         .seed-container {
             display: flex;
             align-items: center;
@@ -308,7 +307,6 @@
             gap: 15px;
         }
         
-        /* Animation for numbers */
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -360,7 +358,25 @@
             background: linear-gradient(to right, #546E7A, #37474F);
         }
         
-        /* Responsive styles */
+        .custom-seed-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .custom-seed-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .custom-seed-input-container {
+            margin-bottom: 15px;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -409,7 +425,6 @@
                 margin-top: 5px;
             }
             
-            /* ปรับปรุงการแสดงผล Initial Seed State บนมือถือ */
             .seed-container {
                 flex-direction: row;
                 align-items: center;
@@ -428,6 +443,10 @@
             }
             
             .reverse-input {
+                grid-template-columns: 1fr;
+            }
+            
+            .custom-seed-inputs {
                 grid-template-columns: 1fr;
             }
         }
@@ -471,7 +490,6 @@
                 font-size: 0.95rem;
             }
             
-            /* ปรับปรุงเพิ่มเติมสำหรับมือถือขนาดเล็ก */
             .seed-container {
                 flex-direction: column;
                 align-items: stretch;
@@ -499,6 +517,8 @@
                 <li>เพิ่มฟังก์ชันคัดลอก Initial Seed State</li>
                 <li>เพิ่มปุ่มกลับสู่หน้าหลัก</li>
                 <li>ปรับปรุงการแสดงผลบนมือถือ</li>
+                <li>เพิ่มฟังก์ชันการใช้ Seed เดิมกับตัวเลขเริ่มต้นอื่น</li>
+                <li>เพิ่มช่องกรอก Seed State แยกต่างหากในส่วน "การใช้ Seed เดิมกับตัวเลขเริ่มต้นอื่น"</li>
             </ul>
         </div>
 
@@ -599,6 +619,37 @@
                 <p>จำนวนครั้ง: <span id="reverseAttemptsResult" class="highlight">0</span></p>
                 <p>ตัวเลขผลลัพธ์: <span id="reverseNumberResult" class="highlight">000</span></p>
             </div>
+            
+            <div class="custom-seed-section">
+                <h3 class="section-title">ใช้ Seed เดิมกับตัวเลขเริ่มต้นอื่น</h3>
+                <p>ส่วนนี้ช่วยให้คุณสามารถใช้ Initial Seed State เดิม แต่เปลี่ยนตัวเลขเริ่มต้น เพื่อดูว่าผลลัพธ์จะเปลี่ยนไปอย่างไร</p>
+                
+                <div class="custom-seed-input-container">
+                    <label for="customSeedInput">Initial Seed State (a,b,c,d)</label>
+                    <input type="text" id="customSeedInput" placeholder="ค่า Seed State จากผลลัพธ์">
+                </div>
+                
+                <div class="custom-seed-inputs">
+                    <div class="input-group">
+                        <label for="customStartNumber">ตัวเลขเริ่มต้นใหม่</label>
+                        <input type="text" id="customStartNumber" placeholder="เช่น 500">
+                    </div>
+                    <div class="input-group">
+                        <label for="customAttempts">จำนวนครั้งที่สุ่ม</label>
+                        <input type="text" id="customAttempts" placeholder="เช่น 12">
+                    </div>
+                </div>
+                
+                <button id="customCalculateButton" class="calc-button" style="width: 100%; margin-top: 15px;">คำนวณผลลัพธ์ใหม่</button>
+                
+                <div id="customResult" class="time-result" style="margin-top: 25px; display: none;">
+                    <h3>ผลลัพธ์การใช้ Seed เดิมกับตัวเลขเริ่มต้นใหม่</h3>
+                    <p>Initial Seed State: <span id="customSeedResult" class="highlight">0</span></p>
+                    <p>ตัวเลขเริ่มต้นใหม่: <span id="customStartResult" class="highlight">000</span></p>
+                    <p>จำนวนครั้ง: <span id="customAttemptsResult" class="highlight">0</span></p>
+                    <p>ตัวเลขผลลัพธ์: <span id="customNumberResult" class="highlight">000</span></p>
+                </div>
+            </div>
         </div>
         
         <footer>
@@ -610,7 +661,6 @@
 
     <script>
         // --- Deterministic PRNG (sfc32) with state export/import ---
-        // Modified to return the current state (a, b, c, d)
         function sfc32(a, b, c, d) {
             let state = { a: a | 0, b: b | 0, c: c | 0, d: d | 0 };
 
@@ -636,7 +686,6 @@
         }
 
         // Improved seed generation function for large numbers
-        // This now generates the initial a, b, c, d array
         function generateInitialSeedState(startNumStr, stopNumStr, timestampStr) {
             const seedString = `${startNumStr}|${stopNumStr}|${timestampStr}`;
             let a = 0x9E3779B9, b = 0x243F6A88, c = 0xB7E15162, d = 0xDEADBEEF;
@@ -651,6 +700,21 @@
             return [a, b, c, d];
         }
 
+        // Function to generate seed state from custom start number
+        function generateCustomSeedState(startNumStr, originalSeedState) {
+            const [a, b, c, d] = originalSeedState;
+            let newA = a, newB = b, newC = c, newD = d;
+            
+            for (let i = 0; i < startNumStr.length; i++) {
+                const char = startNumStr.charCodeAt(i);
+                newA = (newA + char) | 0;
+                newB = (newB ^ char) | 0;
+                newC = (newC + (char << 3)) | 0;
+                newD = (newD ^ (char >>> 5)) | 0;
+            }
+            return [newA, newB, newC, newD];
+        }
+
         // Elements for random number section
         const displayArea = document.getElementById('displayArea');
         const digitSelector = document.getElementById('digitSelector');
@@ -660,7 +724,6 @@
         const stopButton = document.getElementById('stopButton');
         const resetButton = document.getElementById('resetButton');
         const homeButton = document.getElementById('homeButton');
-        const footerHomeButton = document.getElementById('footerHomeButton');
         const repeatButton = document.getElementById('repeatButton');
         const timeResult = document.getElementById('timeResult');
         const startNumberResult = document.getElementById('startNumberResult');
@@ -681,6 +744,17 @@
         const reverseSeedResult = document.getElementById('reverseSeedResult');
         const reverseAttemptsResult = document.getElementById('reverseAttemptsResult');
         const reverseNumberResult = document.getElementById('reverseNumberResult');
+        
+        // Elements for custom seed calculation
+        const customSeedInput = document.getElementById('customSeedInput');
+        const customStartNumberInput = document.getElementById('customStartNumber');
+        const customAttemptsInput = document.getElementById('customAttempts');
+        const customCalculateButton = document.getElementById('customCalculateButton');
+        const customResult = document.getElementById('customResult');
+        const customSeedResult = document.getElementById('customSeedResult');
+        const customStartResult = document.getElementById('customStartResult');
+        const customAttemptsResult = document.getElementById('customAttemptsResult');
+        const customNumberResult = document.getElementById('customNumberResult');
 
         let intervalId = null; 
         let numDigits = 3; 
@@ -689,8 +763,8 @@
         let currentNumber = '';
         let lastTimeUsed = 0;
         let lastAttempts = 0;
-        let currentInitialSeedState = []; // Store the initial seed state array
-        let randomFunc = null; // The sfc32 function instance
+        let currentInitialSeedState = [];
+        let randomFunc = null;
 
         // ฟังก์ชันสำหรับการเรนเดอร์ลูกปิงปอง
         function renderPingPongBalls(numberString) {
@@ -760,7 +834,6 @@
             stopNumberResult.textContent = stopNumberInput.value.padStart(numDigits, '0');
             timeUsed.textContent = formatTime(timeElapsed);
             attemptCount.textContent = attempts.toLocaleString();
-            // Display the initial seed state as a string for copy-pasting
             initialSeedResult.textContent = JSON.stringify(currentInitialSeedState); 
             timeResult.style.display = 'block';
 
@@ -781,8 +854,6 @@
             runButton.disabled = false;
             stopButton.disabled = true;
             timeResult.style.display = 'none';
-            
-            // ไม่รีเซ็ตค่าที่ผู้ใช้กรอก เพื่อให้สามารถใช้งานซ้ำได้
         }
 
         // ฟังก์ชันคำนวณย้อนกลับ
@@ -829,6 +900,67 @@
             reverseResult.style.display = 'block';
         }
 
+        // ฟังก์ชันคำนวณด้วย Seed เดิมแต่ตัวเลขเริ่มต้นใหม่
+        function calculateCustom() {
+            const reverseDigits = parseInt(reverseDigitSelector.value, 10);
+            const seedStateString = customSeedInput.value;
+            const customStartNumber = customStartNumberInput.value;
+            const attemptsValue = parseInt(customAttemptsInput.value);
+            
+            if (!seedStateString) {
+                alert('กรุณากรอก Initial Seed State ที่ใช้ในการสุ่มครั้งนั้นๆ (ในรูปแบบ [a,b,c,d])');
+                customSeedInput.focus();
+                return;
+            }
+
+            if (!customStartNumber) {
+                alert('กรุณากรอกตัวเลขเริ่มต้นใหม่');
+                customStartNumberInput.focus();
+                return;
+            }
+
+            if (customStartNumber.length !== reverseDigits) {
+                alert(`ตัวเลขเริ่มต้นใหม่ต้องมี ${reverseDigits} หลัก`);
+                customStartNumberInput.focus();
+                return;
+            }
+
+            let parsedSeedState;
+            try {
+                parsedSeedState = JSON.parse(seedStateString);
+                if (!Array.isArray(parsedSeedState) || parsedSeedState.length !== 4) {
+                    throw new Error('Seed State ต้องเป็น Array ที่มี 4 ตัวเลข');
+                }
+            } catch (e) {
+                alert('รูปแบบ Initial Seed State ไม่ถูกต้อง. กรุณากรอกเป็น Array ของตัวเลข 4 ตัว เช่น [123,456,789,101]');
+                customSeedInput.focus();
+                return;
+            }
+
+            if (isNaN(attemptsValue) || attemptsValue <= 0) {
+                alert('กรุณากรอกจำนวนครั้งที่สุ่มเป็นตัวเลขที่มากกว่า 0');
+                customAttemptsInput.focus();
+                return;
+            }
+            
+            // สร้าง seed state ใหม่จากตัวเลขเริ่มต้นใหม่
+            const customSeedState = generateCustomSeedState(customStartNumber, parsedSeedState);
+            
+            // สร้าง PRNG ด้วย seed state ใหม่
+            const customRandomGenerator = sfc32(...customSeedState); 
+            
+            let calculatedNumber = '';
+            for (let i = 0; i < attemptsValue; i++) {
+                calculatedNumber = generateRandomNumber(reverseDigits, customRandomGenerator);
+            }
+            
+            customSeedResult.textContent = JSON.stringify(customSeedState);
+            customStartResult.textContent = customStartNumber.padStart(reverseDigits, '0');
+            customAttemptsResult.textContent = attemptsValue;
+            customNumberResult.textContent = calculatedNumber;
+            customResult.style.display = 'block';
+        }
+
         // ฟังก์ชันคัดลอก Seed State
         function copySeedToClipboard() {
             const seedText = initialSeedResult.textContent;
@@ -836,7 +968,6 @@
             
             navigator.clipboard.writeText(seedText)
                 .then(() => {
-                    // แสดงการยืนยันว่าคัดลอกแล้ว
                     const originalText = copySeedButton.textContent;
                     copySeedButton.textContent = 'คัดลอกแล้ว!';
                     
@@ -862,7 +993,10 @@
             const placeholderText = '0'.repeat(reverseDigits);
             reverseStartNumberInput.placeholder = placeholderText;
             reverseStartNumberInput.maxLength = reverseDigits;
+            customStartNumberInput.placeholder = placeholderText;
+            customStartNumberInput.maxLength = reverseDigits;
             reverseResult.style.display = 'none';
+            customResult.style.display = 'none';
         });
 
         // อีเวนต์เมื่อกดปุ่มเริ่มสุ่ม
@@ -956,15 +1090,14 @@
         // อีเวนต์เมื่อกดปุ่มคำนวณย้อนกลับ
         reverseCalculateButton.addEventListener('click', calculateReverse);
         
+        // อีเวนต์เมื่อกดปุ่มคำนวณด้วย Seed เดิมแต่ตัวเลขเริ่มต้นใหม่
+        customCalculateButton.addEventListener('click', calculateCustom);
+        
         // อีเวนต์เมื่อกดปุ่มคัดลอก Seed
         copySeedButton.addEventListener('click', copySeedToClipboard);
         
         // อีเวนต์เมื่อกดปุ่มกลับสู่หน้าหลัก
         homeButton.addEventListener('click', () => {
-            window.location.href = 'https://juckmanphai.github.io/4/index.html';
-        });
-        
-        footerHomeButton.addEventListener('click', () => {
             window.location.href = 'https://juckmanphai.github.io/4/index.html';
         });
         
@@ -980,6 +1113,24 @@
                 calculateReverse();
             }
         });
+        
+        customSeedInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                calculateCustom();
+            }
+        });
+        
+        customStartNumberInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                calculateCustom();
+            }
+        });
+        
+        customAttemptsInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                calculateCustom();
+            }
+        });
 
         // อัพเดทการตั้งค่าเมื่อโหลดหน้า
         document.addEventListener('DOMContentLoaded', () => {
@@ -992,6 +1143,8 @@
             const placeholderText = '0'.repeat(reverseDigits);
             reverseStartNumberInput.placeholder = placeholderText;
             reverseStartNumberInput.maxLength = reverseDigits;
+            customStartNumberInput.placeholder = placeholderText;
+            customStartNumberInput.maxLength = reverseDigits;
         });
     </script>
 
