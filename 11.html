@@ -3054,7 +3054,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         exportPosSummaryToXlsx(context) {
-            const { summaryResult, title, thaiDateString, periodName, sellerIdFilter, startDate, endDate, stockAsOfDate } = context;
+            const { summaryResult, title, thaiDateString, periodName, sellerIdFilter, startDate, endDate, stockAsOfDate, dayCount } = context;
             const isSingleDayReport = startDate.getFullYear() === endDate.getFullYear() && startDate.getMonth() === endDate.getMonth() && startDate.getDate() === endDate.getDate();
             let dataRows = [];
 
@@ -3068,12 +3068,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const isSingleSellerReport = !!(sellerIdFilter && sellerIdFilter !== 'all');
 
-            dataRows.push(['สรุปโดย :', this.currentUser.username]);
-            dataRows.push(['สรุปเมื่อ :', summaryDateTime]);
-            const finalTitle = title.replace('ข้อมูล', 'ข้อมูลทั้งหมด');
-            dataRows.push([finalTitle + ':', thaiDateString]);
+            // Add header information
+            dataRows.push([title]);
+            dataRows.push(['ช่วงวันที่:', thaiDateString]);
+            dataRows.push(['สรุปเมื่อ:', summaryDateTime]);
             dataRows.push([]);
 
+            // Add overall summary for admin view
             if (this.currentUser.role === 'admin' && !isSingleSellerReport) {
                 dataRows.push(['--- ภาพรวมทั้งหมด ---']);
                 dataRows.push(['ยอดเงินสด (บาท)', this.formatNumberSmart(summaryResult.grandTotalCash)]);
@@ -3087,19 +3088,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 dataRows.push([]);
             }
 
+            // Add seller-specific data
             for (const sellerId in summaryResult.sellerSummary) {
                 const sellerData = summaryResult.sellerSummary[sellerId];
-                if (dataRows.length > 5 && !isSingleSellerReport) {
-                    dataRows.push([]);
-                }
-
+                
+                if (dataRows.length > 0) dataRows.push([]);
+                
                 dataRows.push([`--- สรุปยอดขาย: ${sellerData.sellerName} ---`]);
                 dataRows.push(['ยอดขายรวม (บาท)', this.formatNumberSmart(sellerData.totalSales)]);
                 dataRows.push(['ยอดเงินสด (บาท)', this.formatNumberSmart(sellerData.totalCash)]);
                 dataRows.push(['ยอดเงินโอน (บาท)', this.formatNumberSmart(sellerData.totalTransfer)]);
                 dataRows.push(['ยอดเครดิต (บาท)', this.formatNumberSmart(sellerData.totalCredit)]);
+                
+                // แก้ไข: ใช้ sellerData.totalSellingDays แทน summaryResult.totalSellingDays
                 if (!isSingleDayReport) {
-                    dataRows.push(['จำนวนวันขายทั้งหมด (วัน)', summaryResult.totalSellingDays]);
+                    dataRows.push(['จำนวนวันขายทั้งหมด (วัน)', sellerData.totalSellingDays || 0]);
                 }
 
                 const user = this.data.users.find(u => u.id == sellerId);
@@ -3136,17 +3139,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 dataRows.push([]);
                 dataRows.push(['สินค้า', 'ขาย(เงินสด)', 'ขาย(เงินโอน)', 'ขาย(เครดิต)', 'รวม(หน่วย)', 'ยอดขาย(บาท)', 'คงเหลือ']);
+                
                 Object.values(sellerData.productSummary).forEach(p => {
                     const stockAtEndOfDay = stockAsOfDate ? stockAsOfDate.get(p.name) : 'N/A';
                     const formattedStock = (typeof stockAtEndOfDay === 'number') ? this.formatNumberSmart(stockAtEndOfDay) : 'N/A';
-                    dataRows.push([p.name, `${this.formatNumberSmart(p.cashQty)} ${p.unit}`, `${this.formatNumberSmart(p.transferQty)} ${p.unit}`, `${this.formatNumberSmart(p.creditQty)} ${p.unit}`, `${this.formatNumberSmart(p.totalQty)} ${p.unit}`, this.formatNumberSmart(p.totalValue), `${formattedStock} ${p.unit}`]);
+                    dataRows.push([
+                        p.name, 
+                        `${this.formatNumberSmart(p.cashQty)} ${p.unit}`, 
+                        `${this.formatNumberSmart(p.transferQty)} ${p.unit}`, 
+                        `${this.formatNumberSmart(p.creditQty)} ${p.unit}`, 
+                        `${this.formatNumberSmart(p.totalQty)} ${p.unit}`, 
+                        this.formatNumberSmart(p.totalValue), 
+                        `${formattedStock} ${p.unit}`
+                    ]);
                 });
+
+                // Add credit details if available
+                const creditSalesDetails = this.data.sales.filter(s => 
+                    s.sellerId == sellerId && 
+                    s.paymentMethod === 'เครดิต' && 
+                    new Date(s.date) >= startDate && 
+                    new Date(s.date) <= endDate
+                );
+
+                if (creditSalesDetails.length > 0) {
+                    dataRows.push([]);
+                    dataRows.push(['--- รายละเอียดลูกหนี้ (เครดิต) ---']);
+                    dataRows.push(['วันที่', 'ผู้ซื้อ', 'รายการ', 'ยอดเงิน(บาท)', 'กำหนดชำระ']);
+                    
+                    creditSalesDetails.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(s => {
+                        const itemsList = s.items.map(item => {
+                            const product = this.data.products.find(p => p.id === item.productId);
+                            const unit = product ? product.unit : 'หน่วย';
+                            return `${item.name}(${this.formatNumberSmart(item.quantity)} ${unit})`;
+                        }).join('; ');
+                        
+                        dataRows.push([
+                            this.formatThaiDateFullYear(s.date),
+                            s.buyerName || '-',
+                            itemsList,
+                            this.formatNumberSmart(s.total),
+                            this.formatThaiDateFullYear(s.creditDueDate)
+                        ]);
+                    });
+                }
+
+                // Add transfer details if available
+                const transferSalesDetails = this.data.sales.filter(s => 
+                    s.sellerId == sellerId && 
+                    s.paymentMethod === 'เงินโอน' && 
+                    new Date(s.date) >= startDate && 
+                    new Date(s.date) <= endDate
+                );
+
+                if (transferSalesDetails.length > 0) {
+                    dataRows.push([]);
+                    dataRows.push(['--- รายละเอียดเงินโอน ---']);
+                    dataRows.push(['วันที่', 'ผู้โอน', 'รายการ', 'ยอดเงิน(บาท)']);
+                    
+                    transferSalesDetails.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(s => {
+                        const itemsList = s.items.map(item => {
+                            const product = this.data.products.find(p => p.id === item.productId);
+                            const unit = product ? product.unit : 'หน่วย';
+                            return `${item.name}(${this.formatNumberSmart(item.quantity)} ${unit})`;
+                        }).join('; ');
+                        
+                        dataRows.push([
+                            this.formatThaiDateFullYear(s.date),
+                            s.transferorName || '-',
+                            itemsList,
+                            this.formatNumberSmart(s.total)
+                        ]);
+                    });
+                }
             }
 
             // สร้างไฟล์ Excel
             const ws = XLSX.utils.aoa_to_sheet(dataRows);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "สรุปภาพรวม");
+
+            // ปรับความกว้างของคอลัมน์ให้พอดีกับเนื้อหา
+            const colWidths = [];
+            dataRows.forEach(row => {
+                row.forEach((cell, colIndex) => {
+                    const cellLength = cell ? cell.toString().length : 0;
+                    if (!colWidths[colIndex] || cellLength > colWidths[colIndex]) {
+                        colWidths[colIndex] = Math.min(cellLength, 50); // จำกัดความกว้างสูงสุดที่ 50
+                    }
+                });
+            });
+
+            ws['!cols'] = colWidths.map(width => ({ width: width + 2 }));
 
             // สร้าง blob และดาวน์โหลด
             const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
@@ -4993,8 +5077,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.target.classList.contains('delete-stock-out-btn')) this.deleteStockOut(e.target.dataset.id);
                 if (e.target.id === 'clear-stock-out-form-btn') this.clearStockOutForm();
 
-                if (e.target.id === 'export-sales-history-csv-btn') {
-                    this.exportSalesHistoryTocsv();
+                // แก้ไข: เปลี่ยนจาก CSV เป็น XLSX
+                if (e.target.id === 'export-sales-history-excel-btn') {
+                    this.exportSalesHistoryToXlsx();
                 }
 
                 const collapsibleBar = e.target.closest('.collapsible-bar');
@@ -5011,7 +5096,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 
-                if (e.target.id === 'load-from-file-btn') document.getElementById('data-file-input').click();if (e.target.id === 'save-to-file-btn' || e.target.id === 'save-to-file-btn-seller') this.saveBackupToFile(); 
+                if (e.target.id === 'load-from-file-btn') document.getElementById('data-file-input').click();
+                if (e.target.id === 'save-to-file-btn' || e.target.id === 'save-to-file-btn-seller') this.saveBackupToFile(); 
                 if (e.target.id === 'save-to-browser-btn' || e.target.id === 'save-to-browser-btn-seller') this.manualSaveToBrowser(); 
                 
                 if (e.target.id === 'open-reset-modal-btn') this.openResetModal();
@@ -5025,9 +5111,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.target.id === 'my-summary-by-day-btn') this.summarizeMyDay(); 
                 if (e.target.id === 'my-summary-by-range-btn') this.summarizeMyRange();
 
-
                 // New/Refactored Admin Summary Buttons
-                if (e.target.id === 'admin-summary-today-btn') this.runAdminSummaryToday();if (e.target.id === 'admin-summary-all-btn') this.runAdminSummaryAll();
+                if (e.target.id === 'admin-summary-today-btn') this.runAdminSummaryToday();
+                if (e.target.id === 'admin-summary-all-btn') this.runAdminSummaryAll();
                 if (e.target.id === 'admin-summary-by-day-btn') this.runAdminSummaryByDay();
                 if (e.target.id === 'generate-detailed-report-btn') this.runAdminDetailedReport();
                 if (e.target.id === 'generate-credit-summary-btn') this.runAdminCreditSummary();
@@ -5136,15 +5222,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }); 
-            document.getElementById('export-sales-history-excel-btn').addEventListener('click', () => {
-    this.exportSalesHistoryToXlsx();
-});
+            
+            // เพิ่ม event listener สำหรับปุ่มส่งออก Excel
+            const exportExcelBtn = document.getElementById('export-sales-history-excel-btn');
+            if (exportExcelBtn) {
+                exportExcelBtn.addEventListener('click', () => {
+                    this.exportSalesHistoryToXlsx();
+                });
+            }
+            
             document.getElementById('cancel-reset-btn').addEventListener('click', () => this.closeResetModal());
             document.getElementById('confirm-selective-reset-btn').addEventListener('click', () => this.handleSelectiveReset());
         },
     };
     
-   window.App = App;
+    window.App = App;
     App.init();
 });
 </script>
