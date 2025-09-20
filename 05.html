@@ -149,6 +149,18 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
     margin: 0 0.5px;
 }
 
+.checkmark {
+  position: absolute;
+  top: 30%;
+  right: -35px; /* ขยับออกมาด้านนอก */
+  transform: translateY(-50%);
+  color: #2196f3; /* สีฟ้า */
+  font-size: 40px;
+  font-weight: normal; /* ไม่เป็นตัวหนา */
+  text-shadow: 0px 0px 8px rgba(33, 150, 243, 0.8); /* เงานุ่มๆ สีฟ้า */
+  z-index: 1;
+}
+
 
 /* สไตล์ร่วมของป้าย (เอฟเฟกต์ร่องลึก ตัวอักษรสีขาว) */
 .prize-label-blue, .prize-label-orange {
@@ -177,6 +189,7 @@ input, select { font-size: 16px; padding: 8px; margin: 5px 0; border: 1.5px soli
 
 /* แก้ไข CSS สำหรับ container ต่างๆ */
 .circle-container, .square-container, .square-two-container { 
+    position: relative; /* เพิ่มเพื่อให้สามารถวางเครื่องหมายถูกได้ */
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -843,7 +856,12 @@ function createPingPongNumbers(numbers, type = 'red', size = 50, fontSize = 26) 
             const { twoDigits } = getNumbersForToggle();
             
             if (button.classList.toggle("active")) {
-                display.innerHTML = `<div class="circle-container">${createPingPongNumbers(twoDigits, 'orange', 50, 26)}</div>`;
+                display.innerHTML = `
+                    <div class="circle-container">
+                        ${createPingPongNumbers(twoDigits, 'orange', 50, 26)}
+                        <div class="checkmark">✓</div>
+                    </div>
+                `;
             } else {
                 display.innerHTML = createPingPongNumbers(twoDigits, 'orange', 50, 26);
             }
@@ -855,7 +873,12 @@ function createPingPongNumbers(numbers, type = 'red', size = 50, fontSize = 26) 
             const { threeDigits } = getNumbersForToggle();
 
             if (button.classList.toggle("active")) {
-                display.innerHTML = `<div class="square-container">${createPingPongNumbers(threeDigits, 'blue', 50, 26)}</div>`;
+                display.innerHTML = `
+                    <div class="square-container">
+                        ${createPingPongNumbers(threeDigits, 'blue', 50, 26)}
+                        <div class="checkmark">✓</div>
+                    </div>
+                `;
             } else {
                 display.innerHTML = createPingPongNumbers(threeDigits, 'blue', 50, 26);
             }
@@ -867,7 +890,13 @@ function createPingPongNumbers(numbers, type = 'red', size = 50, fontSize = 26) 
             const { threeDigits, threeDigits_first, threeDigits_lastTwo } = getNumbersForToggle();
 
             if (button.classList.toggle("active")) {
-                display.innerHTML = `${createPingPongBall(threeDigits_first, 'blue', 50, 26)}<div class="square-two-container">${createPingPongNumbers(threeDigits_lastTwo, 'blue', 50, 26)}</div>`;
+                display.innerHTML = `
+                    ${createPingPongBall(threeDigits_first, 'blue', 50, 26)}
+                    <div class="square-two-container">
+                        ${createPingPongNumbers(threeDigits_lastTwo, 'blue', 50, 26)}
+                        <div class="checkmark">✓</div>
+                    </div>
+                `;
             } else {
                 display.innerHTML = createPingPongNumbers(threeDigits, 'blue', 50, 26);
             }
@@ -931,7 +960,7 @@ function createPingPongNumbers(numbers, type = 'red', size = 50, fontSize = 26) 
                 return `งวดวันที่ ${dateString}`;
             }
             const days = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายन", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const dayOfWeek = days[date.getDay()];
             const monthName = months[date.getMonth()];
             return `งวดวัน${dayOfWeek}ที่ ${day} ${monthName} พ.ศ. ${thaiYear}`;
