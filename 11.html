@@ -321,21 +321,22 @@
         }
         
         /* New styles for password toggle */
-        .password-container {
-            position: relative;
-            width: 100%;
-        }
+.password-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px; /* ระยะห่างระหว่าง input กับปุ่ม */
+}
         
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-        }
+.password-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 10px;
+    font-size: 1.2em;
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
         
         .password-toggle:hover {
             color: #333;
@@ -641,6 +642,16 @@
         /* === END: CSS ใหม่สำหรับ Modal แสดงสรุป === */
 
         /* === START: ปรับปรุงสำหรับมือถือ === */
+@media screen and (max-width: 768px) {
+    .password-container {
+        gap: 5px;
+    }
+    
+    .password-toggle {
+        padding: 8px;
+        font-size: 1.1em;
+    }
+}
         @media screen and (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -737,10 +748,10 @@
                 <form id="login-form">
                     <input type="text" id="login-username" placeholder="ชื่อผู้ใช้งาน" required>
                     
-                    <div class="password-container">
-                        <input type="password" id="login-password" placeholder="รหัสผ่าน" required>
-                        <button type="button" class="password-toggle" id="toggle-login-password">👁️</button>
-                    </div>
+<div class="password-container">
+    <input type="password" id="login-password" placeholder="รหัสผ่าน" required>
+    <button type="button" class="password-toggle" id="toggle-login-password">👁️</button>
+</div>
                     
                     <button type="submit">เข้าสู่ระบบ</button>
                     <p id="login-message" class="error-message"></p>
