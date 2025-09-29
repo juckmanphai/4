@@ -28,34 +28,66 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
+        /* ปรับปรุง header สำหรับมือถือ */
         header {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 30px;
             border-bottom: 1px solid #eee;
             padding-bottom: 20px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         header h1, .container h1 {
             color: #0056b3;
             margin: 0;
-            font-size: clamp(12px, 2.5vw, 20px);
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+        }
+
+        /* ปรับปรุงเมนูสำหรับมือถือ */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #007bff;
+            padding: 5px 10px;
         }
 
         header nav {
             display: flex;
-            align-items: center;
-            gap: 15px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        header nav.mobile-hidden {
+            display: none;
         }
 
         header nav a {
             text-decoration: none;
             color: #007bff;
             font-weight: bold;
-            padding: 8px 12px;
+            padding: 10px 15px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
         }
 
         header nav a:hover {
@@ -74,7 +106,7 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1rem;
             transition: background-color 0.3s ease;
             margin-right: 5px; /* Added for buttons in a group */
         }
@@ -97,7 +129,7 @@
 
         .form-section, .data-section {
             background-color: #f9f9f9;
-            padding: 25px;
+            padding: 20px;
             border-radius: 8px;
             margin-bottom: 25px;
             border: 1px solid #eee;
@@ -109,6 +141,7 @@
             margin-bottom: 20px;
             border-bottom: 2px solid #007bff;
             padding-bottom: 10px;
+            font-size: clamp(1.1rem, 3.5vw, 1.5rem);
         }
 
         form {
@@ -125,7 +158,7 @@
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 1em;
+            font-size: 1rem;
             width: calc(100% - 24px); /* Account for padding */
             box-sizing: border-box; /* Ensures padding doesn't expand width */
         }
@@ -134,7 +167,7 @@
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 1em;
+            font-size: 1rem;
             width: calc(100% - 24px);
             box-sizing: border-box;
             resize: vertical;
@@ -147,29 +180,31 @@
 
         .filter-controls {
             display: flex;
+            flex-direction: column;
             gap: 10px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
         }
 
         .filter-controls input, .filter-controls button, .filter-controls select {
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
-            min-width: 120px; /* Ensure inputs don't become too small */
+            width: 100%;
+            box-sizing: border-box;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 0.9rem;
         }
 
         table th, table td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 10px;
             text-align: left;
+            word-break: break-word;
         }
 
         table th {
@@ -186,14 +221,21 @@
             background-color: #e9e9e9;
         }
 
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
         .action-buttons button {
             background: none;
             border: none;
             color: #007bff;
             cursor: pointer;
-            padding: 0 5px;
-            font-size: 0.9em;
+            padding: 5px;
+            font-size: 0.9rem;
             transition: color 0.3s;
+            text-align: left;
         }
 
         .action-buttons button:hover {
@@ -225,7 +267,7 @@
         }
 
         .info-message {
-            font-size: 0.9em;
+            font-size: 0.9rem;
             color: #6c757d;
             margin-top: 20px;
             border-top: 1px solid #eee;
@@ -258,7 +300,7 @@
         .summary-total {
             font-weight: bold;
             color: #28a745;
-            font-size: 1.1em;
+            font-size: 1.1rem;
             margin-top: 10px;
             display: block;
         }
@@ -324,7 +366,7 @@
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.5em;
+            font-size: 1.5rem;
             cursor: pointer;
             color: #666;
         }
@@ -491,124 +533,201 @@
             }
         }
 
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    #print-container, #print-container * {
-        visibility: visible;
-    }
-    #print-container {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        padding: 0;
-    }
-    
-    @page {
-        size: A4;
-        margin: 15mm 7mm 10mm 8mm; /* top, right, bottom, left */
-        @top-center {
-            content: "หน้า " counter(page);
-            font-family: Arial, sans-serif;
-            font-size: clamp(8pt, 1vw, 9pt);
-            color: #888;
-            margin-top: 5mm;
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-container, #print-container * {
+                visibility: visible;
+            }
+            #print-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+            }
+            
+            @page {
+                size: A4;
+                margin: 15mm 7mm 10mm 8mm; /* top, right, bottom, left */
+                @top-center {
+                    content: "หน้า " counter(page);
+                    font-family: Arial, sans-serif;
+                    font-size: clamp(8pt, 1vw, 9pt);
+                    color: #888;
+                    margin-top: 5mm;
+                }
+            }
+            body {
+                background: #fff !important;
+                font-size: clamp(9pt, 1.5vw, 10pt);
+                margin: 0;
+                width: 100%;
+            }
+            
+            #print-container .summaryResult {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                background-color: #fff !important;
+                text-align: center;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-top: 10mm; /* เว้นที่สำหรับเลขหน้า */
+            }
+            
+            #print-container .summaryResult p[style*="margin-left"] {
+                text-align: left;
+                display: inline-block;
+            }
+            
+            #print-container h2, #print-container h3, #print-container h4 {
+                margin-bottom: 0.5em;
+            }
+            #print-container p, #print-container li {
+                font-size: clamp(8.5pt, 1.4vw, 9.5pt);
+                line-height: 1.0;
+            }
+          #print-container table {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            table-layout: fixed; /* ช่วยให้ความกว้างคอลัมน์ไม่ผลักขอบออกนอกหน้า */
+            page-break-inside: auto;
+            box-sizing: border-box;
+          }
+            #print-container thead {
+                 display: table-header-group;
+            }
+            #print-container tr {
+                page-break-inside: avoid;
+            }
+            #print-container th,
+            #print-container td {
+                border: 1px solid #000 !important; /* บังคับเส้นขอบทุกด้าน */
+                padding: 4px 6px;
+                text-align: center;
+                line-height: 1.2; 
+                font-size: clamp(8pt, 1.3vw, 9pt);
+            }
+            #print-container th {
+                background-color: #f0f0f0 !important;
+                font-weight: bold;
+            }
+
+            /* แก้ปัญหาช่องสุดท้ายด้านขวาไม่ถูกปิด */
+            #print-container th:last-child,
+            #print-container td:last-child {
+                border-right: 1px solid #000 !important;
+            }
+
+            #print-container span[style*="color"] {
+                color: #000 !important;
+            }
+            #print-container hr {
+                 border-top: 1px solid #999;
+                 margin: 1.5em 0;
+            }
         }
-    }
-    body {
-        background: #fff !important;
-        font-size: clamp(9pt, 1.5vw, 10pt);
-        margin: 0;
-        width: 100%;
-    }
-    
-    #print-container .summaryResult {
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        background-color: #fff !important;
-        text-align: center;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-top: 10mm; /* เว้นที่สำหรับเลขหน้า */
-    }
-    
-    #print-container .summaryResult p[style*="margin-left"] {
-        text-align: left;
-        display: inline-block;
-    }
-    
-    #print-container h2, #print-container h3, #print-container h4 {
-        margin-bottom: 0.5em;
-    }
-    #print-container p, #print-container li {
-        font-size: clamp(8.5pt, 1.4vw, 9.5pt);
-        line-height: 1.0;
-    }
-  #print-container table {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    border-collapse: collapse !important;
-    border-spacing: 0 !important;
-    table-layout: fixed; /* ช่วยให้ความกว้างคอลัมน์ไม่ผลักขอบออกนอกหน้า */
-    page-break-inside: auto;
-    box-sizing: border-box;
-  }
-    #print-container thead {
-         display: table-header-group;
-    }
-    #print-container tr {
-        page-break-inside: avoid;
-    }
-    #print-container th,
-    #print-container td {
-        border: 1px solid #000 !important; /* บังคับเส้นขอบทุกด้าน */
-        padding: 4px 6px;
-        text-align: center;
-        line-height: 1.2; 
-        font-size: clamp(8pt, 1.3vw, 9pt);
-    }
-    #print-container th {
-        background-color: #f0f0f0 !important;
-        font-weight: bold;
-    }
-
-    /* แก้ปัญหาช่องสุดท้ายด้านขวาไม่ถูกปิด */
-    #print-container th:last-child,
-    #print-container td:last-child {
-        border-right: 1px solid #000 !important;
-    }
-
-    #print-container span[style*="color"] {
-        color: #000 !important;
-    }
-    #print-container hr {
-         border-top: 1px solid #999;
-         margin: 1.5em 0;
-    }
-}
         /* === END: REVISED PRINT STYLES === */
 
         /* === END: CSS ใหม่สำหรับ Modal แสดงสรุป === */
+
+        /* Media Queries สำหรับมือถือ */
+        @media (min-width: 768px) {
+            header {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .header-top {
+                width: auto;
+            }
+            
+            .menu-toggle {
+                display: none;
+            }
+            
+            header nav {
+                flex-direction: row;
+                width: auto;
+                margin-top: 0;
+            }
+            
+            header nav a {
+                width: auto;
+                text-align: center;
+            }
+            
+            .filter-controls {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .filter-controls input, .filter-controls button, .filter-controls select {
+                width: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: row;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            header nav {
+                display: none;
+            }
+            
+            header nav.mobile-visible {
+                display: flex;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header for logged in users -->
         <header id="main-header" class="hidden">
-            <h1 id="welcome-message">ยินดีต้อนรับ, ผู้ใช้งาน!</h1>
-            <nav id="main-nav">
+            <div class="header-top">
+                <h1 id="welcome-message">ยินดีต้อนรับ, ผู้ใช้งาน!</h1>
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+            </div>
+            <nav id="main-nav" class="mobile-hidden">
                 <a href="#" data-page="activity" class="active">บันทึกกิจกรรม</a>
-                <a href="#" data-page="activity-types">จัดการประเภทกิจกรรม</a>
-                <a href="#" data-page="summary">สรุปกิจกรรมรายวัน</a>
-                <a href="#" data-page="admin" id="admin-link" class="hidden">Admin Dashboard</a>
+                <a href="#" data-page="activity-types">จัดการกิจกรรม</a>
+                <a href="#" data-page="summary">สรุปกิจกรรม</a>
+                <a href="#" data-page="admin" id="admin-link" class="hidden">ผู้ดูแลระบบ</a>
                 <button id="logout-button">ออกจากระบบ</button>
             </nav>
         </header>
 
+        <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Login/Register Section -->
         <div id="auth-section">
             <h1>ระบบบันทึกกิจกรรม</h1>
@@ -632,6 +751,7 @@
             </div>
         </div>
 
+        <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Activity Page Content -->
         <div id="activity-page" class="hidden">
             <section class="form-section">
@@ -685,6 +805,7 @@
             </section>
         </div>
         
+        <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Activity Types Management Page Content -->
         <div id="activity-types-page" class="hidden">
             <section class="form-section">
@@ -715,6 +836,7 @@
             </section>
         </div>
 
+        <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Summary Page Content -->
         <div id="summary-page" class="hidden">
             <section class="data-section">
@@ -749,6 +871,7 @@
             </section>
         </div>
 
+        <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Admin Page Content -->
         <div id="admin-page" class="hidden">
             <!-- ADDED: Import/Export section -->
@@ -2153,40 +2276,61 @@ function displaySummaryOnScreen() {
 
     let summaryHTML = `
     <div class="summaryResult" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #FAFAD2; text-align: center;">
-        <h2 style="color: #0056b3; margin-bottom: 10px; font-size: clamp(1.5em, 2.5vw, 2em);">สรุปกิจกรรม</h2>
-        <h3 style="color: #333; margin-bottom: 10px; font-size: clamp(1.1em, 2vw, 1.5em);">ผู้ใช้งาน: ${loggedInUser.username}</h3>
-        <h3 style="color: #333; margin-bottom: 20px; font-size: clamp(1em, 1.8vw, 1.3em);">
+        <h2 style="color: #0056b3; margin-bottom: 10px; font-size: clamp(0.5em, 2.0vw, 2em);">สรุปกิจกรรม</h2>
+        <h3 style="color: #333; margin-bottom: 10px; font-size: clamp(0.5em, 2vw, 1.5em);">ผู้ใช้งาน: ${loggedInUser.username}</h3>
+        <h3 style="color: #333; margin-bottom: 20px; font-size: clamp(0.5em, 1.8vw, 1.3em);">
 `;
 
-    if (startDate && endDate && startDate !== endDate) {
-        summaryHTML += `ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}</h3>`;
-    } else if (startDate) {
-        summaryHTML += `วันที่ ${formatDate(startDate)}</h3>`;
+if (startDate && endDate && startDate !== endDate) {
+    summaryHTML += `
+        <div style="text-align: center; margin-bottom: 5px;">
+            <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+                ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}
+            </h3>
+        </div>`;
+} else if (startDate) {
+    summaryHTML += `
+        <div style="text-align: center; margin-bottom: 5px;">
+            <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+                วันที่ ${formatDate(startDate)}
+            </h3>
+        </div>`;
+} else {
+    // กรณี All-Time หรือไม่มีการเลือกวันที่
+    const allActivityDates = Array.from(new Set(userActivities.map(activity => activity.date))).sort();
+    if (allActivityDates.length > 0) {
+        summaryHTML += `
+            <div style="text-align: center; margin-bottom: 5px;">
+                <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+                    จากวันที่ ${formatDate(allActivityDates[0])} ถึง ${formatDate(allActivityDates[allActivityDates.length - 1])}
+                </h3>
+            </div>`;
     } else {
-        // กรณี All-Time หรือไม่มีการเลือกวันที่
-        const allActivityDates = Array.from(new Set(userActivities.map(activity => activity.date))).sort();
-        if (allActivityDates.length > 0) {
-            summaryHTML += `จากวันที่ ${formatDate(allActivityDates[0])} ถึง ${formatDate(allActivityDates[allActivityDates.length - 1])}</h3>`;
-        } else {
-            summaryHTML += `ไม่มีกิจกรรมในช่วงที่เลือก</h3>`; // กรณีไม่มีกิจกรรมเลย
-        }
+        summaryHTML += `
+            <div style="text-align: center; margin-bottom: 5px;">
+                <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+                    ไม่มีกิจกรรมในช่วงที่เลือก
+                </h3>
+            </div>`;
     }
+}
+
     
     // เพิ่มข้อมูลสรุปจำนวนวัน (จากโค้ดตัวอย่างด้านบน)
     // ส่วนนี้จะแสดงเสมอไม่ว่าจะเลือก summaryType แบบไหน
-    summaryHTML += `
-<div style="background-color: #eaf6ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-    <h4 style="color: #0056b3; margin-top: 0; font-size: clamp(0.5rem, 2vw, 1.5rem);">สรุปจำนวนวัน</h4>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.8vw, 1.2rem);">• จำนวนวันทั้งหมด: ${totalDays} วัน</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.8vw, 1.2rem);">• มีกิจกรรม: ${daysWithActivities} วัน</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.8vw, 1.2rem);">• ไม่มีกิจกรรม: ${daysWithoutActivities} วัน</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.8vw, 1.2rem);">• เวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.8vw, 1.2rem);">• เวลาเฉลี่ยต่อวัน (เฉพาะวันที่มีกิจกรรม): ${formatDuration(avgDurationPerDay)}</p>
+summaryHTML += `
+<div style="background-color: #eaf6ff; padding: 5px; border-radius: 8px; margin-bottom: 5px; text-align: center;">
+    <h4 style="color: #0056b3; margin-top: 0; font-size: clamp(0.5rem, 2vw, 1.0rem); line-height: 1;">สรุปจำนวนวัน</h4>
+    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• จำนวนวันทั้งหมด: ${totalDays} วัน</p>
+    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• มีกิจกรรม: ${daysWithActivities} วัน</p>
+    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• ไม่มีกิจกรรม: ${daysWithoutActivities} วัน</p>
+    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• เวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</p>
+    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• เวลาเฉลี่ยต่อวัน (เฉพาะวันที่มีกิจกรรม): ${formatDuration(avgDurationPerDay)}</p>
 </div>
-        `;
+`;
     
     summaryHTML += `
-            <h4 style="color: #0056b3; margin-top: 20px; font-size: clamp(1.1em, 1.8vw, 1.4em);">
+            <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.5em, 1.8vw, 1.0em);">
                 สรุปตามประเภทกิจกรรม
             </h4>
             <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.85em, 1.2vw, 1em);">
@@ -2211,11 +2355,11 @@ function displaySummaryOnScreen() {
     summaryHTML += `
                 </tbody>
             </table>
-            <p style="font-size: clamp(1em, 1.2vw, 1.1em); margin-top: 15px;">
-                <strong>ระยะเวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</strong>
-            </p>
+<p style="font-size: clamp(0.5em, 1.2vw, 1.0em); margin-top: 15px; background-color: blue; color: white; padding: 5px; border-radius: 15px;">
+    <strong>ระยะเวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</strong>
+</p>
             
-            <h4 style="color: #0056b3; margin-top: 30px; font-size: clamp(1.1em, 1.8vw, 1.4em);">
+            <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.5em, 1.8vw, 1.0em);">
                 รายการกิจกรรมทั้งหมด
             </h4>
             <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.85em, 1.2vw, 1em);">
@@ -2231,6 +2375,7 @@ function displaySummaryOnScreen() {
                 </thead>
                 <tbody>
     `;    
+
     userActivities.forEach(activity => {
         const duration = calculateDuration(activity.startTime, activity.endTime);
         summaryHTML += `
