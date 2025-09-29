@@ -2285,22 +2285,22 @@ function displaySummaryOnScreen() {
 
     let summaryHTML = `
     <div class="summaryResult" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #FAFAD2; text-align: center;">
-        <h2 style="color: #0056b3; margin-bottom: 10px; font-size: clamp(0.5em, 2.0vw, 2em);">สรุปกิจกรรม</h2>
-        <h3 style="color: #333; margin-bottom: 10px; font-size: clamp(0.5em, 2vw, 1.5em);">ผู้ใช้งาน: ${loggedInUser.username}</h3>
-        <h3 style="color: #333; margin-bottom: 20px; font-size: clamp(0.5em, 1.8vw, 1.3em);">
+        <h2 style="color: #0056b3; margin-bottom: 10px; font-size: clamp(1.2rem, 3.5vw, 2em);">สรุปกิจกรรม</h2>
+        <h3 style="color: #333; margin-bottom: 10px; font-size: clamp(1rem, 3vw, 1.5em);">ผู้ใช้งาน: ${loggedInUser.username}</h3>
+        <h3 style="color: #333; margin-bottom: 20px; font-size: clamp(0.9rem, 2.8vw, 1.3em);">
 `;
 
 if (startDate && endDate && startDate !== endDate) {
     summaryHTML += `
         <div style="text-align: center; margin-bottom: 5px;">
-            <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+            <h3 style="font-size: clamp(0.8rem, 2.5vw, 1rem); line-height: 1.0; margin: 0;">
                 ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}
             </h3>
         </div>`;
 } else if (startDate) {
     summaryHTML += `
         <div style="text-align: center; margin-bottom: 5px;">
-            <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+            <h3 style="font-size: clamp(0.8rem, 2.5vw, 1rem); line-height: 1.0; margin: 0;">
                 วันที่ ${formatDate(startDate)}
             </h3>
         </div>`;
@@ -2310,14 +2310,14 @@ if (startDate && endDate && startDate !== endDate) {
     if (allActivityDates.length > 0) {
         summaryHTML += `
             <div style="text-align: center; margin-bottom: 5px;">
-                <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+                <h3 style="font-size: clamp(0.8rem, 2.5vw, 1rem); line-height: 1.0; margin: 0;">
                     จากวันที่ ${formatDate(allActivityDates[0])} ถึง ${formatDate(allActivityDates[allActivityDates.length - 1])}
                 </h3>
             </div>`;
     } else {
         summaryHTML += `
             <div style="text-align: center; margin-bottom: 5px;">
-                <h3 style="font-size: clamp(0.6rem, 2vw, 1rem); line-height: 1.0; margin: 0;">
+                <h3 style="font-size: clamp(0.8rem, 2.5vw, 1rem); line-height: 1.0; margin: 0;">
                     ไม่มีกิจกรรมในช่วงที่เลือก
                 </h3>
             </div>`;
@@ -2329,20 +2329,20 @@ if (startDate && endDate && startDate !== endDate) {
     // ส่วนนี้จะแสดงเสมอไม่ว่าจะเลือก summaryType แบบไหน
 summaryHTML += `
 <div style="background-color: #FAFAD2; padding: 5px; margin-bottom: 5px; text-align: center; color: blue;">
-    <h4 style="margin-top: 0; font-size: clamp(0.5rem, 1.2vw, 1.0rem); line-height: 1;">สรุปจำนวนวัน</h4>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• จำนวนวันทั้งหมด: ${totalDays} วัน</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• มีกิจกรรม: ${daysWithActivities} วัน</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• ไม่มีกิจกรรม: ${daysWithoutActivities} วัน</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• เวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</p>
-    <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• เวลาเฉลี่ยต่อวัน (เฉพาะวันที่มีกิจกรรม): ${formatDuration(avgDurationPerDay)}</p>
+    <h4 style="margin-top: 0; font-size: clamp(0.7rem, 2vw, 1.0rem); line-height: 1;">สรุปจำนวนวัน</h4>
+    <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• จำนวนวันทั้งหมด: ${totalDays} วัน</p>
+    <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• มีกิจกรรม: ${daysWithActivities} วัน</p>
+    <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• ไม่มีกิจกรรม: ${daysWithoutActivities} วัน</p>
+    <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• เวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</p>
+    <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• เวลาเฉลี่ยต่อวัน (เฉพาะวันที่มีกิจกรรม): ${formatDuration(avgDurationPerDay)}</p>
 </div>
 `;
     
     summaryHTML += `
-            <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.5em, 1.8vw, 1.0em);">
+            <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 สรุปตามประเภทกิจกรรม
             </h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.85em, 1.2vw, 1em);">
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
                 <thead>
                     <tr style="background-color: #007bff; color: white;">
                         <th style="padding: 10px; border: 1px solid #ddd;">ประเภทกิจกรรม</th>
@@ -2364,14 +2364,14 @@ summaryHTML += `
     summaryHTML += `
                 </tbody>
             </table>
-<p style="font-size: clamp(0.5em, 1.2vw, 1.0em); margin-top: 15px; background-color: blue; color: white; padding: 5px; border-radius: 15px;">
+<p style="font-size: clamp(0.8rem, 2.5vw, 1.0em); margin-top: 15px; background-color: blue; color: white; padding: 5px; border-radius: 15px;">
     <strong>ระยะเวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</strong>
 </p>
             
-            <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.5em, 1.8vw, 1.0em);">
+            <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 รายการกิจกรรมทั้งหมด
             </h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.85em, 1.2vw, 1em);">
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
                 <thead>
                     <tr style="background-color: #007bff; color: white;">
                         <th style="padding: 10px; border: 1px solid #ddd;">ชื่อกิจกรรม</th>
@@ -2414,13 +2414,14 @@ summaryHTML += `
     document.getElementById('summaryFontSizeValue').textContent = 'ขนาด: 100%';
     document.getElementById('summaryLineHeightValue').textContent = 'ความสูงของบรรทัด: 0.5';
     
-    // เรียกใช้การปรับขนาดเริ่มต้น
+    // เรียกใช้การปรับขนาดเริ่มต้น (ยังคงเก็บฟังก์ชันนี้ไว้เผื่อมีการใช้งานในอนาคต)
     adjustSummaryFontSize();
     adjustSummaryLineHeight();
 }
-    function closeSummaryModal() {
-        document.getElementById('summaryModal').style.display = 'none';
-    }
+
+function closeSummaryModal() {
+    document.getElementById('summaryModal').style.display = 'none';
+}
 
 function adjustSummaryFontSize() {
     const scale = parseFloat(document.getElementById('summaryFontSizeSlider').value);
@@ -2428,53 +2429,49 @@ function adjustSummaryFontSize() {
     
     const content = document.getElementById('modalBodyContent');
     
-    // บนมือถือให้ใช้ font-size แทน transform
-    if (window.innerWidth <= 767) {
-        content.style.transform = 'none';
-        // ปรับ font-size แทน
-        const baseSize = 14; // ขนาดพื้นฐานสำหรับมือถือ
-        content.style.fontSize = `${baseSize * scale}px`;
-    } else {
-        content.style.transform = `scale(${scale})`;
-        content.style.transformOrigin = 'top center';
-        content.style.fontSize = ''; // รีเซ็ต font-size
-    }
+    // สำหรับการปรับขนาดโดยรวมของเนื้อหา (ถ้าจำเป็น)
+    // การใช้ transform จะปรับขนาดทั้ง block รวมถึง padding/margin
+    // และไม่ไป override font-size ที่กำหนดด้วย clamp() โดยตรง
+    content.style.transform = `scale(${scale})`;
+    content.style.transformOrigin = 'top center';
+    // ไม่จำเป็นต้องปรับ font-size ตรงนี้แล้ว เพราะเราใช้ clamp() กำหนดไว้ใน HTML แล้ว
+    // หากต้องการให้ slider มีผลต่อ clamp() ต้องใช้ CSS custom properties (variable)
+    // แต่สำหรับการปรับขนาดโดยรวม transform ก็เพียงพอแล้ว
 }
 
-    function adjustSummaryLineHeight() {
-        const lineHeight = parseFloat(document.getElementById('summaryLineHeightSlider').value);
-        document.getElementById('summaryLineHeightValue').textContent = `ความสูงของบรรทัด: ${lineHeight}`;
-        
-        const content = document.getElementById('modalBodyContent');
-        const paragraphs = content.querySelectorAll('p');
-        const tableCells = content.querySelectorAll('td, th');
-        
-        paragraphs.forEach(p => {
-            p.style.marginBottom = `${lineHeight}em`;
-        });
-        
-        tableCells.forEach(cell => {
-            cell.style.paddingTop = `${lineHeight * 0.5}em`;
-            cell.style.paddingBottom = `${lineHeight * 0.5}em`;
-        });
-    }
+function adjustSummaryLineHeight() {
+    const lineHeight = parseFloat(document.getElementById('summaryLineHeightSlider').value);
+    document.getElementById('summaryLineHeightValue').textContent = `ความสูงของบรรทัด: ${lineHeight}`;
+    
+    const content = document.getElementById('modalBodyContent');
+    const paragraphs = content.querySelectorAll('p');
+    const tableCells = content.querySelectorAll('td, th');
+    
+    paragraphs.forEach(p => {
+        p.style.marginBottom = `${lineHeight}em`;
+    });
+    
+    tableCells.forEach(cell => {
+        cell.style.paddingTop = `${lineHeight * 0.5}em`;
+        cell.style.paddingBottom = `${lineHeight * 0.5}em`;
+    });
+}
 
-    function saveSummaryAsImage() {
-        const summaryContent = document.getElementById('modalBodyContent');
-        
-        html2canvas(summaryContent, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#FAFAD2'
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `สรุปกิจกรรม-${new Date().toISOString().split('T')[0]}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    }
-
+function saveSummaryAsImage() {
+    const summaryContent = document.getElementById('modalBodyContent');
+    
+    html2canvas(summaryContent, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#FAFAD2'
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `สรุปกิจกรรม-${new Date().toISOString().split('T')[0]}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+}
 function exportSummaryToXLSX() {
     const { 
         userActivities, 
