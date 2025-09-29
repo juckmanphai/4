@@ -608,14 +608,14 @@ header nav {
     margin: 0;
 }
 
-/* ปรับปรุง CSS สำหรับเนื้อหาสรุป */
 .summaryResult {
     width: 100% !important;
     max-width: 100% !important;
     padding: 10px !important;
     margin: 0 !important;
     box-sizing: border-box;
-    overflow-x: hidden; /* ป้องกันการล้นแนวนอน */
+    overflow-x: hidden;
+    background-color: #FAFAD2 !important; /* เพิ่มบรรทัดนี้ */
 }
 
 .summaryResult table {
@@ -2328,8 +2328,8 @@ if (startDate && endDate && startDate !== endDate) {
     // เพิ่มข้อมูลสรุปจำนวนวัน (จากโค้ดตัวอย่างด้านบน)
     // ส่วนนี้จะแสดงเสมอไม่ว่าจะเลือก summaryType แบบไหน
 summaryHTML += `
-<div style="background-color: #eaf6ff; padding: 5px; border-radius: 8px; margin-bottom: 5px; text-align: center;">
-    <h4 style="color: #0056b3; margin-top: 0; font-size: clamp(0.5rem, 2vw, 1.0rem); line-height: 1;">สรุปจำนวนวัน</h4>
+<div style="background-color: #FAFAD2; padding: 5px; margin-bottom: 5px; text-align: center; color: blue;">
+    <h4 style="margin-top: 0; font-size: clamp(0.5rem, 1.2vw, 1.0rem); line-height: 1;">สรุปจำนวนวัน</h4>
     <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• จำนวนวันทั้งหมด: ${totalDays} วัน</p>
     <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• มีกิจกรรม: ${daysWithActivities} วัน</p>
     <p style="margin: 5px 0; font-size: clamp(0.4rem, 1.2vw, 1rem); line-height: 1;">• ไม่มีกิจกรรม: ${daysWithoutActivities} วัน</p>
