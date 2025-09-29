@@ -64,15 +64,27 @@
             padding: 5px 10px;
         }
 
-        header nav {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-            width: 100%;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
+header nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+/* เพิ่มสไตล์สำหรับเมนูแบบ 2 คอลัมน์ */
+.nav-row {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.nav-row a {
+    flex: 1;
+    text-align: center;
+}
 
         header nav.mobile-hidden {
             display: none;
@@ -446,286 +458,283 @@
         .format-modal-buttons .btn-cancel:hover { 
             background-color: #5a6268; 
         }
+#main-header {
+    background: #f9f9f9;
+    border-bottom: 3px solid #ccc;
+    padding: 10px;
+}
 
-        /* === START: CSS ใหม่สำหรับ Modal แสดงสรุป === */
-        .summary-modal-overlay {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            overflow-y: auto;
-        }
+/* จัด layout ของ nav */
+#main-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
 
-        .summary-modal-content-container {
-            background-color: #FAFAD2;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: auto 0;
-            width: 100%;
-            max-width: 800px;
-        }
+/* แถวของเมนู */
+.nav-row {
+    display: flex;
+    gap: 10px;
+}
 
-        .summary-modal-close-btn {
-            background-color: #E97132;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            cursor: pointer;
-            border-radius: 20px;
-            font-size: 16px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-            width: 90%;
-            max-width: 250px;
-        }
+/* ลิงก์แต่ละหัวข้อ */
+#main-nav a {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
 
-        .summary-modal-close-btn:hover {
-            background-color: #e64a19;
-        }
+/* สีแตกต่างกันแต่ละหัวข้อ */
+#main-nav a[data-page="activity"] {
+    background: #ff6b6b; /* แดงอ่อน */
+}
 
-        .summary-modal-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-top: 10px;
-            max-width: 600px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-        }
+#main-nav a[data-page="activity-types"] {
+    background: #4ecdc4; /* ฟ้าเขียว */
+}
 
-        .summary-control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 15px;
-        }
+#main-nav a[data-page="summary"] {
+    background: #45b7d1; /* น้ำเงินฟ้า */
+}
 
-        .summary-control-group label, .summary-control-group span {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 8px;
-        }
+#main-nav a[data-page="admin"] {
+    background: #f7b731; /* เหลือง */
+    color: #333;
+}
 
-        .summary-control-group input[type="range"] {
-            width: 80%;
-            max-width: 300px;
-            margin: 0;
-        }
+/* ปุ่มออกจากระบบ */
+#logout-button {
+    margin-top: 20px;
+    align-self: center;   /* จัดตรงกลาง */
+    background: #2d3436;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-        /* === START: REVISED PRINT STYLES === */
-        @media screen {
-            #print-container {
-                display: none;
-            }
-        }
+#logout-button:hover {
+    background: #636e72;
+}
 
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #print-container, #print-container * {
-                visibility: visible;
-            }
-            #print-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 0;
-            }
-            
-            @page {
-                size: A4;
-                margin: 15mm 7mm 10mm 8mm; /* top, right, bottom, left */
-                @top-center {
-                    content: "หน้า " counter(page);
-                    font-family: Arial, sans-serif;
-                    font-size: clamp(8pt, 1vw, 9pt);
-                    color: #888;
-                    margin-top: 5mm;
-                }
-            }
-            body {
-                background: #fff !important;
-                font-size: clamp(9pt, 1.5vw, 10pt);
-                margin: 0;
-                width: 100%;
-            }
-            
-            #print-container .summaryResult {
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-                background-color: #fff !important;
-                text-align: center;
-                width: 100% !important;
-                max-width: 100% !important;
-                margin-top: 10mm; /* เว้นที่สำหรับเลขหน้า */
-            }
-            
-            #print-container .summaryResult p[style*="margin-left"] {
-                text-align: left;
-                display: inline-block;
-            }
-            
-            #print-container h2, #print-container h3, #print-container h4 {
-                margin-bottom: 0.5em;
-            }
-            #print-container p, #print-container li {
-                font-size: clamp(8.5pt, 1.4vw, 9.5pt);
-                line-height: 1.0;
-            }
-          #print-container table {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            border-collapse: collapse !important;
-            border-spacing: 0 !important;
-            table-layout: fixed; /* ช่วยให้ความกว้างคอลัมน์ไม่ผลักขอบออกนอกหน้า */
-            page-break-inside: auto;
-            box-sizing: border-box;
-          }
-            #print-container thead {
-                 display: table-header-group;
-            }
-            #print-container tr {
-                page-break-inside: avoid;
-            }
-            #print-container th,
-            #print-container td {
-                border: 1px solid #000 !important; /* บังคับเส้นขอบทุกด้าน */
-                padding: 4px 6px;
-                text-align: center;
-                line-height: 1.2; 
-                font-size: clamp(8pt, 1.3vw, 9pt);
-            }
-            #print-container th {
-                background-color: #f0f0f0 !important;
-                font-weight: bold;
-            }
 
-            /* แก้ปัญหาช่องสุดท้ายด้านขวาไม่ถูกปิด */
-            #print-container th:last-child,
-            #print-container td:last-child {
-                border-right: 1px solid #000 !important;
-            }
+/* === START: CSS ใหม่สำหรับ Modal แสดงสรุป === */
+.summary-modal-overlay {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: flex-start; /* เปลี่ยนจาก center เป็น flex-start */
+    padding: 10px;
+    overflow-y: auto;
+}
 
-            #print-container span[style*="color"] {
-                color: #000 !important;
-            }
-            #print-container hr {
-                 border-top: 1px solid #999;
-                 margin: 1.5em 0;
-            }
-        }
-        /* === END: REVISED PRINT STYLES === */
+.summary-modal-content-container {
+    background-color: #FAFAD2;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0; /* เพิ่ม margin บนล่าง */
+    width: 100%;
+    max-width: 800px;
+    /* ลบการตั้งค่าความสูงตายตัว */
+    overflow: hidden; /* เพิ่มเพื่อป้องกัน content ล้น */
+}
 
-        /* === END: CSS ใหม่สำหรับ Modal แสดงสรุป === */
+.summary-modal-close-btn {
+    background-color: #E97132;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    width: 90%;
+    max-width: 250px;
+}
 
-        /* Media Queries สำหรับมือถือ */
-        @media (min-width: 768px) {
-            header {
-                flex-direction: row;
-                align-items: center;
-            }
-            
-            .header-top {
-                width: auto;
-            }
-            
-            .menu-toggle {
-                display: none;
-            }
-            
-            header nav {
-                flex-direction: row;
-                width: auto;
-                margin-top: 0;
-            }
-            
-            header nav a {
-                width: auto;
-                text-align: center;
-            }
-            
-            .filter-controls {
-                flex-direction: row;
-                align-items: center;
-            }
-            
-            .filter-controls input, .filter-controls button, .filter-controls select {
-                width: auto;
-            }
-            
-            .action-buttons {
-                flex-direction: row;
-            }
-        }
+.summary-modal-close-btn:hover {
+    background-color: #e64a19;
+}
 
-        @media (max-width: 767px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .menu-toggle {
-                display: block;
-            }
-            
-            header nav {
-                display: none;
-            }
-            
-            header nav.mobile-visible {
-                display: flex;
-            }
-            
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .button-group button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        }
+.summary-modal-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    max-width: 600px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.summary-control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.summary-control-group label, .summary-control-group span {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.summary-control-group input[type="range"] {
+    width: 80%;
+    max-width: 300px;
+    margin: 0;
+}
+
+/* ปรับปรุง CSS สำหรับเนื้อหาสรุป */
+.summaryResult {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+    overflow-x: hidden; /* ป้องกันการล้นแนวนอน */
+}
+
+.summaryResult table {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 14px !important;
+}
+
+.summaryResult th, 
+.summaryResult td {
+    padding: 6px 4px !important;
+    font-size: 12px !important;
+    word-break: break-word; /* ให้คำยาวๆ ขึ้นบรรทัดใหม่ */
+}
+
+/* Media Queries สำหรับมือถือ */
+@media (max-width: 767px) {
+    .summary-modal-overlay {
+        padding: 5px;
+        align-items: flex-start;
+    }
+    
+    .summary-modal-content-container {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 8px;
+    }
+    
+    .summaryResult {
+        padding: 5px !important;
+        transform: none !important; /* ลบ transform บนมือถือ */
+    }
+    
+    .summaryResult h2 {
+        font-size: 1.2rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .summaryResult h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .summaryResult h4 {
+        font-size: 1rem !important;
+        margin-top: 15px !important;
+    }
+    
+    .summaryResult table {
+        font-size: 12px !important;
+    }
+    
+    .summaryResult th, 
+    .summaryResult td {
+        padding: 4px 3px !important;
+        font-size: 11px !important;
+    }
+    
+    .summary-modal-controls {
+        padding: 8px;
+    }
+    
+    .summary-control-group label, 
+    .summary-control-group span {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-row {
+        flex-direction: column;
+    }
+}
+    
+    .summaryResult h3 {
+        font-size: 1rem !important;
+    }
+    
+    .summaryResult h4 {
+        font-size: 0.9rem !important;
+    }
+    
+    .summaryResult table {
+        font-size: 11px !important;
+    }
+    
+    .summaryResult th, 
+    .summaryResult td {
+        padding: 3px 2px !important;
+        font-size: 10px !important;
+    }
+    
+    .summary-modal-close-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header for logged in users -->
-        <header id="main-header" class="hidden">
-            <div class="header-top">
-                <h1 id="welcome-message">ยินดีต้อนรับ, ผู้ใช้งาน!</h1>
-                <button class="menu-toggle" id="menu-toggle">☰</button>
-            </div>
-            <nav id="main-nav" class="mobile-hidden">
-                <a href="#" data-page="activity" class="active">บันทึกกิจกรรม</a>
-                <a href="#" data-page="activity-types">จัดการกิจกรรม</a>
-                <a href="#" data-page="summary">สรุปกิจกรรม</a>
-                <a href="#" data-page="admin" id="admin-link" class="hidden">ผู้ดูแลระบบ</a>
-                <button id="logout-button">ออกจากระบบ</button>
-            </nav>
-        </header>
+<header id="main-header" class="hidden">
+    <div class="header-top">
+        <h1 id="welcome-message">ยินดีต้อนรับ, ผู้ใช้งาน!</h1>
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+    </div>
+    <nav id="main-nav" class="mobile-hidden">
+        <div class="nav-row">
+            <a href="#" data-page="activity" class="active">บันทึกกิจกรรม</a>
+            <a href="#" data-page="activity-types">จัดการกิจกรรม</a>
+        </div>
+        <div class="nav-row">
+            <a href="#" data-page="summary">สรุปกิจกรรม</a>
+            <a href="#" data-page="admin" id="admin-link" class="hidden">ผู้ดูแลระบบ</a>
+        </div>
+        <button id="logout-button">ออกจากระบบ</button>
+    </nav>
+</header>
 
         <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Login/Register Section -->
@@ -2374,7 +2383,7 @@ summaryHTML += `
                     </tr>
                 </thead>
                 <tbody>
-    `;    
+    `;     
 
     userActivities.forEach(activity => {
         const duration = calculateDuration(activity.startTime, activity.endTime);
@@ -2413,14 +2422,24 @@ summaryHTML += `
         document.getElementById('summaryModal').style.display = 'none';
     }
 
-    function adjustSummaryFontSize() {
-        const scale = parseFloat(document.getElementById('summaryFontSizeSlider').value);
-        document.getElementById('summaryFontSizeValue').textContent = `ขนาด: ${Math.round(scale * 100)}%`;
-        
-        const content = document.getElementById('modalBodyContent');
+function adjustSummaryFontSize() {
+    const scale = parseFloat(document.getElementById('summaryFontSizeSlider').value);
+    document.getElementById('summaryFontSizeValue').textContent = `ขนาด: ${Math.round(scale * 100)}%`;
+    
+    const content = document.getElementById('modalBodyContent');
+    
+    // บนมือถือให้ใช้ font-size แทน transform
+    if (window.innerWidth <= 767) {
+        content.style.transform = 'none';
+        // ปรับ font-size แทน
+        const baseSize = 14; // ขนาดพื้นฐานสำหรับมือถือ
+        content.style.fontSize = `${baseSize * scale}px`;
+    } else {
         content.style.transform = `scale(${scale})`;
         content.style.transformOrigin = 'top center';
+        content.style.fontSize = ''; // รีเซ็ต font-size
     }
+}
 
     function adjustSummaryLineHeight() {
         const lineHeight = parseFloat(document.getElementById('summaryLineHeightSlider').value);
