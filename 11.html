@@ -726,10 +726,10 @@ header nav {
     <nav id="main-nav" class="mobile-hidden">
         <div class="nav-row">
             <a href="#" data-page="activity" class="active">บันทึกกิจกรรม</a>
-            <a href="#" data-page="activity-types">จัดการกิจกรรม</a>
+            <a href="#" data-page="summary">สรุปกิจกรรม</a>
         </div>
         <div class="nav-row">
-            <a href="#" data-page="summary">สรุปกิจกรรม</a>
+            <a href="#" data-page="activity-types">จัดการกิจกรรม</a>
             <a href="#" data-page="admin" id="admin-link" class="hidden">ผู้ดูแลระบบ</a>
         </div>
         <button id="logout-button">ออกจากระบบ</button>
@@ -2475,151 +2475,409 @@ function adjustSummaryFontSize() {
         });
     }
 
-    function exportSummaryToXLSX() {
-        const { userActivities, typeTotals, totalDurationAll, startDate, endDate } = summaryContext;
-        
-        const workbook = XLSX.utils.book_new();
-        
-        // สร้างชีทสรุปตามประเภท
-        const summaryData = [
-            ['สรุปกิจกรรมตามประเภท'],
-            startDate && endDate && startDate !== endDate 
-                ? [`ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}`]
-                : startDate 
-                ? [`วันที่ ${formatDate(startDate)}`]
-                : ['ทั้งหมด'],
-            [],
-            ['ประเภทกิจกรรม', 'ระยะเวลารวม (นาที)', 'ระยะเวลารวม (HH:MM:SS)']
-        ];
-        
-        Object.entries(typeTotals).forEach(([type, duration]) => {
-            summaryData.push([type, duration, formatDurationHms(duration)]);
-        });
-        
-        summaryData.push(['ทั้งหมด', totalDurationAll, formatDurationHms(totalDurationAll)]);
-        
-        const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
-        XLSX.utils.book_append_sheet(workbook, summarySheet, 'สรุปตามประเภท');
-        
-        // สร้างชีทรายการกิจกรรม
-        const activitiesData = [
-            ['รายการกิจกรรมทั้งหมด'],
-            startDate && endDate && startDate !== endDate 
-                ? [`ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}`]
-                : startDate 
-                ? [`วันที่ ${formatDate(startDate)}`]
-                : ['ทั้งหมด'],
-            [],
-            ['ชื่อกิจกรรม', 'วันที่', 'เวลาเริ่มต้น', 'เวลาสิ้นสุด', 'ระยะเวลา (นาที)', 'ระยะเวลา (HH:MM:SS)', 'รายละเอียด']
-        ];
-        
-        userActivities.forEach(activity => {
-            const duration = calculateDuration(activity.startTime, activity.endTime);
-            activitiesData.push([
-                activity.activityName,
-                activity.date,
-                activity.startTime,
-                activity.endTime,
-                duration,
-                formatDurationHms(duration),
-                activity.details || ''
-            ]);
-        });
-        
-        const activitiesSheet = XLSX.utils.aoa_to_sheet(activitiesData);
-        XLSX.utils.book_append_sheet(workbook, activitiesSheet, 'รายการกิจกรรม');
-        
-        // บันทึกไฟล์
-        const fileName = `สรุปกิจกรรม-${startDate || 'ทั้งหมด'}-${endDate && endDate !== startDate ? `ถึง-${endDate}` : ''}-${new Date().toISOString().split('T')[0]}.xlsx`;
-        XLSX.writeFile(workbook, fileName);
+function exportSummaryToXLSX() {
+    const { 
+        userActivities, 
+        typeTotals, 
+        totalDurationAll, 
+        startDate, 
+        endDate,
+        totalDays,
+        daysWithActivities,
+        daysWithoutActivities,
+        loggedInUser
+    } = summaryContext;
+    
+    // คำนวณค่าเฉลี่ยต่อวัน
+    const avgDurationPerDay = daysWithActivities > 0 ? totalDurationAll / daysWithActivities : 0;
+    
+    const workbook = XLSX.utils.book_new();
+    
+    // === ข้อมูลทั้งหมดในชีทเดียว ===
+    const allData = [];
+    
+    // หัวเรื่องหลัก
+    allData.push(['สรุปกิจกรรม']);
+    allData.push(['ผู้ใช้งาน:', loggedInUser.username]);
+    
+    // ช่วงวันที่
+    if (startDate && endDate && startDate !== endDate) {
+        allData.push(['ช่วงวันที่:', `${formatDate(startDate)} ถึง ${formatDate(endDate)}`]);
+    } else if (startDate) {
+        allData.push(['วันที่:', formatDate(startDate)]);
+    } else {
+        const allActivityDates = Array.from(new Set(userActivities.map(activity => activity.date))).sort();
+        if (allActivityDates.length > 0) {
+            allData.push(['ช่วงวันที่:', `${formatDate(allActivityDates[0])} ถึง ${formatDate(allActivityDates[allActivityDates.length - 1])}`]);
+        } else {
+            allData.push(['ช่วงวันที่:', 'ไม่มีกิจกรรมในช่วงที่เลือก']);
+        }
     }
+    
+    allData.push([]); // เว้นบรรทัด
+    
+    // === ส่วนที่ 1: สรุปจำนวนวัน ===
+    allData.push(['สรุปจำนวนวัน']);
+    allData.push(['จำนวนวันทั้งหมด', `${totalDays} วัน`]);
+    allData.push(['วันที่มีกิจกรรม', `${daysWithActivities} วัน`]);
+    allData.push(['วันที่ไม่มีกิจกรรม', `${daysWithoutActivities} วัน`]);
+    allData.push(['เวลารวมทั้งหมด', formatDuration(totalDurationAll)]);
+    allData.push(['เวลาเฉลี่ยต่อวัน (เฉพาะวันที่มีกิจกรรม)', formatDuration(avgDurationPerDay)]);
+    
+    allData.push([]); // เว้นบรรทัด
+    
+    // === ส่วนที่ 2: สรุปตามประเภทกิจกรรม ===
+    allData.push(['สรุปตามประเภทกิจกรรม']);
+    allData.push(['ประเภทกิจกรรม', 'ระยะเวลารวม']);
+    
+    Object.entries(typeTotals).forEach(([type, duration]) => {
+        allData.push([type, formatDuration(duration)]);
+    });
+    
+    allData.push(['ทั้งหมด', formatDuration(totalDurationAll)]);
+    
+    allData.push([]); // เว้นบรรทัด
+    
+    // === ส่วนที่ 3: รายการกิจกรรมทั้งหมด ===
+    allData.push(['รายการกิจกรรมทั้งหมด']);
+    allData.push(['จำนวนกิจกรรม:', `${userActivities.length} รายการ`]);
+    
+    // หัวข้อตารางกิจกรรม
+    allData.push([
+        'ชื่อกิจกรรม', 
+        'วันที่', 
+        'เวลาเริ่มต้น', 
+        'เวลาสิ้นสุด', 
+        'ระยะเวลา', 
+        'รายละเอียด'
+    ]);
+    
+    // ข้อมูลกิจกรรม
+    userActivities.forEach(activity => {
+        const duration = calculateDuration(activity.startTime, activity.endTime);
+        allData.push([
+            activity.activityName,
+            formatDate(activity.date),
+            activity.startTime,
+            activity.endTime,
+            formatDuration(duration),
+            activity.details || '-'
+        ]);
+    });
+    
+    allData.push([]); // เว้นบรรทัด
+    allData.push(['สร้างเมื่อ:', new Date().toLocaleDateString('th-TH')]);
+    allData.push(['ระบบบันทึกกิจกรรม']);
+    
+    // สร้างชีทเดียว
+    const summarySheet = XLSX.utils.aoa_to_sheet(allData);
+    XLSX.utils.book_append_sheet(workbook, summarySheet, 'สรุปกิจกรรม');
+    
+    // บันทึกไฟล์
+    const fileName = `สรุปกิจกรรม-${startDate || 'ทั้งหมด'}-${endDate && endDate !== startDate ? `ถึง-${endDate}` : ''}-${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+}
 
 function exportSummaryToPDF() {
-    const { userActivities, typeTotals, totalDurationAll, startDate, endDate } = summaryContext;
+    const { 
+        userActivities, 
+        typeTotals, 
+        totalDurationAll, 
+        startDate, 
+        endDate,
+        totalDays,
+        daysWithActivities,
+        daysWithoutActivities,
+        loggedInUser
+    } = summaryContext;
+    
+    // คำนวณค่าเฉลี่ยต่อวัน
+    const avgDurationPerDay = daysWithActivities > 0 ? totalDurationAll / daysWithActivities : 0;
+
+    // สร้าง iframe สำหรับพิมพ์
+    const printFrame = document.createElement('iframe');
+    printFrame.style.position = 'fixed';
+    printFrame.style.right = '0';
+    printFrame.style.bottom = '0';
+    printFrame.style.width = '0';
+    printFrame.style.height = '0';
+    printFrame.style.border = 'none';
+    document.body.appendChild(printFrame);
+
+    const printDocument = printFrame.contentDocument || printFrame.contentWindow.document;
     
     let printHTML = `
-        <div class="summaryResult" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; text-align: center;">
-            <h2 style="color: #0056b3; margin-bottom: 10px; font-size: clamp(1.5rem, 2vw, 2.2rem);">สรุปกิจกรรม</h2>
-            <h3 style="color: #333; margin-bottom: 20px; font-size: clamp(1.2rem, 1.8vw, 1.6rem);">
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>สรุปกิจกรรม - ${loggedInUser.username}</title>
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    margin: 15mm 5mm 10mm 10mm; 
+                    padding: 0;
+                    color: #000;
+                    line-height: 1.4;
+                    font-size: 12px;
+                }
+                
+                .header { 
+                    text-align: center; 
+                    margin-bottom: 20px;
+                    border-bottom: 2px solid #000;
+                    padding-bottom: 10px;
+                }
+                .header h1 { 
+                    margin: 0 0 5px 0; 
+                    font-size: 18px;
+                }
+                .header h2 { 
+                    margin: 0 0 5px 0; 
+                    font-size: 14px;
+                    font-weight: normal;
+                }
+                .date-range { 
+                    font-size: 12px;
+                    margin-top: 5px;
+                }
+                
+                .summary-section {
+                    margin: 15px 0;
+                }
+                .summary-section h3 { 
+                    margin: 0 0 10px 0;
+                    font-size: 14px;
+                    background-color: #f0f0f0;
+                    padding: 5px 10px;
+                }
+                
+                /* การตั้งค่าตารางทั้งหมดเหมือนกัน */
+                table { 
+                    width: 100%; 
+                    border-collapse: collapse; 
+                    margin: 10px 0;
+                    font-size: 11px;
+                    table-layout: auto;
+                    word-wrap: break-word;
+                }
+                th { 
+                    background-color: #ddd; 
+                    padding: 6px 4px;
+                    border: 1px solid #000;
+                    text-align: left;
+                    white-space: nowrap;
+                }
+                td { 
+                    padding: 5px 4px;
+                    border: 1px solid #000;
+                    word-break: break-word;
+                    vertical-align: top;
+                }
+                
+                /* คอลัมน์สำหรับตารางสรุปจำนวนวัน */
+                .col-label { width: 60%; }
+                .col-value { width: 40%; }
+                
+                /* คอลัมน์สำหรับตารางสรุปประเภทกิจกรรม */
+                .col-activity { width: 70%; }
+                .col-duration { width: 30%; }
+                
+                /* คอลัมน์สำหรับตารางรายการกิจกรรม - ปรับอัตโนมัติ */
+                .col-act-name { width: auto; min-width: 100px; }
+                .col-date { width: auto; min-width: 80px; }
+                .col-time { width: auto; min-width: 60px; }
+                .col-duration-small { width: auto; min-width: 70px; }
+                .col-details { width: auto; min-width: 120px; }
+                
+                .total-row {
+                    background-color: #f0f0f0;
+                    font-weight: bold;
+                }
+                
+                .page-info {
+                    text-align: center;
+                    margin-top: 20px;
+                    font-size: 10px;
+                    color: #666;
+                }
+                
+                @media print {
+                    @page {
+                        margin: 15mm 10mm 20mm 10mm;
+                        @bottom-center {
+                            content: "หน้า " counter(page);
+                            font-size: 10px;
+                        }
+                    }
+                    
+                    table { 
+                        page-break-inside: auto;
+                    }
+                    tr { 
+                        page-break-inside: avoid;
+                        page-break-after: auto;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>สรุปกิจกรรม</h1>
+                <h2>ผู้ใช้งาน: ${loggedInUser.username}</h2>
     `;
     
+    // ส่วนหัวเรื่องวันที่
     if (startDate && endDate && startDate !== endDate) {
-        printHTML += `ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}</h3>`;
+        printHTML += `<div class="date-range">ช่วงวันที่ ${formatDate(startDate)} ถึง ${formatDate(endDate)}</div>`;
     } else if (startDate) {
-        printHTML += `วันที่ ${formatDate(startDate)}</h3>`;
+        printHTML += `<div class="date-range">วันที่ ${formatDate(startDate)}</div>`;
     } else {
-        printHTML += `ทั้งหมด</h3>`;
+        const allActivityDates = Array.from(new Set(userActivities.map(activity => activity.date))).sort();
+        if (allActivityDates.length > 0) {
+            printHTML += `<div class="date-range">จากวันที่ ${formatDate(allActivityDates[0])} ถึง ${formatDate(allActivityDates[allActivityDates.length - 1])}</div>`;
+        } else {
+            printHTML += `<div class="date-range">ไม่มีกิจกรรมในช่วงที่เลือก</div>`;
+        }
     }
     
     printHTML += `
-            <h4 style="color: #0056b3; margin-top: 20px; font-size: clamp(1rem, 1.6vw, 1.4rem);">สรุปตามประเภทกิจกรรม</h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.9rem, 1.4vw, 1.1rem);">
-                <thead>
-                    <tr style="background-color: #007bff; color: white;">
-                        <th style="padding: 10px; border: 1px solid #888;">ประเภทกิจกรรม</th>
-                        <th style="padding: 10px; border: 1px solid #888;">ระยะเวลารวม</th>
+            </div>
+            
+            <!-- ส่วนสรุปจำนวนวัน -->
+            <div class="summary-section">
+                <h3>สรุปจำนวนวัน</h3>
+                <table>
+                    <tr>
+                        <td class="col-label">จำนวนวันทั้งหมด</td>
+                        <td class="col-value">${totalDays} วัน</td>
                     </tr>
-                </thead>
-                <tbody>
+                    <tr>
+                        <td class="col-label">วันที่มีกิจกรรม</td>
+                        <td class="col-value">${daysWithActivities} วัน</td>
+                    </tr>
+                    <tr>
+                        <td class="col-label">วันที่ไม่มีกิจกรรม</td>
+                        <td class="col-value">${daysWithoutActivities} วัน</td>
+                    </tr>
+                    <tr>
+                        <td class="col-label">เวลารวมทั้งหมด</td>
+                        <td class="col-value">${formatDuration(totalDurationAll)}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-label">เวลาเฉลี่ยต่อวัน (เฉพาะวันที่มีกิจกรรม)</td>
+                        <td class="col-value">${formatDuration(avgDurationPerDay)}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- ตารางสรุปตามประเภทกิจกรรม -->
+            <div class="summary-section">
+                <h3>สรุปตามประเภทกิจกรรม</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-activity">ประเภทกิจกรรม</th>
+                            <th class="col-duration">ระยะเวลารวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
     `;
     
     Object.entries(typeTotals).forEach(([type, duration]) => {
         printHTML += `
             <tr>
-                <td style="padding: 8px; border: 1px solid #888;">${type}</td>
-                <td style="padding: 8px; border: 1px solid #888;">${formatDuration(duration)}</td>
+                <td class="col-activity">${type}</td>
+                <td class="col-duration">${formatDuration(duration)}</td>
             </tr>
         `;
     });
     
     printHTML += `
-                </tbody>
-            </table>
-            <p style="font-size: clamp(1rem, 1.5vw, 1.2rem); margin-top: 15px;"><strong>ระยะเวลารวมทั้งหมด: ${formatDuration(totalDurationAll)}</strong></p>
-            
-            <h4 style="color: #0056b3; margin-top: 30px; font-size: clamp(1rem, 1.6vw, 1.4rem);">รายการกิจกรรมทั้งหมด</h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.9rem, 1.4vw, 1.1rem);">
-                <thead>
-                    <tr style="background-color: #007bff; color: white;">
-                        <th style="padding: 10px; border: 1px solid #888;">ชื่อกิจกรรม</th>
-                        <th style="padding: 10px; border: 1px solid #888;">วันที่</th>
-                        <th style="padding: 10px; border: 1px solid #888;">เวลาเริ่มต้น</th>
-                        <th style="padding: 10px; border: 1px solid #888;">เวลาสิ้นสุด</th>
-                        <th style="padding: 10px; border: 1px solid #888;">ระยะเวลา</th>
-                        <th style="padding: 10px; border: 1px solid #888;">รายละเอียด</th>
-                    </tr>
-                </thead>
-                <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td class="col-activity">รวมทั้งหมด</td>
+                            <td class="col-duration">${formatDuration(totalDurationAll)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
     `;
     
-    userActivities.forEach(activity => {
-        const duration = calculateDuration(activity.startTime, activity.endTime);
+    // ตารางรายการกิจกรรมทั้งหมด (ถ้ามีกิจกรรม)
+    if (userActivities.length > 0) {
         printHTML += `
-            <tr>
-                <td style="padding: 8px; border: 1px solid #888;">${activity.activityName}</td>
-                <td style="padding: 8px; border: 1px solid #888;">${formatDate(activity.date)}</td>
-                <td style="padding: 8px; border: 1px solid #888;">${activity.startTime}</td>
-                <td style="padding: 8px; border: 1px solid #888;">${activity.endTime}</td>
-                <td style="padding: 8px; border: 1px solid #888;">${formatDuration(duration)}</td>
-                <td style="padding: 8px; border: 1px solid #888;">${activity.details || '-'}</td>
-            </tr>
+            <div class="summary-section">
+                <h3>รายการกิจกรรมทั้งหมด (${userActivities.length} รายการ)</h3>
+                <table style="table-layout: fixed;"> <!-- เปลี่ยนเป็น fixed layout -->
+                    <colgroup>
+                        <col class="col-act-name">
+                        <col class="col-date">
+                        <col class="col-time">
+                        <col class="col-time">
+                        <col class="col-duration-small">
+                        <col class="col-details">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>ชื่อกิจกรรม</th>
+                            <th>วันที่</th>
+                            <th>เริ่มต้น</th>
+                            <th>สิ้นสุด</th>
+                            <th>ระยะเวลา</th>
+                            <th>รายละเอียด</th>
+                        </tr>
+                    </thead>
+                    <tbody>
         `;
-    });
+        
+        userActivities.forEach(activity => {
+            const duration = calculateDuration(activity.startTime, activity.endTime);
+            printHTML += `
+                <tr>
+                    <td>${activity.activityName}</td>
+                    <td>${formatDate(activity.date)}</td>
+                    <td>${activity.startTime}</td>
+                    <td>${activity.endTime}</td>
+                    <td>${formatDuration(duration)}</td>
+                    <td>${activity.details || '-'}</td>
+                </tr>
+            `;
+        });
+        
+        printHTML += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
     
     printHTML += `
-                </tbody>
-            </table>
-        </div>
+            <div class="page-info">
+                สร้างเมื่อ: ${new Date().toLocaleDateString('th-TH')} - ระบบบันทึกกิจกรรม
+            </div>
+        </body>
+        </html>
     `;
     
-    document.getElementById('print-container').innerHTML = printHTML;
+    // เขียน HTML ไปยัง iframe และพิมพ์
+    printDocument.open();
+    printDocument.write(printHTML);
+    printDocument.close();
     
-    // ใช้ setTimeout เพื่อให้แน่ใจว่าเนื้อหาถูกโหลดก่อนพิมพ์
-    setTimeout(() => {
-        window.print();
-    }, 500);
+    // พิมพ์หลังจากโหลดเนื้อหาเสร็จ
+    printFrame.onload = function() {
+        setTimeout(() => {
+            printFrame.contentWindow.focus();
+            printFrame.contentWindow.print();
+            
+            // ลบ iframe หลังจากพิมพ์เสร็จ
+            setTimeout(() => {
+                document.body.removeChild(printFrame);
+            }, 1000);
+        }, 500);
+    };
 }
-
     // ========== Event Listeners Setup ==========
     function setupEventListeners() {
         // Login
