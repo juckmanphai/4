@@ -643,22 +643,23 @@
     /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
     #modalBodyContent table,
     .summaryResult table {
-        table-layout: auto; /* ให้เบราว์เซอร์กำหนดความกว้างคอลัมน์ตามเนื้อหา */
-        width: auto;        /* อนุญาตให้ตารางขยายตามความต้องการของเนื้อหา */
-        min-width: 100%;    /* อย่างน้อยเติมความกว้างคอนเทนเนอร์เริ่มต้น */
+        table-layout: auto;
+        width: auto;
+        min-width: 100%;
     }
 
     #modalBodyContent table th,
     #modalBodyContent table td,
     .summaryResult table th,
     .summaryResult table td {
-        white-space: nowrap; /* บังคับให้เนื้อหาทั้งหมดอยู่ในบรรทัดเดียว */
-        font-size: 11px;     /* ขนาดฟอนต์ที่เล็กกว่าสำหรับ popup บนมือถือ */
+        white-space: nowrap;
+        font-size: 11px;
         vertical-align: middle;
-        height: 40px; /* เพิ่มความสูงให้เท่ากับตารางกิจกรรม */
+        /* ลบ height: 40px; ออก */
+        padding: 6px 4px; /* ปรับ padding ให้พอดี */
     }
     /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
-    
+
     /* ปรับปรุงตารางกิจกรรมสำหรับมือถือ */
     #activity-list-table {
         table-layout: auto;
@@ -672,9 +673,9 @@
         font-size: 11px;
         vertical-align: middle;
         padding: 8px 6px;
-        height: 40px; /* เพิ่มความสูงให้เท่ากับตารางสรุป */
+        /* ลบ height: 40px; ออก */
     }
-    
+
     /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือ */
     #all-activities-table {
         table-layout: auto;
@@ -688,7 +689,7 @@
         font-size: 11px;
         vertical-align: middle;
         padding: 8px 6px;
-        height: 40px; /* เพิ่มความสูงให้เท่ากับตารางสรุป */
+        /* ลบ height: 40px; ออก */
     }
 
     /* ปรับปรุงตารางทั้งหมดสำหรับมือถือ */
@@ -716,7 +717,7 @@
         font-size: 11px;
         vertical-align: middle;
         padding: 8px 6px;
-        height: 40px;
+        /* ลบ height: 40px; ออก */
     }
 
     /* Media Queries สำหรับมือถือ */
@@ -724,18 +725,20 @@
         /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
         #modalBodyContent table,
         .summaryResult table {
-            table-layout: auto; /* ให้เบราว์เซอร์กำหนดความกว้างคอลัมน์ตามเนื้อหา */
-            width: auto;        /* อนุญาตให้ตารางขยายตามความต้องการของเนื้อหา */
-            min-width: 100%;    /* 确保อย่างน้อยเติมความกว้างคอนเทนเนอร์เริ่มต้น */
+            table-layout: auto;
+            width: auto;
+            min-width: 100%;
         }
 
         #modalBodyContent table th,
         #modalBodyContent table td,
         .summaryResult table th,
         .summaryResult table td {
-            white-space: nowrap; /* บังคับให้เนื้อหาทั้งหมดอยู่ในบรรทัดเดียว */
-            font-size: 11px;     /* ขนาดฟอนต์ที่เล็กกว่าสำหรับ popup บนมือถือ */
+            white-space: nowrap;
+            font-size: 11px;
             vertical-align: middle;
+            padding: 6px 4px; /* ปรับ padding ให้เล็กลงสำหรับมือถือ */
+            /* ลบ height: 40px; ออก */
         }
         /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
         
@@ -751,7 +754,8 @@
             white-space: nowrap;
             font-size: 11px;
             vertical-align: middle;
-            padding: 8px 6px;
+            padding: 6px 4px; /* ปรับ padding ให้เล็กลง */
+            /* ลบ height: 40px; ออก */
         }
         
         /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือ */
@@ -766,7 +770,8 @@
             white-space: nowrap;
             font-size: 11px;
             vertical-align: middle;
-            padding: 8px 6px;
+            padding: 6px 4px; /* ปรับ padding ให้เล็กลง */
+            /* ลบ height: 40px; ออก */
         }
         
         .summary-modal-overlay {
@@ -837,7 +842,8 @@
             white-space: nowrap;
             font-size: 11px;
             vertical-align: middle;
-            padding: 8px 6px;
+            padding: 6px 4px; /* ปรับ padding ให้เล็กลง */
+            /* ลบ height: 40px; ออก */
         }
     }
 
@@ -864,16 +870,16 @@
         #activity-list-table th,
         #activity-list-table td {
             font-size: 10px;
-            padding: 6px 4px;
-            height: 35px; /* ปรับความสูงสำหรับหน้าจอขนาดเล็ก */
+            padding: 5px 3px; /* ปรับ padding ให้เล็กลงอีก */
+            /* ลบ height: 35px; ออก */
         }
         
         /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือขนาดเล็ก */
         #all-activities-table th,
         #all-activities-table td {
             font-size: 10px;
-            padding: 6px 4px;
-            height: 35px; /* ปรับความสูงสำหรับหน้าจอขนาดเล็ก */
+            padding: 5px 3px; /* ปรับ padding ให้เล็กลงอีก */
+            /* ลบ height: 35px; ออก */
         }
         
         .summary-modal-close-btn {
@@ -891,12 +897,11 @@
         #all-activities-table th,
         #all-activities-table td {
             font-size: 10px;
-            padding: 6px 4px;
-            height: 35px;
+            padding: 5px 3px; /* ปรับ padding ให้เล็กลงอีก */
+            /* ลบ height: 35px; ออก */
         }
     }
-</style>
-</head>
+</style></head>
 <body>
     <div class="container">
         <!-- Header for logged in users -->
