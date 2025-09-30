@@ -8,6 +8,7 @@
     <!-- เพิ่มไลบรารีสำหรับการส่งออก -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     
 <style>
     /* CSS styles remain the same */
@@ -1050,14 +1051,6 @@
                     <button id="view-summary-button">ดูสรุป</button>
                 </div>
 
-                <!-- เพิ่มส่วนสำรองข้อมูลและกู้คืน -->
-                <div class="button-group">
-                    <button id="backup-data-button">สำรองข้อมูล</button>
-                    <input type="file" id="restore-data-input" accept=".json" class="hidden">
-                    <button id="show-restore-button">กู้คืนข้อมูล</button>
-                </div>
-                <p id="backup-restore-message" class="info-message"></p>
-
                 <div id="daily-summary-results">
                     <p>กรุณาเลือกประเภทสรุปและวันที่เพื่อดูข้อมูล</p>
                 </div>
@@ -1066,17 +1059,29 @@
 
         <!-- ส่วนที่เหลือของโค้ด HTML ยังคงเหมือนเดิมทุกประการ -->
         <!-- Admin Page Content -->
-        <div id="admin-page" class="hidden">
-            <!-- ADDED: Import/Export section -->
-            <section class="data-section">
-                <h2>นำเข้า/ส่งออกข้อมูล</h2>
-                <div class="button-group">
-                    <button id="export-data-button">บันทึกข้อมูล (JSON)</button>
-                    <input type="file" id="import-data-input" accept=".json" class="hidden">
-                    <button id="show-import-button">โหลดข้อมูล (JSON)</button>
-                </div>
-                <p id="import-export-message" class="info-message"></p>
-            </section>
+<div id="admin-page" class="hidden">
+    <!-- ส่วนนำเข้า/ส่งออกข้อมูล -->
+    <section class="data-section">
+        <h2>นำเข้า/ส่งออกข้อมูล</h2>
+        <div class="button-group">
+            <button id="export-data-button">บันทึกข้อมูล (JSON)</button>
+            <input type="file" id="import-data-input" accept=".json" class="hidden">
+            <button id="show-import-button">โหลดข้อมูล (JSON)</button>
+        </div>
+        <p id="import-export-message" class="info-message"></p>
+        
+        <!-- เพิ่มส่วนสำรองข้อมูลและกู้คืนสำหรับผู้ดูแลระบบ -->
+        <div class="button-group">
+            <button id="backup-data-button">สำรองข้อมูล (มีรหัสผ่าน)</button>
+            <input type="file" id="restore-data-input" accept=".json" class="hidden">
+            <button id="show-restore-button">กู้คืนข้อมูล (ต้องใช้รหัสผ่าน)</button>
+        </div>
+        <p id="backup-restore-message" class="info-message"></p>
+        <p class="info-message" style="font-size: 0.8rem; margin-top: -10px;">
+            หมายเหตุ: การสำรองข้อมูลจะถูกเข้ารหัสด้วยรหัสผ่านที่คุณกำหนด<br>
+            คุณจะต้องใช้รหัสผ่านเดียวกันนี้ในการกู้คืนข้อมูล
+        </p>
+    </section>
 
             <!-- User Management Section -->
             <section class="form-section">
@@ -1346,6 +1351,34 @@
         });
         dropdown.value = selectedValue;
     }
+
+// ========== Encryption Functions ==========
+function encryptData(data, password) {
+    try {
+        const dataStr = JSON.stringify(data);
+        const encrypted = CryptoJS.AES.encrypt(dataStr, password).toString();
+        return encrypted;
+    } catch (error) {
+        console.error('Encryption error:', error);
+        throw new Error('เกิดข้อผิดพลาดในการเข้ารหัสข้อมูล');
+    }
+}
+
+function decryptData(encryptedData, password) {
+    try {
+        const decrypted = CryptoJS.AES.decrypt(encryptedData, password);
+        const dataStr = decrypted.toString(CryptoJS.enc.Utf8);
+        
+        if (!dataStr) {
+            throw new Error('รหัสผ่านไม่ถูกต้อง');
+        }
+        
+        return JSON.parse(dataStr);
+    } catch (error) {
+        console.error('Decryption error:', error);
+        throw new Error('รหัสผ่านไม่ถูกต้องหรือข้อมูลเสียหาย');
+    }
+}
 
     // ========== Password Toggle Functionality ==========
     function setupPasswordToggles() {
@@ -2333,12 +2366,26 @@ function generateSummary(startDate, endDate) {
     function showImportDialog() {
         document.getElementById('import-data-input').click();
     }
+function showRestoreDialog() {
+    document.getElementById('restore-data-input').click();
+}
+// ========== Backup and Restore ==========
+function backupData() {
+    const loggedInUser = getLoggedInUser();
+    if (!loggedInUser) return;
 
-    // ========== Backup and Restore ==========
-    function backupData() {
-        const loggedInUser = getLoggedInUser();
-        if (!loggedInUser) return;
+    const password = prompt('กรุณากรอกรหัสผ่านสำหรับการสำรองข้อมูล:');
+    if (!password) {
+        document.getElementById('backup-restore-message').textContent = 'ยกเลิกการสำรองข้อมูล';
+        return;
+    }
 
+    if (password.length < 4) {
+        document.getElementById('backup-restore-message').textContent = 'รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร';
+        return;
+    }
+
+    try {
         const allActivities = getFromLocalStorage('activities');
         const userActivities = allActivities.filter(activity => activity.userId === loggedInUser.id);
         
@@ -2349,8 +2396,10 @@ function generateSummary(startDate, endDate) {
             exportedBy: loggedInUser.username
         };
 
-        const dataStr = JSON.stringify(data, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        // เข้ารหัสข้อมูล
+        const encryptedData = encryptData(data, password);
+
+        const dataBlob = new Blob([encryptedData], { type: 'application/json' });
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement('a');
         link.href = url;
@@ -2360,62 +2409,76 @@ function generateSummary(startDate, endDate) {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
 
-        document.getElementById('backup-restore-message').textContent = 'สำรองข้อมูลเรียบร้อยแล้ว';
+        document.getElementById('backup-restore-message').textContent = 'สำรองข้อมูลเรียบร้อยแล้ว (มีการเข้ารหัส)';
+    } catch (error) {
+        document.getElementById('backup-restore-message').textContent = 'เกิดข้อผิดพลาดในการสำรองข้อมูล: ' + error.message;
     }
+}
 
-    function restoreData(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+function restoreData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                const loggedInUser = getLoggedInUser();
-                if (!loggedInUser) return;
-
-                if (data.activities && Array.isArray(data.activities)) {
-                    const allActivities = getFromLocalStorage('activities');
-                    const otherUsersActivities = allActivities.filter(activity => activity.userId !== loggedInUser.id);
-                    
-                    const restoredActivities = data.activities.map(activity => ({
-                        ...activity,
-                        userId: loggedInUser.id
-                    }));
-
-                    const updatedActivities = [...otherUsersActivities, ...restoredActivities];
-                    saveToLocalStorage('activities', updatedActivities);
-
-                    if (data.activityTypes && Array.isArray(data.activityTypes)) {
-                        const existingTypes = getFromLocalStorage('activityTypes');
-                        const newTypes = data.activityTypes.filter(newType => 
-                            !existingTypes.some(existingType => existingType.name === newType.name)
-                        );
-                        if (newTypes.length > 0) {
-                            saveToLocalStorage('activityTypes', [...existingTypes, ...newTypes]);
-                        }
-                    }
-
-                    document.getElementById('backup-restore-message').textContent = 'กู้คืนข้อมูลเรียบร้อยแล้ว';
-                    loadUserActivities();
-                    populateActivityTypeDropdowns('activity-name-select');
-                    populateActivityTypeDropdowns('filter-activity-type');
-                } else {
-                    document.getElementById('backup-restore-message').textContent = 'รูปแบบไฟล์ไม่ถูกต้อง';
-                }
-            } catch (error) {
-                document.getElementById('backup-restore-message').textContent = 'เกิดข้อผิดพลาดในการกู้คืนข้อมูล';
-                console.error('Restore error:', error);
-            }
-        };
-        reader.readAsText(file);
+    const password = prompt('กรุณากรอกรหัสผ่านสำหรับกู้คืนข้อมูล:');
+    if (!password) {
+        document.getElementById('backup-restore-message').textContent = 'ยกเลิกการกู้คืนข้อมูล';
         event.target.value = '';
+        return;
     }
 
-    function showRestoreDialog() {
-        document.getElementById('restore-data-input').click();
-    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const encryptedData = e.target.result;
+            const data = decryptData(encryptedData, password);
+            
+            const loggedInUser = getLoggedInUser();
+            if (!loggedInUser) return;
 
+            if (data.activities && Array.isArray(data.activities)) {
+                const allActivities = getFromLocalStorage('activities');
+                const otherUsersActivities = allActivities.filter(activity => activity.userId !== loggedInUser.id);
+                
+                const restoredActivities = data.activities.map(activity => ({
+                    ...activity,
+                    userId: loggedInUser.id
+                }));
+
+                const updatedActivities = [...otherUsersActivities, ...restoredActivities];
+                saveToLocalStorage('activities', updatedActivities);
+
+                if (data.activityTypes && Array.isArray(data.activityTypes)) {
+                    const existingTypes = getFromLocalStorage('activityTypes');
+                    const newTypes = data.activityTypes.filter(newType => 
+                        !existingTypes.some(existingType => existingType.name === newType.name)
+                    );
+                    if (newTypes.length > 0) {
+                        saveToLocalStorage('activityTypes', [...existingTypes, ...newTypes]);
+                    }
+                }
+
+                document.getElementById('backup-restore-message').textContent = 'กู้คืนข้อมูลเรียบร้อยแล้ว';
+                loadUserActivities();
+                populateActivityTypeDropdowns('activity-name-select');
+                populateActivityTypeDropdowns('filter-activity-type');
+            } else {
+                document.getElementById('backup-restore-message').textContent = 'รูปแบบไฟล์ไม่ถูกต้อง';
+            }
+        } catch (error) {
+            document.getElementById('backup-restore-message').textContent = 'เกิดข้อผิดพลาดในการกู้คืนข้อมูล: ' + error.message;
+            console.error('Restore error:', error);
+        }
+    };
+    reader.onerror = function() {
+        document.getElementById('backup-restore-message').textContent = 'เกิดข้อผิดพลาดในการอ่านไฟล์';
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function showRestoreDialog() {
+    document.getElementById('restore-data-input').click();
+}
     // ========== Modal Management ==========
     function setupModals() {
         const editUserModal = document.getElementById('edit-user-modal');
@@ -3111,7 +3174,7 @@ function exportSummaryToPDF() {
         setupPasswordToggles();
     }
 
-    // ========== Initialization ==========
+// ========== Initialization ==========
     function initializeApp() {
         // Initialize default data if not exists
         const users = getFromLocalStorage('users');
@@ -3170,6 +3233,11 @@ function exportSummaryToPDF() {
         populateActivityTypeDropdowns('activity-name-select');
         populateActivityTypeDropdowns('filter-activity-type');
         populateActivityTypeDropdowns('admin-filter-activity-type');
+        
+        // Backup/Restore สำหรับผู้ดูแลระบบ (เพิ่มจากไฟล์ 94)
+        document.getElementById('backup-data-button').addEventListener('click', backupData);
+        document.getElementById('restore-data-input').addEventListener('change', restoreData);
+        document.getElementById('show-restore-button').addEventListener('click', showRestoreDialog);
     }
 
     // Start the application
