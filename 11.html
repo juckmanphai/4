@@ -9,780 +9,892 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
-    <style>
-        /* CSS styles remain the same */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
-        }
+<style>
+    /* CSS styles remain the same */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f7f6;
+        color: #333;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-        /* ปรับปรุง header สำหรับมือถือ */
-        header {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-            position: relative;
-        }
+    /* ปรับปรุง header สำหรับมือถือ */
+    header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        position: relative;
+    }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
 
-        header h1, .container h1 {
-            color: #0056b3;
-            margin: 0;
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
-        }
+    header h1, .container h1 {
+        color: #0056b3;
+        margin: 0;
+        font-size: clamp(1.2rem, 4vw, 1.8rem);
+    }
 
-        /* ปรับปรุงเมนูสำหรับมือถือ */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #007bff;
-            padding: 5px 10px;
-        }
+    /* ปรับปรุงเมนูสำหรับมือถือ */
+    .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #007bff;
+        padding: 5px 10px;
+    }
 
-        header nav {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-            width: 100%;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
+    header nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+    }
 
-        /* เพิ่มสไตล์สำหรับเมนูแบบ 2 คอลัมน์ */
-        .nav-row {
-            display: flex;
-            width: 100%;
-            gap: 10px;
-        }
+    /* เพิ่มสไตล์สำหรับเมนูแบบ 2 คอลัมน์ */
+    .nav-row {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+    }
 
-        .nav-row a {
-            flex: 1;
-            text-align: center;
-        }
+    .nav-row a {
+        flex: 1;
+        text-align: center;
+    }
 
-        header nav.mobile-hidden {
-            display: none;
-        }
+    header nav.mobile-hidden {
+        display: none;
+    }
 
-        header nav a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: left;
-        }
+    header nav a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: left;
+    }
 
-        header nav a:hover {
-            background-color: #e2e6ea;
-        }
+    header nav a:hover {
+        background-color: #e2e6ea;
+    }
 
-        header nav a.active {
-            background-color: #007bff;
-            color: white;
-        }
+    header nav a.active {
+        background-color: #007bff;
+        color: white;
+    }
 
-        button, .button-group button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-            margin-right: 5px; /* Added for buttons in a group */
-        }
-        
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+    button, .button-group button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        margin-right: 5px; /* Added for buttons in a group */
+    }
+    
+    .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
 
-        button:hover, .button-group button:hover {
-            background-color: #0056b3;
-        }
+    button:hover, .button-group button:hover {
+        background-color: #0056b3;
+    }
 
-        button:disabled, .button-group button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
+    button:disabled, .button-group button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
 
-        .form-section, .data-section {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border: 1px solid #eee;
-        }
+    .form-section, .data-section {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 1px solid #eee;
+    }
 
-        h2 {
-            color: #0056b3;
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            font-size: clamp(1.1rem, 3.5vw, 1.5rem);
-        }
+    h2 {
+        color: #0056b3;
+        margin-top: 0;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-        input[type="text"],
-        input[type="password"],
-        input[type="date"],
-        input[type="time"],
-        select {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            width: calc(100% - 24px); /* Account for padding */
-            box-sizing: border-box; /* Ensures padding doesn't expand width */
-        }
-        
-        textarea {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            width: calc(100% - 24px);
-            box-sizing: border-box;
-            resize: vertical;
-        }
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    input[type="time"],
+    select {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: calc(100% - 24px); /* Account for padding */
+        box-sizing: border-box; /* Ensures padding doesn't expand width */
+    }
+    
+    textarea {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: calc(100% - 24px);
+        box-sizing: border-box;
+        resize: vertical;
+    }
 
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-        }
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+    }
 
-        .filter-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+    .filter-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
-        .filter-controls input, .filter-controls button, .filter-controls select {
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .filter-controls input, .filter-controls button, .filter-controls select {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.9rem;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
 
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            word-break: break-word;
-        }
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        word-break: break-word;
+    }
 
-        table th {
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
-        }
+    table th {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
 
-        table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-        table tr:hover {
-            background-color: #e9e9e9;
-        }
+    table tr:hover {
+        background-color: #e9e9e9;
+    }
 
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
 
-        .action-buttons button {
-            background: none;
-            border: none;
-            color: #007bff;
-            cursor: pointer;
-            padding: 5px;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-            text-align: left;
-        }
+    .action-buttons button {
+        background: none;
+        border: none;
+        color: #007bff;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-align: left;
+    }
 
-        .action-buttons button:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
+    .action-buttons button:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
 
-        .action-buttons .delete-button {
-            color: #dc3545;
-        }
-        .action-buttons .delete-button:hover {
-            color: #bd2130;
-        }
+    .action-buttons .delete-button {
+        color: #dc3545;
+    }
+    .action-buttons .delete-button:hover {
+        color: #bd2130;
+    }
 
-        .hidden {
-            display: none !important;
-        }
+    .hidden {
+        display: none !important;
+    }
 
-        .error-message {
-            color: red;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+    .error-message {
+        color: red;
+        margin-top: 10px;
+        font-weight: bold;
+    }
 
-        .success-message {
-            color: green;
-            margin-top: 10px;
-            font-weight: bold;
-        }
+    .success-message {
+        color: green;
+        margin-top: 10px;
+        font-weight: bold;
+    }
 
-        .info-message {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-top: 20px;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-        
-        /* Navigation for logged out state */
-        #main-nav {
-            display: flex;
-        }
+    .info-message {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+    
+    /* Navigation for logged out state */
+    #main-nav {
+        display: flex;
+    }
 
-        .summary-block {
-            background-color: #eaf6ff;
-            border-left: 5px solid #007bff;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-        .summary-block h4 {
-            margin-top: 0;
-            color: #0056b3;
-        }
-        .summary-block ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .summary-block li {
-            margin-bottom: 5px;
-        }
-        .summary-total {
-            font-weight: bold;
-            color: #28a745;
-            font-size: 1.1rem;
-            margin-top: 10px;
-            display: block;
-        }
-        
-        /* New styles for password toggle */
-        .password-container {
-            position: relative;
-            width: 100%;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .password-toggle:hover {
-            color: #333;
-        }
-        
-        /* Modal styles for user management */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        
-        .modal-title {
-            margin: 0;
-            color: #0056b3;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .close-modal:hover {
-            color: #333;
-        }
+    .summary-block {
+        background-color: #eaf6ff;
+        border-left: 5px solid #007bff;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+    .summary-block h4 {
+        margin-top: 0;
+        color: #0056b3;
+    }
+    .summary-block ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    .summary-block li {
+        margin-bottom: 5px;
+    }
+    .summary-total {
+        font-weight: bold;
+        color: #28a745;
+        font-size: 1.1rem;
+        margin-top: 10px;
+        display: block;
+    }
+    
+    /* New styles for password toggle */
+    .password-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+    }
+    
+    .password-toggle:hover {
+        color: #333;
+    }
+    
+    /* Modal styles for user management */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    .modal-title {
+        margin: 0;
+        color: #0056b3;
+    }
+    
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+    }
+    
+    .close-modal:hover {
+        color: #333;
+    }
 
-        /* เพิ่มสไตล์สำหรับ Modal ใหม่ */
-        .modal-overlay { 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.6);
-            display: none; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 10px;
-            overflow-y: auto; 
-        }
-        
-        .format-modal-content {
-            background-color: #fff;
-            padding: 20px 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
-        }
+    /* เพิ่มสไตล์สำหรับ Modal ใหม่ */
+    .modal-overlay { 
+        position: fixed; 
+        z-index: 1000; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
+        height: 100%; 
+        background-color: rgba(0,0,0,0.6);
+        display: none; 
+        justify-content: center; 
+        align-items: center; 
+        padding: 10px;
+        overflow-y: auto; 
+    }
+    
+    .format-modal-content {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        width: 90%;
+        max-width: 400px;
+    }
 
-        .format-modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
+    .format-modal-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+    }
 
-        .format-modal-buttons button {
-            padding: 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    .format-modal-buttons button {
+        padding: 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
-        .format-modal-buttons .btn-display { 
-            background-color: #007bff; 
-        }
-        .format-modal-buttons .btn-display:hover { 
-            background-color: #0056b3; 
-        }
-        
-        .format-modal-buttons .btn-xlsx { 
-            background-color: #107C41; 
-        }
-        .format-modal-buttons .btn-xlsx:hover { 
-            background-color: #0E6A37; 
-        }
-        
-        .format-modal-buttons .btn-pdf { 
-            background-color: #e64a19; 
-        }
-        .format-modal-buttons .btn-pdf:hover { 
-            background-color: #bf360c; 
-        }
-        
-        .format-modal-buttons .btn-cancel { 
-            background-color: #6c757d; 
-            margin-top: 10px;
-        }
-        .format-modal-buttons .btn-cancel:hover { 
-            background-color: #5a6268; 
-        }
-        
-        #main-header {
-            background: #f9f9f9;
-            border-bottom: 3px solid #ccc;
-            padding: 10px;
-        }
+    .format-modal-buttons .btn-display { 
+        background-color: #007bff; 
+    }
+    .format-modal-buttons .btn-display:hover { 
+        background-color: #0056b3; 
+    }
+    
+    .format-modal-buttons .btn-xlsx { 
+        background-color: #107C41; 
+    }
+    .format-modal-buttons .btn-xlsx:hover { 
+        background-color: #0E6A37; 
+    }
+    
+    .format-modal-buttons .btn-pdf { 
+        background-color: #e64a19; 
+    }
+    .format-modal-buttons .btn-pdf:hover { 
+        background-color: #bf360c; 
+    }
+    
+    .format-modal-buttons .btn-cancel { 
+        background-color: #6c757d; 
+        margin-top: 10px;
+    }
+    .format-modal-buttons .btn-cancel:hover { 
+        background-color: #5a6268; 
+    }
+    
+    #main-header {
+        background: #f9f9f9;
+        border-bottom: 3px solid #ccc;
+        padding: 10px;
+    }
 
-        /* จัด layout ของ nav */
-        #main-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
+    /* จัด layout ของ nav */
+    #main-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
 
-        /* แถวของเมนู */
-        .nav-row {
-            display: flex;
-            gap: 10px;
-        }
+    /* แถวของเมนู */
+    .nav-row {
+        display: flex;
+        gap: 10px;
+    }
 
-        /* ลิงก์แต่ละหัวข้อ */
-        #main-nav a {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-        }
+    /* ลิงก์แต่ละหัวข้อ */
+    #main-nav a {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+    }
 
-        /* สีแตกต่างกันแต่ละหัวข้อ */
-        #main-nav a[data-page="activity"] {
-            background: #ff6b6b; /* แดงอ่อน */
-        }
+    /* สีแตกต่างกันแต่ละหัวข้อ */
+    #main-nav a[data-page="activity"] {
+        background: #ff6b6b; /* แดงอ่อน */
+    }
 
-        #main-nav a[data-page="activity-types"] {
-            background: #4ecdc4; /* ฟ้าเขียว */
-        }
+    #main-nav a[data-page="activity-types"] {
+        background: #4ecdc4; /* ฟ้าเขียว */
+    }
 
-        #main-nav a[data-page="summary"] {
-            background: #45b7d1; /* น้ำเงินฟ้า */
-        }
+    #main-nav a[data-page="summary"] {
+        background: #45b7d1; /* น้ำเงินฟ้า */
+    }
 
-        #main-nav a[data-page="admin"] {
-            background: #f7b731; /* เหลือง */
-            color: #333;
-        }
+    #main-nav a[data-page="admin"] {
+        background: #f7b731; /* เหลือง */
+        color: #333;
+    }
 
-        /* ปุ่มออกจากระบบ */
-        #logout-button {
-            margin-top: 20px;
-            align-self: center;   /* จัดตรงกลาง */
-            background: #2d3436;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    /* ปุ่มออกจากระบบ */
+    #logout-button {
+        margin-top: 20px;
+        align-self: center;   /* จัดตรงกลาง */
+        background: #2d3436;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-        #logout-button:hover {
-            background: #636e72;
-        }
+    #logout-button:hover {
+        background: #636e72;
+    }
 
-        /* === START: CSS ใหม่สำหรับ Modal แสดงสรุป === */
-        .summary-modal-overlay {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            display: none;
-            justify-content: center;
-            align-items: flex-start; /* เปลี่ยนจาก center เป็น flex-start */
-            padding: 10px;
-            overflow-y: auto;
-        }
+    /* === START: CSS ใหม่สำหรับ Modal แสดงสรุป === */
+    .summary-modal-overlay {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6);
+        display: none;
+        justify-content: center;
+        align-items: flex-start; /* เปลี่ยนจาก center เป็น flex-start */
+        padding: 10px;
+        overflow-y: auto;
+    }
 
-        .summary-modal-content-container {
-            background-color: #FAFAD2;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px 0; /* เพิ่ม margin บนล่าง */
-            width: 100%;
-            max-width: 800px;
-            /* ลบการตั้งค่าความสูงตายตัว */
-            overflow: hidden; /* เพิ่มเพื่อป้องกัน content ล้น */
-        }
+    .summary-modal-content-container {
+        background-color: #FAFAD2;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px 0; /* เพิ่ม margin บนล่าง */
+        width: 100%;
+        max-width: 800px;
+        /* ลบการตั้งค่าความสูงตายตัว */
+        overflow: hidden; /* เพิ่มเพื่อป้องกัน content ล้น */
+    }
 
-        .summary-modal-close-btn {
-            background-color: #E97132;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            cursor: pointer;
-            border-radius: 20px;
-            font-size: 16px;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-            width: 90%;
-            max-width: 250px;
-        }
+    .summary-modal-close-btn {
+        background-color: #E97132;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px;
+        font-size: 16px;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+        width: 90%;
+        max-width: 250px;
+    }
 
-        .summary-modal-close-btn:hover {
-            background-color: #e64a19;
-        }
+    .summary-modal-close-btn:hover {
+        background-color: #e64a19;
+    }
 
-        .summary-modal-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-top: 10px;
-            max-width: 600px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-        }
+    .summary-modal-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 10px;
+        max-width: 600px;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 8px;
+    }
 
-        .summary-control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 15px;
-        }
+    .summary-control-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 15px;
+    }
 
-        .summary-control-group label, .summary-control-group span {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 8px;
-        }
+    .summary-control-group label, .summary-control-group span {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 8px;
+    }
 
-        .summary-control-group input[type="range"] {
-            width: 80%;
-            max-width: 300px;
-            margin: 0;
-        }
+    .summary-control-group input[type="range"] {
+        width: 80%;
+        max-width: 300px;
+        margin: 0;
+    }
 
-        .summaryResult {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 10px !important;
-            margin: 0 !important;
-            box-sizing: border-box;
-            overflow-x: hidden;
-            background-color: #FAFAD2 !important; /* เพิ่มบรรทัดนี้ */
-        }
+    .summaryResult {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 10px !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        background-color: #FAFAD2 !important; /* เพิ่มบรรทัดนี้ */
+    }
 
+    .summaryResult table {
+        width: 100% !important;
+        max-width: 100% !important;
+        font-size: 14px !important;
+    }
+
+    .summaryResult th, 
+    .summaryResult td {
+        padding: 6px 4px !important;
+        font-size: 12px !important;
+        word-break: break-word; /* ให้คำยาวๆ ขึ้นบรรทัดใหม่ */
+    }
+
+    /* เพิ่ม container สำหรับตารางที่มีแถบเลื่อนแนวนอน */
+    .table-container {
+        overflow-x: auto;  /* สร้างแถบเลื่อนแนวนอนเมื่อเนื้อหาล้น */
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
+    #modalBodyContent table,
+    .summaryResult table {
+        table-layout: auto; /* ให้เบราว์เซอร์กำหนดความกว้างคอลัมน์ตามเนื้อหา */
+        width: auto;        /* อนุญาตให้ตารางขยายตามความต้องการของเนื้อหา */
+        min-width: 100%;    /* อย่างน้อยเติมความกว้างคอนเทนเนอร์เริ่มต้น */
+    }
+
+    #modalBodyContent table th,
+    #modalBodyContent table td,
+    .summaryResult table th,
+    .summaryResult table td {
+        white-space: nowrap; /* บังคับให้เนื้อหาทั้งหมดอยู่ในบรรทัดเดียว */
+        font-size: 11px;     /* ขนาดฟอนต์ที่เล็กกว่าสำหรับ popup บนมือถือ */
+        vertical-align: middle;
+        height: 40px; /* เพิ่มความสูงให้เท่ากับตารางกิจกรรม */
+    }
+    /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
+    
+    /* ปรับปรุงตารางกิจกรรมสำหรับมือถือ */
+    #activity-list-table {
+        table-layout: auto;
+        width: auto;
+        min-width: 100%;
+    }
+
+    #activity-list-table th,
+    #activity-list-table td {
+        white-space: nowrap;
+        font-size: 11px;
+        vertical-align: middle;
+        padding: 8px 6px;
+        height: 40px; /* เพิ่มความสูงให้เท่ากับตารางสรุป */
+    }
+    
+    /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือ */
+    #all-activities-table {
+        table-layout: auto;
+        width: auto;
+        min-width: 100%;
+    }
+
+    #all-activities-table th,
+    #all-activities-table td {
+        white-space: nowrap;
+        font-size: 11px;
+        vertical-align: middle;
+        padding: 8px 6px;
+        height: 40px; /* เพิ่มความสูงให้เท่ากับตารางสรุป */
+    }
+
+    /* ปรับปรุงตารางทั้งหมดสำหรับมือถือ */
+    #activity-list-table,
+    #activity-types-table,
+    #user-list-table,
+    #all-activities-table,
+    .summaryResult table {
+        table-layout: auto;
+        width: auto;
+        min-width: 100%;
+    }
+
+    #activity-list-table th,
+    #activity-list-table td,
+    #activity-types-table th,
+    #activity-types-table td,
+    #user-list-table th,
+    #user-list-table td,
+    #all-activities-table th,
+    #all-activities-table td,
+    .summaryResult table th,
+    .summaryResult table td {
+        white-space: nowrap;
+        font-size: 11px;
+        vertical-align: middle;
+        padding: 8px 6px;
+        height: 40px;
+    }
+
+    /* Media Queries สำหรับมือถือ */
+    @media (max-width: 768px) {
+        /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
+        #modalBodyContent table,
         .summaryResult table {
-            width: 100% !important;
-            max-width: 100% !important;
-            font-size: 14px !important;
+            table-layout: auto; /* ให้เบราว์เซอร์กำหนดความกว้างคอลัมน์ตามเนื้อหา */
+            width: auto;        /* อนุญาตให้ตารางขยายตามความต้องการของเนื้อหา */
+            min-width: 100%;    /* 确保อย่างน้อยเติมความกว้างคอนเทนเนอร์เริ่มต้น */
         }
 
+        #modalBodyContent table th,
+        #modalBodyContent table td,
+        .summaryResult table th,
+        .summaryResult table td {
+            white-space: nowrap; /* บังคับให้เนื้อหาทั้งหมดอยู่ในบรรทัดเดียว */
+            font-size: 11px;     /* ขนาดฟอนต์ที่เล็กกว่าสำหรับ popup บนมือถือ */
+            vertical-align: middle;
+        }
+        /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
+        
+        /* ปรับปรุงตารางกิจกรรมสำหรับมือถือ */
+        #activity-list-table {
+            table-layout: auto;
+            width: auto;
+            min-width: 100%;
+        }
+
+        #activity-list-table th,
+        #activity-list-table td {
+            white-space: nowrap;
+            font-size: 11px;
+            vertical-align: middle;
+            padding: 8px 6px;
+        }
+        
+        /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือ */
+        #all-activities-table {
+            table-layout: auto;
+            width: auto;
+            min-width: 100%;
+        }
+
+        #all-activities-table th,
+        #all-activities-table td {
+            white-space: nowrap;
+            font-size: 11px;
+            vertical-align: middle;
+            padding: 8px 6px;
+        }
+        
+        .summary-modal-overlay {
+            padding: 5px;
+            align-items: flex-start;
+        }
+        
+        .summary-modal-content-container {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        
+        .summaryResult {
+            padding: 5px !important;
+            transform: none !important; /* ลบ transform บนมือถือ */
+        }
+        
+        .summaryResult h2 {
+            font-size: 1.2rem !important;
+            margin-bottom: 8px !important;
+        }
+        
+        .summaryResult h3 {
+            font-size: 1.1rem !important;
+            margin-bottom: 8px !important;
+        }
+        
+        .summaryResult h4 {
+            font-size: 1rem !important;
+            margin-top: 15px !important;
+        }
+        
+        .summaryResult table {
+            font-size: 12px !important;
+        }
+        
         .summaryResult th, 
         .summaryResult td {
-            padding: 6px 4px !important;
-            font-size: 12px !important;
-            word-break: break-word; /* ให้คำยาวๆ ขึ้นบรรทัดใหม่ */
+            padding: 4px 3px !important;
+            font-size: 11px !important;
+        }
+        
+        .summary-modal-controls {
+            padding: 8px;
+        }
+        
+        .summary-control-group label, 
+        .summary-control-group span {
+            font-size: 14px;
+        }
+        
+        .nav-row {
+            flex-direction: column;
         }
 
-        /* เพิ่ม container สำหรับตารางที่มีแถบเลื่อนแนวนอน */
-        .table-container {
-            overflow-x: auto;  /* สร้างแถบเลื่อนแนวนอนเมื่อเนื้อหาล้น */
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 20px;
+        /* ปรับปรุงตารางทั้งหมดสำหรับมือถือ */
+        #activity-list-table th,
+        #activity-list-table td,
+        #activity-types-table th,
+        #activity-types-table td,
+        #user-list-table th,
+        #user-list-table td,
+        #all-activities-table th,
+        #all-activities-table td,
+        .summaryResult table th,
+        .summaryResult table td {
+            white-space: nowrap;
+            font-size: 11px;
+            vertical-align: middle;
+            padding: 8px 6px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .summaryResult h3 {
+            font-size: 1rem !important;
+        }
+        
+        .summaryResult h4 {
+            font-size: 0.9rem !important;
+        }
+        
+        .summaryResult table {
+            font-size: 11px !important;
+        }
+        
+        .summaryResult th, 
+        .summaryResult td {
+            padding: 3px 2px !important;
+            font-size: 10px !important;
+        }
+        
+        /* ปรับปรุงตารางกิจกรรมสำหรับมือถือขนาดเล็ก */
+        #activity-list-table th,
+        #activity-list-table td {
+            font-size: 10px;
+            padding: 6px 4px;
+            height: 35px; /* ปรับความสูงสำหรับหน้าจอขนาดเล็ก */
+        }
+        
+        /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือขนาดเล็ก */
+        #all-activities-table th,
+        #all-activities-table td {
+            font-size: 10px;
+            padding: 6px 4px;
+            height: 35px; /* ปรับความสูงสำหรับหน้าจอขนาดเล็ก */
+        }
+        
+        .summary-modal-close-btn {
+            padding: 10px 20px;
+            font-size: 14px;
         }
 
-        /* Media Queries สำหรับมือถือ */
-        @media (max-width: 768px) {
-            /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
-            #modalBodyContent table,
-            .summaryResult table {
-                table-layout: auto; /* ให้เบราว์เซอร์กำหนดความกว้างคอลัมน์ตามเนื้อหา */
-                width: auto;        /* อนุญาตให้ตารางขยายตามความต้องการของเนื้อหา */
-                min-width: 100%;    /* 确保อย่างน้อยเติมความกว้างคอนเทนเนอร์เริ่มต้น */
-            }
-
-            #modalBodyContent table th,
-            #modalBodyContent table td,
-            .summaryResult table th,
-            .summaryResult table td {
-                white-space: nowrap; /* บังคับให้เนื้อหาทั้งหมดอยู่ในบรรทัดเดียว */
-                font-size: 11px;     /* ขนาดฟอนต์ที่เล็กกว่าสำหรับ popup บนมือถือ */
-                vertical-align: middle;
-            }
-            /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
-            
-            /* ปรับปรุงตารางกิจกรรมสำหรับมือถือ */
-            #activity-list-table {
-                table-layout: auto;
-                width: auto;
-                min-width: 100%;
-            }
-
-            #activity-list-table th,
-            #activity-list-table td {
-                white-space: nowrap;
-                font-size: 11px;
-                vertical-align: middle;
-                padding: 8px 6px;
-            }
-            
-            /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือ */
-            #all-activities-table {
-                table-layout: auto;
-                width: auto;
-                min-width: 100%;
-            }
-
-            #all-activities-table th,
-            #all-activities-table td {
-                white-space: nowrap;
-                font-size: 11px;
-                vertical-align: middle;
-                padding: 8px 6px;
-            }
-            
-            .summary-modal-overlay {
-                padding: 5px;
-                align-items: flex-start;
-            }
-            
-            .summary-modal-content-container {
-                padding: 10px;
-                margin: 10px 0;
-                border-radius: 8px;
-            }
-            
-            .summaryResult {
-                padding: 5px !important;
-                transform: none !important; /* ลบ transform บนมือถือ */
-            }
-            
-            .summaryResult h2 {
-                font-size: 1.2rem !important;
-                margin-bottom: 8px !important;
-            }
-            
-            .summaryResult h3 {
-                font-size: 1.1rem !important;
-                margin-bottom: 8px !important;
-            }
-            
-            .summaryResult h4 {
-                font-size: 1rem !important;
-                margin-top: 15px !important;
-            }
-            
-            .summaryResult table {
-                font-size: 12px !important;
-            }
-            
-            .summaryResult th, 
-            .summaryResult td {
-                padding: 4px 3px !important;
-                font-size: 11px !important;
-            }
-            
-            .summary-modal-controls {
-                padding: 8px;
-            }
-            
-            .summary-control-group label, 
-            .summary-control-group span {
-                font-size: 14px;
-            }
-            
-            .nav-row {
-                flex-direction: column;
-            }
+        /* ปรับปรุงตารางทั้งหมดสำหรับมือถือขนาดเล็ก */
+        #activity-list-table th,
+        #activity-list-table td,
+        #activity-types-table th,
+        #activity-types-table td,
+        #user-list-table th,
+        #user-list-table td,
+        #all-activities-table th,
+        #all-activities-table td {
+            font-size: 10px;
+            padding: 6px 4px;
+            height: 35px;
         }
-
-        @media (max-width: 480px) {
-            .summaryResult h3 {
-                font-size: 1rem !important;
-            }
-            
-            .summaryResult h4 {
-                font-size: 0.9rem !important;
-            }
-            
-            .summaryResult table {
-                font-size: 11px !important;
-            }
-            
-            .summaryResult th, 
-            .summaryResult td {
-                padding: 3px 2px !important;
-                font-size: 10px !important;
-            }
-            
-            /* ปรับปรุงตารางกิจกรรมสำหรับมือถือขนาดเล็ก */
-            #activity-list-table th,
-            #activity-list-table td {
-                font-size: 10px;
-                padding: 6px 4px;
-            }
-            
-            /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือขนาดเล็ก */
-            #all-activities-table th,
-            #all-activities-table td {
-                font-size: 10px;
-                padding: 6px 4px;
-            }
-            
-            .summary-modal-close-btn {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <div class="container">
@@ -869,11 +981,11 @@
                     <table id="activity-list-table">
                         <thead>
                             <tr>
-                                <th>กิจกรรม</th>
+                                <th>ชื่อกิจกรรม</th>
                                 <th>วันที่</th>
-                                <th>เริ่มเวลา</th>
-                                <th>จบเวลา</th>
-                                <th>รวมเวลา</th>
+                                <th>เวลาเริ่มต้น</th>
+                                <th>เวลาสิ้นสุด</th>
+                                <th>ระยะเวลารวม</th>
                                 <th>รายละเอียด</th>
                                 <th>จัดการ</th>
                             </tr>
@@ -1023,11 +1135,11 @@
                     <thead>
                         <tr>
                             <th>ผู้ใช้งาน</th>
-                            <th>กิจกรรม</th>
+                            <th>ชื่อกิจกรรม</th>
                             <th>วันที่</th>
-                            <th>เริ่มเวลา</th>
-                            <th>จบเวลา</th>
-                            <th>รวมเวลา</th>
+                            <th>เวลาเริ่มต้น</th>
+                            <th>เวลาสิ้นสุด</th>
+                            <th>ระยะเวลารวม</th>
                             <th>รายละเอียด</th> <!-- เพิ่มบรรทัดนี้ -->
                             <th>จัดการ</th>
                         </tr>
@@ -2414,7 +2526,7 @@ summaryHTML += `
             <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 สรุปตามประเภทกิจกรรม
             </h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em); text-align: center;">
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
                 <thead>
                     <tr style="background-color: #007bff; color: white;">
                         <th style="padding: 10px; border: 1px solid #ddd;">ประเภทกิจกรรม</th>
@@ -2443,13 +2555,13 @@ summaryHTML += `
             <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 รายการกิจกรรมทั้งหมด
             </h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em); text-align: center;">
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
                 <thead>
                     <tr style="background-color: #007bff; color: white;">
-                        <th style="padding: 10px; border: 1px solid #ddd;">กิจกรรม</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">ชื่อกิจกรรม</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">วันที่</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">เริ่มเวลา</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">จบเวลา</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">เวลาเริ่มต้น</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">เวลาสิ้นสุด</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">ระยะเวลา</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">รายละเอียด</th>
                     </tr>
@@ -2613,11 +2725,11 @@ function exportSummaryToXLSX() {
     
     // หัวข้อตารางกิจกรรม
     allData.push([
-        'กิจกรรม', 
+        'ชื่อกิจกรรม', 
         'วันที่', 
-        'เริ่มเวลา', 
-        'จบเวลา', 
-        'รวมเวลา', 
+        'เวลาเริ่มต้น', 
+        'เวลาสิ้นสุด', 
+        'ระยะเวลา', 
         'รายละเอียด'
     ]);
     
@@ -2889,7 +3001,7 @@ function exportSummaryToPDF() {
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>กิจกรรม</th>
+                            <th>ชื่อกิจกรรม</th>
                             <th>วันที่</th>
                             <th>เริ่มต้น</th>
                             <th>สิ้นสุด</th>
