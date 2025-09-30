@@ -790,20 +790,39 @@
             transform: none !important; /* ลบ transform บนมือถือ */
         }
         
-        .summaryResult h2 {
-            font-size: 1.2rem !important;
-            margin-bottom: 8px !important;
-        }
+.summaryResult h2 {
+    color: #0056b3;
+    margin-bottom: 8px !important;
+    line-height: 1.0 !important; /* ลดจากค่าเดิม */
+    font-size: clamp(1.2rem, 3.5vw, 2em) !important;
+}
         
-        .summaryResult h3 {
-            font-size: 1.1rem !important;
-            margin-bottom: 8px !important;
-        }
+.summaryResult h3 {
+    color: #333;
+    margin-bottom: 8px !important;
+    line-height: 1.0 !important; /* ลดจากค่าเดิม */
+    font-size: clamp(1rem, 3vw, 1.5em) !important;
+}
         
-        .summaryResult h4 {
-            font-size: 1rem !important;
-            margin-top: 15px !important;
-        }
+.summaryResult h4 {
+    color: #0056b3;
+    margin-top: 15px !important;
+    margin-bottom: 8px !important;
+    line-height: 1.0 !important; /* ลดจากค่าเดิม */
+    font-size: clamp(0.9rem, 2.8vw, 1.0em) !important;
+}
+
+.summaryResult p {
+    margin: 3px 0 !important; /* ลดจาก 5px 0 */
+    line-height: 1.0 !important; /* ปรับให้เหมาะสม */
+    font-size: clamp(0.6rem, 1.8vw, 1rem) !important;
+}
+
+/* ปรับแต่งเฉพาะส่วนสรุปจำนวนวัน */
+.summaryResult > div > div:first-child p {
+    margin: 2px 0 !important; /* ลดระยะห่างให้มากขึ้น */
+    line-height: 1.0 !important;
+}
         
         .summaryResult table {
             font-size: 12px !important;
