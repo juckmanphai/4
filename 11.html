@@ -639,7 +639,7 @@
             margin-top: 20px;
         }
 
-/* Media Queries สำหรับมือถือ */
+        /* Media Queries สำหรับมือถือ */
         @media (max-width: 768px) {
             /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
             #modalBodyContent table,
@@ -659,7 +659,7 @@
             }
             /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
             
-            /* เพิ่มในส่วน @media (max-width: 768px) */
+            /* ปรับปรุงตารางกิจกรรมสำหรับมือถือ */
             #activity-list-table {
                 table-layout: auto;
                 width: auto;
@@ -668,6 +668,21 @@
 
             #activity-list-table th,
             #activity-list-table td {
+                white-space: nowrap;
+                font-size: 11px;
+                vertical-align: middle;
+                padding: 8px 6px;
+            }
+            
+            /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือ */
+            #all-activities-table {
+                table-layout: auto;
+                width: auto;
+                min-width: 100%;
+            }
+
+            #all-activities-table th,
+            #all-activities-table td {
                 white-space: nowrap;
                 font-size: 11px;
                 vertical-align: middle;
@@ -748,9 +763,16 @@
                 font-size: 10px !important;
             }
             
-            /* เพิ่มในส่วน @media (max-width: 480px) */
+            /* ปรับปรุงตารางกิจกรรมสำหรับมือถือขนาดเล็ก */
             #activity-list-table th,
             #activity-list-table td {
+                font-size: 10px;
+                padding: 6px 4px;
+            }
+            
+            /* ปรับปรุงตารางกิจกรรมในหน้า admin สำหรับมือถือขนาดเล็ก */
+            #all-activities-table th,
+            #all-activities-table td {
                 font-size: 10px;
                 padding: 6px 4px;
             }
@@ -842,22 +864,25 @@
                     <button id="apply-filter-button">กรอง</button>
                     <button id="reset-filter-button">รีเซ็ต</button>
                 </div>
-                <table id="activity-list-table">
-                    <thead>
-                        <tr>
-                            <th>ชื่อกิจกรรม</th>
-                            <th>วันที่</th>
-                            <th>เวลาเริ่มต้น</th>
-                            <th>เวลาสิ้นสุด</th>
-                            <th>ระยะเวลารวม</th>
-                            <th>รายละเอียด</th> <!-- เพิ่มบรรทัดนี้ -->
-                            <th>จัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Activities will be loaded here by JavaScript -->
-                    </tbody>
-                </table>
+                <!-- เพิ่ม container สำหรับตาราง -->
+                <div class="table-container">
+                    <table id="activity-list-table">
+                        <thead>
+                            <tr>
+                                <th>ชื่อกิจกรรม</th>
+                                <th>วันที่</th>
+                                <th>เวลาเริ่มต้น</th>
+                                <th>เวลาสิ้นสุด</th>
+                                <th>ระยะเวลารวม</th>
+                                <th>รายละเอียด</th>
+                                <th>จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Activities will be loaded here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </div>
         
