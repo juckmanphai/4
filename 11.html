@@ -869,11 +869,11 @@
                     <table id="activity-list-table">
                         <thead>
                             <tr>
-                                <th>ชื่อกิจกรรม</th>
+                                <th>กิจกรรม</th>
                                 <th>วันที่</th>
-                                <th>เวลาเริ่มต้น</th>
-                                <th>เวลาสิ้นสุด</th>
-                                <th>ระยะเวลารวม</th>
+                                <th>เริ่มเวลา</th>
+                                <th>จบเวลา</th>
+                                <th>รวมเวลา</th>
                                 <th>รายละเอียด</th>
                                 <th>จัดการ</th>
                             </tr>
@@ -1023,11 +1023,11 @@
                     <thead>
                         <tr>
                             <th>ผู้ใช้งาน</th>
-                            <th>ชื่อกิจกรรม</th>
+                            <th>กิจกรรม</th>
                             <th>วันที่</th>
-                            <th>เวลาเริ่มต้น</th>
-                            <th>เวลาสิ้นสุด</th>
-                            <th>ระยะเวลารวม</th>
+                            <th>เริ่มเวลา</th>
+                            <th>จบเวลา</th>
+                            <th>รวมเวลา</th>
                             <th>รายละเอียด</th> <!-- เพิ่มบรรทัดนี้ -->
                             <th>จัดการ</th>
                         </tr>
@@ -2414,7 +2414,7 @@ summaryHTML += `
             <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 สรุปตามประเภทกิจกรรม
             </h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em); text-align: center;">
                 <thead>
                     <tr style="background-color: #007bff; color: white;">
                         <th style="padding: 10px; border: 1px solid #ddd;">ประเภทกิจกรรม</th>
@@ -2443,13 +2443,13 @@ summaryHTML += `
             <h4 style="color: #0056b3; margin-top: 10px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 รายการกิจกรรมทั้งหมด
             </h4>
-            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em); text-align: center;">
                 <thead>
                     <tr style="background-color: #007bff; color: white;">
-                        <th style="padding: 10px; border: 1px solid #ddd;">ชื่อกิจกรรม</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">กิจกรรม</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">วันที่</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">เวลาเริ่มต้น</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">เวลาสิ้นสุด</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">เริ่มเวลา</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">จบเวลา</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">ระยะเวลา</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">รายละเอียด</th>
                     </tr>
@@ -2613,11 +2613,11 @@ function exportSummaryToXLSX() {
     
     // หัวข้อตารางกิจกรรม
     allData.push([
-        'ชื่อกิจกรรม', 
+        'กิจกรรม', 
         'วันที่', 
-        'เวลาเริ่มต้น', 
-        'เวลาสิ้นสุด', 
-        'ระยะเวลา', 
+        'เริ่มเวลา', 
+        'จบเวลา', 
+        'รวมเวลา', 
         'รายละเอียด'
     ]);
     
@@ -2889,7 +2889,7 @@ function exportSummaryToPDF() {
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>ชื่อกิจกรรม</th>
+                            <th>กิจกรรม</th>
                             <th>วันที่</th>
                             <th>เริ่มต้น</th>
                             <th>สิ้นสุด</th>
