@@ -2605,7 +2605,7 @@ if (startDate && endDate && startDate !== endDate) {
             </div>`;
     } else {
         summaryHTML += `
-            <div style="text-align: center; margin-bottom: 5px;">
+            <div style="text-align: center; margin-bottom: 2px;">
                 <h3 style="font-size: clamp(0.8rem, 2.5vw, 1rem); line-height: 1.0; margin: 0;">
                     ไม่มีกิจกรรมในช่วงที่เลือก
                 </h3>
@@ -2617,7 +2617,7 @@ if (startDate && endDate && startDate !== endDate) {
     // เพิ่มข้อมูลสรุปจำนวนวัน (จากโค้ดตัวอย่างด้านบน)
     // ส่วนนี้จะแสดงเสมอไม่ว่าจะเลือก summaryType แบบไหน
 summaryHTML += `
-<div style="background-color: #FAFAD2; padding: 5px; margin-bottom: 5px; text-align: center; color: blue;">
+<div style="background-color: #FAFAD2; padding: 5px; margin-bottom: 3px; text-align: center; color: blue;">
     <h4 style="margin-top: 0; font-size: clamp(0.7rem, 2vw, 1.0rem); line-height: 1;">สรุปจำนวนวัน</h4>
     <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• จำนวนวันทั้งหมด: ${totalDays} วัน</p>
     <p style="margin: 5px 0; font-size: clamp(0.6rem, 1.8vw, 1rem); line-height: 1;">• มีกิจกรรม: ${daysWithActivities} วัน</p>
@@ -2628,7 +2628,7 @@ summaryHTML += `
 `;
     
     summaryHTML += `
-            <h4 style="color: #0056b3; margin-top: 5px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
+            <h4 style="color: #0056b3; margin-top: 2px; font-size: clamp(0.9rem, 2.8vw, 1.0em);">
                 สรุปตามประเภทกิจกรรม
             </h4>
             <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: clamp(0.75rem, 2vw, 1em);">
