@@ -2598,7 +2598,7 @@ if (startDate && endDate && startDate !== endDate) {
     const allActivityDates = Array.from(new Set(userActivities.map(activity => activity.date))).sort();
     if (allActivityDates.length > 0) {
         summaryHTML += `
-            <div style="text-align: center; margin-bottom: 5px;">
+            <div style="text-align: center; margin-bottom: 2px;">
                 <h3 style="font-size: clamp(0.8rem, 2.5vw, 1rem); line-height: 1.0; margin: 0;">
                     จากวันที่ ${formatDate(allActivityDates[0])} ถึง ${formatDate(allActivityDates[allActivityDates.length - 1])}
                 </h3>
