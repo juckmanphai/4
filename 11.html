@@ -639,7 +639,7 @@
             margin-top: 20px;
         }
 
-        /* Media Queries สำหรับมือถือ */
+/* Media Queries สำหรับมือถือ */
         @media (max-width: 768px) {
             /* === START: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
             #modalBodyContent table,
@@ -658,6 +658,21 @@
                 vertical-align: middle;
             }
             /* === END: USER REQUEST - POPUP TABLE SINGLE-LINE ADJUSTMENT ON MOBILE === */
+            
+            /* เพิ่มในส่วน @media (max-width: 768px) */
+            #activity-list-table {
+                table-layout: auto;
+                width: auto;
+                min-width: 100%;
+            }
+
+            #activity-list-table th,
+            #activity-list-table td {
+                white-space: nowrap;
+                font-size: 11px;
+                vertical-align: middle;
+                padding: 8px 6px;
+            }
             
             .summary-modal-overlay {
                 padding: 5px;
@@ -731,6 +746,13 @@
             .summaryResult td {
                 padding: 3px 2px !important;
                 font-size: 10px !important;
+            }
+            
+            /* เพิ่มในส่วน @media (max-width: 480px) */
+            #activity-list-table th,
+            #activity-list-table td {
+                font-size: 10px;
+                padding: 6px 4px;
             }
             
             .summary-modal-close-btn {
