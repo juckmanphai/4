@@ -1,9 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบบันทึกกิจกรรม</title>
+    <!-- [PWA] Link to Manifest & Theme Color -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a90e2">
     
     <!-- เพิ่มไลบรารีสำหรับการส่งออก -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1361,19 +1365,47 @@ function formatDate(dateString) {
         return hash.toString();
     }
 
-    function populateActivityTypeDropdowns(dropdownId) {
-        const dropdown = document.getElementById(dropdownId);
-        if (!dropdown) return;
+function populateActivityTypeDropdowns(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    if (!dropdown) return;
 
-        const activityTypes = getFromLocalStorage('activityTypes');
-        const selectedValue = dropdown.value;
+    const loggedInUser = getLoggedInUser();
+    if (!loggedInUser) return;
 
+    const allActivityTypes = getFromLocalStorage('activityTypes');
+    // กรองเฉพาะประเภทกิจกรรมของ user นี้
+    const userActivityTypes = allActivityTypes.filter(type => type.userId === loggedInUser.id);
+    
+    const selectedValue = dropdown.value;
+
+    // ตรวจสอบว่ามีประเภทกิจกรรมกี่รายการ
+    const activityTypeCount = userActivityTypes.length;
+    
+    // ถ้ามีแค่ 1 ประเภทกิจกรรม ให้เลือกอัตโนมัติและซ่อน dropdown
+    if (activityTypeCount === 1 && (dropdownId === 'activity-name-select')) {
+        dropdown.value = userActivityTypes[0].name;
+        dropdown.style.display = 'none'; // ซ่อน dropdown
+        
+        // แสดงชื่อกิจกรรมแทน
+        const activityNameDisplay = document.getElementById('activity-name-display') || createActivityNameDisplay();
+        activityNameDisplay.textContent = `กิจกรรม: ${userActivityTypes[0].name}`;
+    } else {
+        // ถ้ามีมากกว่า 1 ให้แสดง dropdown ปกติ
+        dropdown.style.display = 'block';
+        
+        // ซ่อนการแสดงชื่อกิจกรรมถ้ามี
+        const activityNameDisplay = document.getElementById('activity-name-display');
+        if (activityNameDisplay) {
+            activityNameDisplay.style.display = 'none';
+        }
+        
+        // ล้างและสร้าง options ใหม่
         dropdown.innerHTML = '<option value="">-- เลือกประเภทกิจกรรม --</option>';
         if (dropdownId === 'filter-activity-type' || dropdownId === 'admin-filter-activity-type') {
             dropdown.innerHTML = '<option value="">-- กรองตามประเภท --</option>';
         }
 
-        activityTypes.forEach(type => {
+        userActivityTypes.forEach(type => {
             const option = document.createElement('option');
             option.value = type.name;
             option.textContent = type.name;
@@ -1381,6 +1413,23 @@ function formatDate(dateString) {
         });
         dropdown.value = selectedValue;
     }
+}
+
+// ฟังก์ชันสร้าง element สำหรับแสดงชื่อกิจกรรม
+function createActivityNameDisplay() {
+    const displayElement = document.createElement('div');
+    displayElement.id = 'activity-name-display';
+    displayElement.style.padding = '10px';
+    displayElement.style.backgroundColor = '#e9ecef';
+    displayElement.style.borderRadius = '5px';
+    displayElement.style.marginBottom = '10px';
+    displayElement.style.fontWeight = 'bold';
+    
+    const dropdown = document.getElementById('activity-name-select');
+    dropdown.parentNode.insertBefore(displayElement, dropdown);
+    
+    return displayElement;
+}
 
 // ========== Encryption Functions ==========
 function encryptData(data, password) {
@@ -1554,6 +1603,123 @@ function decryptData(encryptedData, password) {
     }
 
     // ========== Activity Management ==========
+function deleteActivityType(typeId) {
+    const allActivityTypes = getFromLocalStorage('activityTypes');
+    const activities = getFromLocalStorage('activities');
+    const loggedInUser = getLoggedInUser();
+
+    const typeToDelete = allActivityTypes.find(t => t.id === typeId);
+    
+    // ตรวจสอบสิทธิ์การลบ
+    if (typeToDelete && typeToDelete.userId !== loggedInUser.id) {
+        alert('คุณไม่มีสิทธิ์ลบประเภทกิจกรรมนี้');
+        return;
+    }
+
+    // ตรวจสอบว่ามีกิจกรรมใช้ประเภทนี้อยู่หรือไม่
+    const isTypeUsed = activities.some(activity => 
+        activity.activityName === typeToDelete?.name && 
+        activity.userId === loggedInUser.id
+    );
+    
+    if (isTypeUsed) {
+        alert('ไม่สามารถลบประเภทกิจกรรมนี้ได้ เนื่องจากมีกิจกรรมที่ใช้ประเภทนี้อยู่');
+        return;
+    }
+
+    if (!confirm('คุณแน่ใจว่าต้องการลบประเภทกิจกรรมนี้?')) return;
+
+    const updatedTypes = allActivityTypes.filter(t => t.id !== typeId);
+    saveToLocalStorage('activityTypes', updatedTypes);
+    loadActivityTypes();
+    populateActivityTypeDropdowns('activity-name-select');
+    populateActivityTypeDropdowns('filter-activity-type');
+}
+function updateActivityType(typeId) {
+    const name = document.getElementById('activity-type-name').value.trim();
+    if (!name) {
+        document.getElementById('activity-type-message').textContent = 'กรุณากรอกชื่อประเภทกิจกรรม';
+        return;
+    }
+
+    const allActivityTypes = getFromLocalStorage('activityTypes');
+    const loggedInUser = getLoggedInUser();
+    
+    // ตรวจสอบชื่อซ้ำ (เฉพาะของ user นี้)
+    const existingType = allActivityTypes.find(t => 
+        t.name.toLowerCase() === name.toLowerCase() && 
+        t.id !== typeId &&
+        t.userId === loggedInUser.id
+    );
+    
+    if (existingType) {
+        document.getElementById('activity-type-message').textContent = 'มีประเภทกิจกรรมนี้อยู่แล้ว';
+        return;
+    }
+
+    // อัปเดตข้อมูล
+    const typeIndex = allActivityTypes.findIndex(t => t.id === typeId && t.userId === loggedInUser.id);
+    if (typeIndex === -1) return;
+
+    allActivityTypes[typeIndex].name = name;
+    saveToLocalStorage('activityTypes', allActivityTypes);
+    
+    document.getElementById('activity-type-form').reset();
+    document.getElementById('activity-type-message').textContent = 'อัปเดตประเภทกิจกรรมเรียบร้อยแล้ว';
+    document.getElementById('save-activity-type-button').classList.remove('hidden');
+    document.getElementById('update-activity-type-button').classList.add('hidden');
+    document.getElementById('cancel-activity-type-edit-button').classList.add('hidden');
+
+    loadActivityTypes();
+    populateActivityTypeDropdowns('activity-name-select');
+    populateActivityTypeDropdowns('filter-activity-type');
+}
+function editActivityType(typeId) {
+    const allActivityTypes = getFromLocalStorage('activityTypes');
+    const loggedInUser = getLoggedInUser();
+    
+    // ค้นหาประเภทกิจกรรมเฉพาะของ user นี้
+    const type = allActivityTypes.find(t => t.id === typeId && t.userId === loggedInUser.id);
+    
+    if (!type) {
+        alert('ไม่พบประเภทกิจกรรมนี้หรือคุณไม่มีสิทธิ์แก้ไข');
+        return;
+    }
+
+    // แสดงฟอร์มแก้ไข
+    document.getElementById('activity-type-name').value = type.name;
+    
+    document.getElementById('save-activity-type-button').classList.add('hidden');
+    document.getElementById('update-activity-type-button').classList.remove('hidden');
+    document.getElementById('cancel-activity-type-edit-button').classList.remove('hidden');
+
+    document.getElementById('update-activity-type-button').onclick = function() {
+        updateActivityType(typeId);
+    };
+
+    document.getElementById('cancel-activity-type-edit-button').onclick = function() {
+        document.getElementById('activity-type-form').reset();
+        document.getElementById('save-activity-type-button').classList.remove('hidden');
+        document.getElementById('update-activity-type-button').classList.add('hidden');
+        document.getElementById('cancel-activity-type-edit-button').classList.add('hidden');
+        document.getElementById('activity-type-message').textContent = '';
+    };
+}
+function attachActivityTypeEventListeners() {
+    document.querySelectorAll('.edit-activity-type').forEach(button => {
+        button.addEventListener('click', function() {
+            const typeId = this.getAttribute('data-id');
+            editActivityType(typeId);
+        });
+    });
+
+    document.querySelectorAll('.delete-activity-type').forEach(button => {
+        button.addEventListener('click', function() {
+            const typeId = this.getAttribute('data-id');
+            deleteActivityType(typeId);
+        });
+    });
+}
     function loadUserActivities() {
         const loggedInUser = getLoggedInUser();
         if (!loggedInUser) return;
@@ -1677,16 +1843,28 @@ function decryptData(encryptedData, password) {
         loadUserActivities();
     }
 
-    function handleActivityFormSubmit(event) {
-        event.preventDefault();
-        const loggedInUser = getLoggedInUser();
-        if (!loggedInUser) return;
+function handleActivityFormSubmit(event) {
+    event.preventDefault();
+    const loggedInUser = getLoggedInUser();
+    if (!loggedInUser) return;
 
-        const activityName = document.getElementById('activity-name-select').value;
-        const date = document.getElementById('activity-date').value;
-        const startTime = document.getElementById('start-time').value;
-        const endTime = document.getElementById('end-time').value;
-        const details = document.getElementById('activity-details').value.trim();
+    // ตรวจสอบว่ามีประเภทกิจกรรมเดียวและถูกซ่อนอยู่หรือไม่
+    const allActivityTypes = getFromLocalStorage('activityTypes');
+    const userActivityTypes = allActivityTypes.filter(type => type.userId === loggedInUser.id);
+    
+    let activityName;
+    if (userActivityTypes.length === 1 && document.getElementById('activity-name-select').style.display === 'none') {
+        // ถ้ามีกิจกรรมเดียวและ dropdown ถูกซ่อนอยู่ ให้ใช้ชื่อกิจกรรมนั้น
+        activityName = userActivityTypes[0].name;
+    } else {
+        // มิฉะนั้นใช้ค่าจาก dropdown
+        activityName = document.getElementById('activity-name-select').value;
+    }
+
+    const date = document.getElementById('activity-date').value;
+    const startTime = document.getElementById('start-time').value;
+    const endTime = document.getElementById('end-time').value;
+    const details = document.getElementById('activity-details').value.trim();
 
         if (!activityName || !date || !startTime || !endTime) {
             document.getElementById('activity-message').textContent = 'กรุณากรอกข้อมูลให้ครบถ้วน';
@@ -1725,7 +1903,6 @@ function loadActivityTypes() {
     if (!loggedInUser) return;
 
     const allActivityTypes = getFromLocalStorage('activityTypes');
-    // กรองเฉพาะประเภทกิจกรรมของ user นี้
     const userActivityTypes = allActivityTypes.filter(type => type.userId === loggedInUser.id);
     
     const tableBody = document.querySelector('#activity-types-table tbody');
@@ -1744,7 +1921,11 @@ function loadActivityTypes() {
         tableBody.appendChild(row);
     });
 
+    // เรียกฟังก์ชันนี้เพื่อตั้งค่า event listeners
     attachActivityTypeEventListeners();
+    
+    // อัพเดท dropdown เมื่อมีการเปลี่ยนแปลงประเภทกิจกรรม
+    populateActivityTypeDropdowns('activity-name-select');
 }
 
 function handleActivityTypeFormSubmit(event) {
@@ -1774,7 +1955,7 @@ function handleActivityTypeFormSubmit(event) {
     const newType = {
         id: Date.now().toString(),
         name,
-        userId: loggedInUser.id  // เพิ่ม field userId
+        userId: loggedInUser.id
     };
 
     allActivityTypes.push(newType);
@@ -1783,7 +1964,7 @@ function handleActivityTypeFormSubmit(event) {
     document.getElementById('activity-type-message').textContent = 'เพิ่มประเภทกิจกรรมเรียบร้อยแล้ว';
 
     loadActivityTypes();
-    populateActivityTypeDropdowns('activity-name-select');
+    populateActivityTypeDropdowns('activity-name-select'); // อัพเดท dropdown
     populateActivityTypeDropdowns('filter-activity-type');
 }
 
@@ -1842,7 +2023,7 @@ function deleteActivityType(typeId) {
     const updatedTypes = allActivityTypes.filter(t => t.id !== typeId);
     saveToLocalStorage('activityTypes', updatedTypes);
     loadActivityTypes();
-    populateActivityTypeDropdowns('activity-name-select');
+    populateActivityTypeDropdowns('activity-name-select'); // อัพเดท dropdown
     populateActivityTypeDropdowns('filter-activity-type');
 }
 
