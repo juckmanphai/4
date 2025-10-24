@@ -2489,18 +2489,23 @@ function generateResultHTML() {
   const lunarHtml = lunarDate ? 
     `<p class="lunar-date" style="color: ${lunarDate.includes('วันพระ') ? 'red' : 'green'};">( ${lunarDate} )</p>` : '';
 
-  const commonData = {
-    date: date,
-    topicName: getTopicName(),
-    topicTimeHtml: (() => { 
-      const t = getTopicTime(); 
-      return t ? `<p class="topic-time">${t}</p>` : ''; 
-    })(),
-    selectedPerson: getSelectedPerson(),
-    lunarHtml: lunarHtml, // ใช้ lunarHtml ที่ปรับปรุงแล้ว
-    noteHtml: `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`,
-    textShadow: engravedShadowStyle
-  };
+const commonData = {
+  date: date,
+  topicName: getTopicName(),
+  topicNameHtml: (() => { 
+    const name = getTopicName();
+    const time = getTopicTime();
+    return `<p class="topic-main">${name}${time ? ` เวลา ${time} น.` : ''}</p>`; 
+  })(),
+  topicTimeHtml: (() => { 
+    const t = getTopicTime(); 
+    return t ? `<p class="topic-time">${t}</p>` : ''; 
+  })(),
+  selectedPerson: getSelectedPerson(),
+  lunarHtml: lunarHtml,
+  noteHtml: `หมายเหตุ : ${noteValue ? `<span style="color: red;">${noteValue}</span>` : '<span style="color: red;">No remarks</span>'}`,
+  textShadow: engravedShadowStyle
+};
 
   if (num.length === 2) { return generate2DigitHTML(num, commonData); }
   else if (num.length === 3) { return generate3DigitHTML(num, commonData); }
