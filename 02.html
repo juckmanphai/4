@@ -2495,11 +2495,13 @@ const commonData = {
   topicNameHtml: (() => { 
     const name = getTopicName();
     const time = getTopicTime();
-    return `<p class="topic-main">${name}${time ? ` เวลา ${time} น.` : ''}</p>`; 
+    // แก้ไขส่วนนี้ - แยกเป็นสองบรรทัด
+    return `<p class="topic-main">${name}</p>`; 
   })(),
   topicTimeHtml: (() => { 
     const t = getTopicTime(); 
-    return t ? `<p class="topic-time">${t}</p>` : ''; 
+    // แก้ไขส่วนนี้ - แสดงเวลาต่างหาก
+    return t ? `<p class="topic-time">เวลา ${t} น.</p>` : ''; 
   })(),
   selectedPerson: getSelectedPerson(),
   lunarHtml: lunarHtml,
