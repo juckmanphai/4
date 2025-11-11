@@ -19,6 +19,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
 
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         /* --- CSS Reset & Base Styles --- */
         * {
@@ -231,7 +234,7 @@
         .btn {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             padding: 10px 8px; 
             border: none;
             border-radius: 8px;
@@ -240,7 +243,7 @@
             font-weight: 500;
             font-family: 'Kanit', sans-serif;
             cursor: pointer;
-            text-align: center;
+            text-align: left;
             text-decoration: none;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -249,6 +252,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            position: relative;
         }
 
         .btn:hover {
@@ -270,6 +274,19 @@
         .button-grid .btn.color-11 { background-image: linear-gradient(45deg, #8b5cf6, #a78bfa); } /* Violet */
         .button-grid .btn.color-12 { background-image: linear-gradient(45deg, #ec4899, #f472b6); } /* Pink */
         
+        /* --- Icon Styles --- */
+        .btn-icon {
+            margin-right: 8px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .btn-text {
+            flex-grow: 1;
+        }
+
         /* --- Footer --- */
         footer {
             margin-top: 20px;
@@ -332,6 +349,12 @@
             .section-subtitle {
                 font-size: 0.85rem;
                 margin-bottom: 12px;
+            }
+
+            .btn-icon {
+                font-size: 14px;
+                margin-right: 6px;
+                width: 16px;
             }
         }
     </style>
@@ -405,16 +428,28 @@
         <!-- Section: แปลตัวเลข -->
         <div class="card">
             <div class="main-section-header header-translate active" onclick="toggleMainSection('translate-section')">
-                <span>เมนูฟอร์มแปลตัวเลข</span>
+                <span><i class="fas fa-language btn-icon"></i>เมนูฟอร์มแปลตัวเลข</span>
                 <span class="arrow">▶</span>
             </div>
             <div id="translate-section" class="main-section-content active">
                 <p class="section-subtitle">เลือกรายการแปลตัวเลขที่ต้องการใช้งาน</p>
                 <div class="button-grid">
-                    <button class="btn color-1" onclick="navigateTo('https://juckmanphai.github.io/4/01.html')">แปล 2 ถึง 4 ตัว</button>
-                    <button class="btn color-3" onclick="navigateTo('https://juckmanphai.github.io/4/02.html')">แปล 2 ถึง 4 ตัว v.2 </button>
-                    <button class="btn color-5" onclick="navigateTo('https://juckmanphai.github.io/4/03.html')">แปล 3 ตัวเท่านั้น</button>
-                    <button class="btn color-4" onclick="navigateTo('https://juckmanphai.github.io/4/04.html')">ไม่แปล 2 และ 3 ตัว</button>
+                    <button class="btn color-1" onclick="navigateTo('https://juckmanphai.github.io/4/01.html')">
+                        <i class="fas fa-exchange-alt btn-icon"></i>
+                        <span class="btn-text">แปล 2 ถึง 4 ตัว</span>
+                    </button>
+                    <button class="btn color-3" onclick="navigateTo('https://juckmanphai.github.io/4/02.html')">
+                        <i class="fas fa-sync-alt btn-icon"></i>
+                        <span class="btn-text">แปล 2 ถึง 4 ตัว v.2</span>
+                    </button>
+                    <button class="btn color-5" onclick="navigateTo('https://juckmanphai.github.io/4/03.html')">
+                        <i class="fas fa-cube btn-icon"></i>
+                        <span class="btn-text">แปล 3 ตัวเท่านั้น</span>
+                    </button>
+                    <button class="btn color-4" onclick="navigateTo('https://juckmanphai.github.io/4/04.html')">
+                        <i class="fas fa-ban btn-icon"></i>
+                        <span class="btn-text">ไม่แปล 2 และ 3 ตัว</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -422,15 +457,24 @@
         <!-- Section: กรอกผลตัวเลข -->
         <div class="card">
             <div class="main-section-header header-fill-form" onclick="toggleMainSection('fill-form-section')">
-                <span>เมนูฟอร์มกรอกผลตัวเลข</span>
+                <span><i class="fas fa-edit btn-icon"></i>เมนูฟอร์มกรอกผลตัวเลข</span>
                 <span class="arrow">▶</span>
             </div>
             <div id="fill-form-section" class="main-section-content">
                 <p class="section-subtitle">เลือกกลุ่มเพื่อกรอกผล</p>
                 <div class="button-grid">
-                    <button class="btn color-6" onclick="navigateTo('https://juckmanphai.github.io/4/05.html')">กลุ่มลาว+รัฐบาล</button>
-                    <button class="btn color-2" onclick="navigateTo('https://juckmanphai.github.io/4/06.html')">กลุ่มลาว+รัฐบาล V 2</button>
-                    <button class="btn color-3" onclick="navigateTo('https://juckmanphai.github.io/4/18.html')">บัญชี</button>
+                    <button class="btn color-6" onclick="navigateTo('https://juckmanphai.github.io/4/05.html')">
+                        <i class="fas fa-users btn-icon"></i>
+                        <span class="btn-text">กลุ่มลาว+รัฐบาล</span>
+                    </button>
+                    <button class="btn color-2" onclick="navigateTo('https://juckmanphai.github.io/4/06.html')">
+                        <i class="fas fa-user-friends btn-icon"></i>
+                        <span class="btn-text">กลุ่มลาว+รัฐบาล V 2</span>
+                    </button>
+                    <button class="btn color-3" onclick="navigateTo('https://juckmanphai.github.io/4/18.html')">
+                        <i class="fas fa-user-circle btn-icon"></i>
+                        <span class="btn-text">บัญชี</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -438,19 +482,40 @@
         <!-- Section: แถบเมนูเครื่องมือ (ใหม่) -->
         <div class="card">
             <div class="main-section-header header-tools" onclick="toggleMainSection('tools-section')">
-                <span>แถบเมนูเครื่องมือ</span>
+                <span><i class="fas fa-tools btn-icon"></i>แถบเมนูเครื่องมือ</span>
                 <span class="arrow">▶</span>
             </div>
             <div id="tools-section" class="main-section-content">
                 <p class="section-subtitle">เครื่องมือที่มีประโยชน์สำหรับคุณ</p>
                 <div class="button-grid">
-                    <button class="btn color-10" onclick="navigateTo('https://juckmanphai.github.io/4/12.html')">แปลงวันพระจากเว็บ</button>
-                    <button class="btn color-11" onclick="navigateTo('https://juckmanphai.github.io/4/11.html')">Test</button>
-                    <button class="btn color-12" onclick="navigateTo('https://juckmanphai.github.io/4/13.html')">สุ่มตัวเลข</button>
-                    <button class="btn color-9" onclick="navigateTo('https://juckmanphai.github.io/4/14.html')">ส่มตัวเลขดูเวลา</button>
-                    <button class="btn color-8" onclick="navigateTo('https://juckmanphai.github.io/4/15.html')">กรองข้อมูลหวยลาว</button>
-                    <button class="btn color-7" onclick="navigateTo('https://juckmanphai.github.io/4/16.html')">วิเคราะห์หวย5หลัก</button>
-                    <button class="btn color-6" onclick="navigateTo('https://juckmanphai.github.io/4/17.html')">วิเคราะห์หวย6หลัก</button>
+                    <button class="btn color-10" onclick="navigateTo('https://juckmanphai.github.io/4/12.html')">
+                        <i class="fas fa-calendar-alt btn-icon"></i>
+                        <span class="btn-text">แปลงวันพระจากเว็บ</span>
+                    </button>
+                    <button class="btn color-11" onclick="navigateTo('https://juckmanphai.github.io/4/11.html')">
+                        <i class="fas fa-vial btn-icon"></i>
+                        <span class="btn-text">Test</span>
+                    </button>
+                    <button class="btn color-12" onclick="navigateTo('https://juckmanphai.github.io/4/13.html')">
+                        <i class="fas fa-random btn-icon"></i>
+                        <span class="btn-text">สุ่มตัวเลข</span>
+                    </button>
+                    <button class="btn color-9" onclick="navigateTo('https://juckmanphai.github.io/4/14.html')">
+                        <i class="fas fa-clock btn-icon"></i>
+                        <span class="btn-text">ส่มตัวเลขดูเวลา</span>
+                    </button>
+                    <button class="btn color-8" onclick="navigateTo('https://juckmanphai.github.io/4/15.html')">
+                        <i class="fas fa-filter btn-icon"></i>
+                        <span class="btn-text">กรองข้อมูลหวยลาว</span>
+                    </button>
+                    <button class="btn color-7" onclick="navigateTo('https://juckmanphai.github.io/4/16.html')">
+                        <i class="fas fa-chart-line btn-icon"></i>
+                        <span class="btn-text">วิเคราะห์หวย5หลัก</span>
+                    </button>
+                    <button class="btn color-6" onclick="navigateTo('https://juckmanphai.github.io/4/17.html')">
+                        <i class="fas fa-chart-bar btn-icon"></i>
+                        <span class="btn-text">วิเคราะห์หวย6หลัก</span>
+                    </button>
                 </div>
             </div>
         </div>
