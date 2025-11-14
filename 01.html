@@ -9,7 +9,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ฟอร์มแปลตัวเลข 2, 3 และ 4 ตัว</title>
 <!-- PWA-related additions -->
 <link rel="manifest" href="manifest-unified.json">
@@ -91,7 +91,7 @@ overflow-y: auto;
     background-color: #FFFFD1;
     border-radius: 1px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    width: 100%;
+    width: 98%;
     max-width: 600px;
     padding: 25px 5px;             /* ตรงกับด้านบน */
     position: relative;
@@ -106,7 +106,7 @@ overflow-y: auto;
     max-width: calc(100% - 2px);   /* ตรงกับด้านบน */
     margin: 5px auto;              /* กึ่งกลาง พร้อมค่าบน-ล่าง 5px */
     padding: 10px 2px;             /* ตรงกับด้านบน */
-    border: 1.5px solid #FF33CC;    /* ตรงกับด้านบน */
+    border: 1.5px solid #FF33CC;   /* ตรงกับด้านบน */
     border-radius: 10px;
     position: relative;
     text-align: center;
@@ -120,19 +120,19 @@ overflow-y: auto;
 .result-header { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
 .header-logo { width: 40px; height: auto; }
 .topic-box {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-gap: 15px;
-background-color: #FF75FF;
-border: 2px solid #0070C0;
-color: white;
-border-radius: 50px;
-padding: 1px 1px;
-font-size: 24px;
-font-weight: bold;
-/* Engraved effect for white text */
-text-shadow: -1px -1px 1px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background-color: #FF75FF;
+  border: 1.0px solid #0070C0;
+  color: white;
+  border-radius: 50px;
+  padding: 1px 1px;        /* padding น้อยมาก */
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: -1px -1px 1px rgba(0,0,0,0.5),
+               1px 1px 1px rgba(255,255,255,0.5);
 }
 .topic-time {
 font-size: 18px;
@@ -228,6 +228,7 @@ margin-bottom: 10px;
     padding: 0 3px;
   }
 }
+
 </style>
 </head>
 <body>
